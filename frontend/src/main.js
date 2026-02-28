@@ -95,7 +95,7 @@ export const Main = () => {
         }
     }
     const show2 = async () => {
-        const result = await fetch("http://localhost:8000/api/saleproduct", {
+        const result = await fetch("https://elcto-1.onrender.com/api/saleproduct", {
             method: "get"
         })
         if (result.ok) {
@@ -110,7 +110,7 @@ export const Main = () => {
         }
     }
     const show3 = async () => {
-        const result = await fetch("http://localhost:8000/api/latestproduct", {
+        const result = await fetch("https://elcto-1.onrender.com/api/latestproduct", {
             method: "get"
         })
         if (result.ok) {
