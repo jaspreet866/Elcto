@@ -80,7 +80,7 @@ export const Main = () => {
 
 
     const show = async () => {
-        const result = await fetch("http://localhost:8000/api/getcategory", {
+        const result = await fetch("https://elcto-1.onrender.com/api/getcategory", {
             method: "get"
         })
         if (result) {
