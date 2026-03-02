@@ -13,7 +13,7 @@ export const Register = () => {
 
     const register = async () => {
         const data = { fname, lname, email, pass }
-        const result = await fetch("http://localhost:8000/api/register", {
+        const result = await fetch("https://elcto-1.onrender.com/api/register", {
             method: "post",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }
