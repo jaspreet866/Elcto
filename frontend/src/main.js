@@ -80,7 +80,7 @@ export const Main = () => {
 
 
     const show = async () => {
-        const result = await fetch("https://elcto-1.onrender.com/api/getcategory", {
+        const result = await fetch(" https://elcto-1.onrender.com/api/getcategory", {
             method: "get"
         })
         if (result) {
@@ -124,7 +124,7 @@ export const Main = () => {
         }
     }
     const show4 = async () => {
-        const result = await fetch("http://localhost:8000/api/showbrand", {
+        const result = await fetch(" https://elcto-1.onrender.com/api/showbrand", {
             method: "get"
         })
         if (result) {
@@ -138,7 +138,7 @@ export const Main = () => {
         }
     }
     const show5 = async () => {
-        const result = await fetch(`http://localhost:8000/api/laptop`, {
+        const result = await fetch(` https://elcto-1.onrender.com/api/laptop`, {
             method: "get"
         })
         if (result.ok) {
