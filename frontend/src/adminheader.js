@@ -34,7 +34,7 @@ export const AdminHeader = () => {
     return (
         <>
 
-            <nav className="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+            <nav className="navbar navbar-expand-lg  shadow-sm sticky-top" id="navbar">
                 <div className="container">
 
 

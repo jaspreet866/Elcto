@@ -74,11 +74,7 @@ export const Header = () => {
 
                             <li className="nav-item dropdown">
                                 <a
-                                    className="nav-link dropdown-toggle"
-                                    role="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                >
+                                    className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" >
                                     Products
                                 </a>
                                 <ul className="dropdown-menu shadow-sm">

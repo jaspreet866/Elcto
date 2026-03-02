@@ -5,6 +5,8 @@ const multer = require('multer')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const key = "$@*#5gf*yre@gutcf&@*#$234ju6"
+const dotenv = require("dotenv");
+dotenv.config();
 
 const app = express()
 
@@ -14,9 +16,11 @@ app.use(cors())
 
 app.listen(8000, () => {
     console.log("Server is running on 7000")
+   
 })
 
-mongoose.connect("mongodb+srv://itannjass_db_user:k8Aip0NhAzoeIpdH@cluster0.tsjm4en.mongodb.net/electromart")
+
+mongoose.connect(process.env.Mongo_url)
     .then(() => console.log("connected"))
     .catch(() => console.log("not connected"))
 
