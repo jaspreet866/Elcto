@@ -19,8 +19,8 @@ const corsfront={
 app.use(express.json())
 app.use(cors(corsfront))
 
-app.listen(8000, () => {
-    console.log("Server is running on 7000")
+app.listen(9000, () => {
+    console.log("Server is running on 9000")
    
 })
 
