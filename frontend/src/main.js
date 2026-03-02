@@ -81,7 +81,7 @@ export const Main = () => {
 
    const show = async () => {
     try {
-        const result = await fetch("https://elcto-1.onrender.com/api/getcategory");
+        const result = await fetch("http://localhost:9000/api/getcategory");
 
         const res = await result.json();
 
