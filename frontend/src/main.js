@@ -79,21 +79,22 @@ export const Main = () => {
 
 
 
-    const show = async () => {
-        const result = await fetch("https://elcto-1.onrender.com/api/getcategory", {
-            method: "get"
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setd(res.data)
-                setidd(res.data[0]?.Category)
-            }
-            else {
-                alert("sfs")
-            }
+   const show = async () => {
+    try {
+        const result = await fetch("https://elcto-1.onrender.com/api/getcategory");
+
+        const res = await result.json();
+
+        if (res.statuscode === 1) {
+            setd(res.data);
+            setidd(res.data[0]?.Category);
+        } else {
+            alert("Error from API");
         }
+    } catch (err) {
+        console.error("Fetch error:", err);
     }
+};
     const show2 = async () => {
         const result = await fetch("https://elcto-1.onrender.com/api/saleproduct", {
             method: "get"
