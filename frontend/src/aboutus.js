@@ -50,7 +50,7 @@ export const About = () => {
     }, [])
 
     const show = async () => {
-        const result = await fetch("http://localhost:8000/api/showbrand")
+        const result = await fetch("https://elcto-1.onrender.com/api/showbrand")
 
         if (result.ok) {
             const res = await result.json()

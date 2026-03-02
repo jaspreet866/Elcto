@@ -11,7 +11,7 @@ export const Order = () => {
     }, [id])
 
     const show = async () => {
-        const result = await fetch(`http://localhost:8000/api/myorder/${id}`, {
+        const result = await fetch(`https://elcto-1.onrender.com/api/myorder/${id}`, {
             method: "get"
         })
         if (result) {

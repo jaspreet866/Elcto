@@ -16,7 +16,7 @@ export const Wish = () => {
 
     const show = async (e) => {
 
-        const result = await fetch(`http://localhost:8000/api/getwish/${id}`, {
+        const result = await fetch(`https://elcto-1.onrender.com/api/getwish/${id}`, {
             method: "get"
         })
         if (result.ok) {
@@ -32,7 +32,7 @@ export const Wish = () => {
 
     const cart = async (id, name, price, img, value = 1) => {
         const data = { id, name, price, img, value }
-        const result = await fetch("http://localhost:8000/api/cartdata", {
+        const result = await fetch("https://elcto-1.onrender.com/api/cartdata", {
             method: "post",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }
@@ -57,7 +57,7 @@ export const Wish = () => {
 
         if (confirm.isConfirmed) {
 
-            const result = await fetch(`http://localhost:8000/api/deletewish/${id}`, {
+            const result = await fetch(`https://elcto-1.onrender.com/api/deletewish/${id}`, {
                 method: "DELETE"
             });
 

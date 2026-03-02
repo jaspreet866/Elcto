@@ -48,7 +48,7 @@ export const Product = () => {
         formData.append("Specifications", specifications);
 
 
-        const result = await fetch("http://localhost:8000/api/product", {
+        const result = await fetch("https://elcto-1.onrender.com/api/product", {
             method: "post",
             body: formData
         })
@@ -67,7 +67,7 @@ export const Product = () => {
         }
     }
     const show = async () => {
-        const result = await fetch("http://localhost:8000/api/getcategory", {
+        const result = await fetch("https://elcto-1.onrender.com/api/getcategory", {
             method: "get"
         })
         if (result) {
@@ -79,7 +79,7 @@ export const Product = () => {
         }
     }
     const show2 = async () => {
-        const result = await fetch(`http://localhost:8000/api/getbrand2/${id}`, {
+        const result = await fetch(`https://elcto-1.onrender.com/api/getbrand2/${id}`, {
             method: "get"
         })
         if (result) {
@@ -94,7 +94,7 @@ export const Product = () => {
         }
     }
     const show3 = async () => {
-        const result = await fetch("http://localhost:8000/api/getproduct", {
+        const result = await fetch("https://elcto-1.onrender.com/api/getproduct", {
             method: "get"
         })
         if (result.ok) {
@@ -121,7 +121,7 @@ export const Product = () => {
 
         if (confirm.isConfirmed) {
 
-            const result = await fetch(`http://localhost:8000/api/deletepro/${id}`, {
+            const result = await fetch(`https://elcto-1.onrender.com/api/deletepro/${id}`, {
                 method: "DELETE"
             });
 
@@ -167,7 +167,7 @@ export const Product = () => {
         formData2.append("brand", brand)
         formData2.append("specifications", specifications);
 
-        const result = await fetch(`http://localhost:8000/api/updatepro/${idd}`, {
+        const result = await fetch(`https://elcto-1.onrender.com/api/updatepro/${idd}`, {
             method: "put",
             body: formData2
         })

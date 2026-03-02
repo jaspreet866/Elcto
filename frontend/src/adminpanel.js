@@ -70,7 +70,7 @@ export const Dashboard = () => {
     }, [])
 
     const show = async () => {
-        const result = await fetch("http://localhost:8000/api/users", {
+        const result = await fetch("https://elcto-1.onrender.com/api/users", {
             method: "get"
         })
         if (result) {
@@ -87,7 +87,7 @@ export const Dashboard = () => {
         }
     }
     const show2 = async () => {
-        const result = await fetch("http://localhost:8000/api/getcategory", {
+        const result = await fetch("https://elcto-1.onrender.com/api/getcategory", {
             method: "get"
         })
         if (result) {
@@ -101,7 +101,7 @@ export const Dashboard = () => {
         }
     }
     const show3 = async () => {
-        const result = await fetch("http://localhost:8000/api/getproduct", {
+        const result = await fetch("https://elcto-1.onrender.com/api/getproduct", {
             method: "get"
         })
         if (result) {
@@ -115,7 +115,7 @@ export const Dashboard = () => {
         }
     }
     const show4 = async () => {
-        const result = await fetch("http://localhost:8000/api/showbrand", {
+        const result = await fetch("https://elcto-1.onrender.com/api/showbrand", {
             method: "get"
         })
         if (result) {
@@ -178,7 +178,7 @@ export const Dashboard = () => {
     };
 
     const show5 = async () => {
-        const result = await fetch("http://localhost:8000/api/orderdata", {
+        const result = await fetch("https://elcto-1.onrender.com/api/orderdata", {
             method: "get"
         })
         if (result) {

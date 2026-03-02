@@ -21,7 +21,7 @@ export const Cart = () => {
     })
 
     const show = async () => {
-        const result = await fetch(`http://localhost:8000/api/getcartdata/${id}`, {
+        const result = await fetch(`https://elcto-1.onrender.com/api/getcartdata/${id}`, {
             method: "get"
         })
         if (result.ok) {
@@ -55,7 +55,7 @@ export const Cart = () => {
 
         if (confirm.isConfirmed) {
 
-            const result = await fetch(`http://localhost:8000/api/remove/${id}`, {
+            const result = await fetch(`https://elcto-1.onrender.com/api/remove/${id}`, {
                 method: "DELETE"
             });
 

@@ -14,7 +14,7 @@ export const Login = () => {
     const login = async (e) => {
         e.preventDefault()
         const data = { email, pass }
-        const result = await fetch("http://localhost:8000/api/login", {
+        const result = await fetch("https://elcto-1.onrender.com/api/login", {
             method: "post",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }
