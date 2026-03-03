@@ -272,6 +272,7 @@ export const Main = () => {
 
     return (
         <>
+        
            
             <div className="container mt-5" data-aos="zoom-in">
                 <h2 className="fw-bold text-center mb-4">Product Categories</h2>
