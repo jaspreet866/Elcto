@@ -294,7 +294,7 @@ export const Main = () => {
                 </button>
             </div>
             <div className="container mt-5" data-aos="zoom-in">
-                {/* <h2 className="fw-bold text-center mb-4">Product Categories</h2> */}
+                <h2 className="fw-bold text-center mb-4">Product Categories</h2>
 
                 <div className="splide categorySlider mt-4 ">
                     <div className="splide__track">
