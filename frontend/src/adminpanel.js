@@ -42,7 +42,7 @@ export const Dashboard = () => {
     });
 
     useEffect(() => {
-        fetch("http://localhost:8000/api/sales/monthly")
+        fetch("https://elcto-1.onrender.com/api/sales/monthly")
             .then(res => res.json())
             .then(data => {
                 setMonthlyData({
