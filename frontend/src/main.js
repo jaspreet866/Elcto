@@ -470,10 +470,10 @@ export const Main = () => {
                                         </span>
                                     </p>
                                     <div className='d-flex gap-3'>
-                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-50">
+                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
                                             View Product
                                         </Link>
-                                        <button className='btn btn-danger btn-sm w-50 ' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
+                                        <button className='btn btn-danger btn-sm w-100 ' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
                                     </div>
                                 </div>
                             </div>
@@ -530,10 +530,10 @@ export const Main = () => {
                                         </span>
                                     </p>
                                     <div className='d-flex gap-3'>
-                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-50">
+                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
                                             View Product
                                         </Link>
-                                        <button className='btn btn-danger btn-sm w-50 ' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
+                                        <button className='btn btn-danger btn-sm w-100 ' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
                                     </div>
                                 </div>
                             </div>
@@ -591,10 +591,10 @@ export const Main = () => {
                                     </p>
 
                                     <div className='d-flex gap-3'>
-                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-50">
+                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
                                             View Product
                                         </Link>
-                                        <button className='btn btn-danger btn-sm w-50 ' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
+                                        <button className='btn btn-danger btn-sm w-100 ' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
                                     </div>
                                 </div>
                             </div>
@@ -652,10 +652,10 @@ export const Main = () => {
                                     </p>
 
                                     <div className='d-flex gap-3'>
-                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-50">
+                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
                                             View Product
                                         </Link>
-                                        <button className='btn btn-danger btn-sm w-50 ' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
+                                        <button className='btn btn-danger btn-sm w-100 ' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
                                     </div>
                                 </div>
                             </div>
@@ -713,10 +713,10 @@ export const Main = () => {
                                     </p>
 
                                     <div className='d-flex gap-3'>
-                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-50">
+                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
                                             View Product
                                         </Link>
-                                        <button className='btn btn-danger btn-sm w-50 ' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
+                                        <button className='btn btn-danger btn-sm w-100 ' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
                                     </div>
                                 </div>
                             </div>
