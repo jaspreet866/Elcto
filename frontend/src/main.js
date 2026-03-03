@@ -272,9 +272,9 @@ export const Main = () => {
 
     return (
         <>
-            {/* <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel" data-aos="fade">
+            <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel" data-aos="fade">
                 <div class="carousel-inner">
-                    <div class="carousel-item active">
+                    <div class="carousel-item">
                         <img src={banner1} class="d-block w-100" alt="..." />
                     </div>
                     <div class="carousel-item">
@@ -292,7 +292,7 @@ export const Main = () => {
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Next</span>
                 </button>
-            </div> */}
+            </div>
             <div className="container mt-5" data-aos="zoom-in">
                 <h2 className="fw-bold text-center mb-4">Product Categories</h2>
 
