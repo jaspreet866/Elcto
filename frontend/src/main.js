@@ -709,7 +709,7 @@ export const Main = () => {
                                 </div>
 
                                 <div className="card-body p-0">
-                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold">{p.ProductName}</h6>
+                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title">{p.ProductName}</h6>
                                     <div className="mb-2 text-warning">
     <i className="bi bi-star-fill"></i>
     <i className="bi bi-star-fill"></i>

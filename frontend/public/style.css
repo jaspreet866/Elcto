@@ -316,5 +316,11 @@ footer i:hover {
 .accordion-button::after {
   display: none;
 }
+.product-title{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
 
 
