@@ -308,7 +308,7 @@ export const Main = () => {
                                         className="text-decoration-none"
                                         to={`/related?id=${a._id}`}
                                     >
-                                        <div className="card border-0 shadow-sm text-center p-3 w-100 category-card">
+                                        <div className="card border-0 text-center p-3 w-100 category-card">
 
                                             <img
                                                 className="img-fluid mx-auto mb-2"
