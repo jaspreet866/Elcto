@@ -398,7 +398,7 @@ export const Main = () => {
                                 </div>
 
                                 <div className="card-body p-0">
-                                    <h6 className="fw-semibold mb-2">{p.ProductName}</h6>
+                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold">{p.ProductName}</h6>
                                     <div className="mb-2 text-warning">
     <i className="bi bi-star-fill"></i>
     <i className="bi bi-star-fill"></i>
@@ -412,7 +412,7 @@ export const Main = () => {
                                         <span className="">
                                             ₹{p.ProductPrice}
                                         </span>
-                                        <span className="text-success fw-bold ">
+                                        <span className="text-success fw-bold ms-2 ">
                                             ₹{p.SalePrice}
                                         </span>
                                         
@@ -466,7 +466,7 @@ export const Main = () => {
                                 </div>
 
                                 <div className="card-body p-0">
-                                    <h6 className="fw-semibold mb-2">{p.ProductName}</h6>
+                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold">{p.ProductName}</h6>
                                     <div className="mb-2 text-warning">
     <i className="bi bi-star-fill"></i>
     <i className="bi bi-star-fill"></i>
@@ -480,7 +480,7 @@ export const Main = () => {
                                         <span className=" ">
                                             ₹{p.ProductPrice}
                                         </span>
-                                        <span className=" text-success fw-bold ">
+                                        <span className=" text-success fw-bold ms-2 ">
                                             ₹{p.SalePrice}
                                         </span>
                                         
@@ -527,7 +527,7 @@ export const Main = () => {
                                 </div>
 
                                 <div className="card-body p-0">
-                                    <h6 className="fw-semibold mb-2">{p.ProductName}</h6>
+                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold">{p.ProductName}</h6>
                                     <div className="mb-2 text-warning">
     <i className="bi bi-star-fill"></i>
     <i className="bi bi-star-fill"></i>
@@ -541,7 +541,7 @@ export const Main = () => {
                                         <span className="">
                                             ₹{p.ProductPrice}
                                         </span>
-                                        <span className=" text-success fw-bold">
+                                        <span className=" text-success fw-bold ms-2">
                                             ₹{p.SalePrice}
                                         </span>
                                         
@@ -588,7 +588,7 @@ export const Main = () => {
                                 </div>
 
                                 <div className="card-body p-0">
-                                    <h6 className="fw-semibold mb-2">{p.ProductName}</h6>
+                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold">{p.ProductName}</h6>
                                     <div className="mb-2 text-warning">
     <i className="bi bi-star-fill"></i>
     <i className="bi bi-star-fill"></i>
@@ -601,7 +601,7 @@ export const Main = () => {
                                         <span className=" ">
                                             ₹{p.ProductPrice}
                                         </span>
-                                        <span className=" text-success fw-bold ">
+                                        <span className=" text-success fw-bold ms-2 ">
                                             ₹{p.SalePrice}
                                         </span>
                                         
@@ -648,7 +648,7 @@ export const Main = () => {
                                 </div>
 
                                 <div className="card-body p-0">
-                                    <h6 className="fw-semibold mb-2">{p.ProductName}</h6>
+                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold">{p.ProductName}</h6>
                                     <div className="mb-2 text-warning">
     <i className="bi bi-star-fill"></i>
     <i className="bi bi-star-fill"></i>
@@ -662,7 +662,7 @@ export const Main = () => {
                                         <span className=" ">
                                             ₹{p.ProductPrice}
                                         </span>
-                                        <span className=" text-success fw-bold ">
+                                        <span className=" text-success fw-bold ms-2 ">
                                             ₹{p.SalePrice}
                                         </span>
                                         
@@ -709,7 +709,7 @@ export const Main = () => {
                                 </div>
 
                                 <div className="card-body p-0">
-                                    <h6 className="fw-semibold mb-2">{p.ProductName}</h6>
+                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold">{p.ProductName}</h6>
                                     <div className="mb-2 text-warning">
     <i className="bi bi-star-fill"></i>
     <i className="bi bi-star-fill"></i>
@@ -723,7 +723,7 @@ export const Main = () => {
                                         <span className=" ">
                                             ₹{p.ProductPrice}
                                         </span>
-                                        <span className=" text-success fw-bold">
+                                        <span className=" text-success fw-bold ms-2">
                                             ₹{p.SalePrice}
                                         </span>
                                         
