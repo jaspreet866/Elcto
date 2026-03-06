@@ -229,7 +229,6 @@ export const Main = () => {
         }
     }
     const cart = async (id, name, price, img, value = 1, prr) => {
-        if (!prr || !id) return;
         const data = { id, name, price, img, value }
         const result = await fetch(`https://elcto-1.onrender.com/api/cartdata/${prr}`, {
             method: "post",
