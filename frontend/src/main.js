@@ -64,6 +64,7 @@ show();
         show8()
         }
         else{
+            alert("id is not here")
             navigate("/login")
         }
         
