@@ -681,67 +681,108 @@ export const Main = () => {
                     ))}
                 </div>
             </section>
-            <section className="container mt-5 py-3">
-                <div className=" align-items-center mb-4 mt-5">
-                    <h2 className="fw-bold">🔥 Our Led Collection</h2>
+          <section className="container mt-5 py-3">
 
-                </div>
+    <div className="mb-4 mt-5">
+        <h2 className="fw-bold">🔥 Our Led Collection</h2>
+    </div>
 
-                <div className="row g-4">
-                    {led.map((p) => (
-                        <div key={p._id} className="col-lg-3 col-6 col-md-4 col-sm-6">
+    <div className="row g-4">
 
-                            <div className="card w-100 border-0 shadow-sm text-center p-3" data-aos="fade-up">
-                                <div className='cardicons justify-self-end'>
+        {led.map((p) => (
 
-                                    <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id) }}><i class="bi bi-heart-fill"></i>
-                                    </p><br></br>
-                                    <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}><i class="bi bi-cart"></i></p>
-                                    <p><i class="bi bi-eye"></i></p>
-                                </div>
-                                <div className=" rounded d-flex justify-content-center align-items-center mb-3" style={{ height: "150px" }}>
-                                    <img
-                                        src={`/uploads/${p.Img}`}
-                                        alt={p.name}
-                                        className="img-fluid"
-                                        style={{ maxHeight: "120px" }}
-                                    />
-                                </div>
+            <div key={p._id} className="col-lg-3 col-md-4 col-sm-6 col-6">
 
-                                <div className="card-body p-0">
-                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title">{p.ProductName}</h6>
-                                    <div className="mb-2 text-warning">
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-half"></i>
-    <i className="bi bi-star"></i>
-    <span className="text-muted small ms-1">(4.3)</span>
-</div>
+                <div className="card product-card border-0 shadow-sm text-center p-3" data-aos="fade-up">
 
-                                   <p className="d-flex justify-content-center align-self-center text-center">
-                                        <span className=" ">
-                                            ₹{p.ProductPrice}
-                                        </span>
-                                        <span className=" text-success fw-bold ms-1 ">
-                                            ₹{p.SalePrice}
-                                        </span>
-                                        
+                    {/* Icons */}
+                    <div className="cardicons">
 
-                                    </p>
-                                    <div className='d-flex flex-column flex-md-row gap-1'>
-                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
-                                            View Product
-                                        </Link>
-                                        <button className='btn btn-danger btn-sm w-100 ' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
+                        <button className="btn text-danger"
+                            onClick={() => wish(id, p.ProductName, p.ProductPrice, p.Img, p._id)}>
+                            <i className="bi bi-heart-fill"></i>
+                        </button>
+
+                        <button className="btn"
+                            onClick={() => cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id)}>
+                            <i className="bi bi-cart"></i>
+                        </button>
+
+                        <button className="btn">
+                            <i className="bi bi-eye"></i>
+                        </button>
+
+                    </div>
+
+                    {/* Image */}
+                    <div className="product-img">
+                        <img
+                            src={`/uploads/${p.Img}`}
+                            alt={p.ProductName}
+                            className="img-fluid"
+                        />
+                    </div>
+
+                    <div className="card-body p-0">
+
+                        {/* Product Name */}
+                        <h6 className="product-title">
+                            {p.ProductName}
+                        </h6>
+
+                        {/* Rating */}
+                        <div className="mb-2 text-warning">
+                            <i className="bi bi-star-fill"></i>
+                            <i className="bi bi-star-fill"></i>
+                            <i className="bi bi-star-fill"></i>
+                            <i className="bi bi-star-half"></i>
+                            <i className="bi bi-star"></i>
+                            <span className="text-muted small ms-1">(4.3)</span>
+                        </div>
+
+                        {/* Price */}
+                        <p className="price-section">
+
+                            <span className="old-price">
+                                ₹{Number(p.ProductPrice).toLocaleString("en-IN")}
+                            </span>
+
+                            <span className="new-price">
+                                ₹{Number(p.SalePrice).toLocaleString("en-IN")}
+                            </span>
+
+                        </p>
+
+                        {/* Buttons */}
+                        <div className="product-buttons">
+
+                            <Link
+                                to={`/detail?id=${p._id}&cid=${p.Category}`}
+                                className="btn btn-primary btn-sm w-100"
+                            >
+                                View Product
+                            </Link>
+
+                            <button
+                                className="btn btn-danger btn-sm w-100"
+                                onClick={() => cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id)}
+                            >
+                                Add to Cart
+                            </button>
 
                         </div>
-                    ))}
+
+                    </div>
+
                 </div>
-            </section>
+
+            </div>
+
+        ))}
+
+    </div>
+
+</section>
             <section className="container mt-5 py-4" data-aos="fade-up">
                 <h2 className="fw-bold text-center mb-4">Why Choose Us</h2>
                 <div className="row g-4 py-5">
