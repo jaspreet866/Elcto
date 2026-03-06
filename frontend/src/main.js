@@ -408,7 +408,7 @@ export const Main = () => {
     <span className="text-muted small ms-1">(4.3)</span>
 </div>
 
-                                    <p className="mb-3">
+                                    <p className="">
                                         <span className="">
                                             ₹{p.ProductPrice}
                                         </span>
@@ -420,10 +420,10 @@ export const Main = () => {
                                     </p>
 
                                     <div className='d-flex flex-column flex-md-row gap-1'>
-                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-50 ">
+                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100 ">
                                             View Product
                                         </Link>
-                                        <button className='btn btn-danger btn-sm w-50 ' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
+                                        <button className='btn btn-danger btn-sm w-100 ' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
                                     </div>
                                 </div>
 
