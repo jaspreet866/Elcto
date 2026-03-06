@@ -35,6 +35,14 @@ export const Header = () => {
             navigate("/login")
         }
     }
+    const wish=()=>{
+        if(id){
+            navigate("/cart")
+        }
+        else{
+            navigate("/login")
+        }
+    }
     return (
         <>
 
@@ -138,7 +146,7 @@ export const Header = () => {
                         <div className="ms-5 d-flex ">
                             <button className="fs-4 btn" onClick={() => cart()} ><i className="bi bi-cart-fill"></i></button>
                             <div className="fs-4 btn"><i className="bi bi-person-fill" onClick={() => navigate("/login")}></i></div>
-                            <div className="fs-4 btn"><i className="bi bi-heart-fill" onClick={() => navigate("/wish")}></i></div>
+                            <div className="fs-4 btn"><i className="bi bi-heart-fill" onClick={() => wish()}></i></div>
                         </div>
 
                     </div>
@@ -269,11 +277,11 @@ export const Header = () => {
                         <i className="bi bi-bag-fill" ></i><br></br>
                         <span className='' >Order</span>
                     </div>
-                    <div className="btn text-white" onClick={() => { navigate("/wish") }}>
+                    <div className="btn text-white" onClick={() => { wish() }}>
                         <i className="bi bi-heart-fill"></i><br></br>
                         <span className=''>Wishlist</span>
                     </div>
-                    <div className="btn text-white" onClick={() => { navigate("/cart") }}>
+                    <div className="btn text-white" onClick={() => { cart() }}>
                         <i class="bi bi-cart-fill"></i><br></br>
                         <span className=''>Cart</span>
                     </div>
