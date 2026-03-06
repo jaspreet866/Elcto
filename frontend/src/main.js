@@ -408,11 +408,11 @@ export const Main = () => {
     <span className="text-muted small ms-1">(4.3)</span>
 </div>
 
-                                    <p className="d-flex">
-                                        <span className="">
+                                   <p className="d-flex justify-content-center align-self-center text-center">
+                                        <span className=" ">
                                             ₹{p.ProductPrice}
                                         </span>
-                                        <span className="text-success fw-bold ms-1 ">
+                                        <span className=" text-success fw-bold ms-1 ">
                                             ₹{p.SalePrice}
                                         </span>
                                         
@@ -476,7 +476,7 @@ export const Main = () => {
     <span className="text-muted small ms-1">(4.3)</span>
 </div>
 
-                                   <p className="d-flex text-center">
+                                     <p className="d-flex justify-content-center align-self-center text-center">
                                         <span className=" ">
                                             ₹{p.ProductPrice}
                                         </span>
@@ -537,11 +537,11 @@ export const Main = () => {
     <span className="text-muted small ms-1">(4.3)</span>
 </div>
 
-                                    <p className="d-flex">
-                                        <span className="">
+                                    <p className="d-flex justify-content-center align-self-center text-center">
+                                        <span className=" ">
                                             ₹{p.ProductPrice}
                                         </span>
-                                        <span className=" text-success fw-bold ms-1">
+                                        <span className=" text-success fw-bold ms-1 ">
                                             ₹{p.SalePrice}
                                         </span>
                                         
@@ -597,8 +597,8 @@ export const Main = () => {
     <i className="bi bi-star"></i>
     <span className="text-muted small ms-1">(4.3)</span>
 </div>
- <p className="mb-3">
-                                        <span className="d-flex ">
+   <p className="d-flex justify-content-center align-self-center text-center">
+                                        <span className=" ">
                                             ₹{p.ProductPrice}
                                         </span>
                                         <span className=" text-success fw-bold ms-1 ">
@@ -658,7 +658,7 @@ export const Main = () => {
     <span className="text-muted small ms-1">(4.3)</span>
 </div>
 
-                                    <p className="d-flex">
+                                    <p className="d-flex justify-content-center align-self-center text-center">
                                         <span className=" ">
                                             ₹{p.ProductPrice}
                                         </span>
@@ -719,17 +719,16 @@ export const Main = () => {
     <span className="text-muted small ms-1">(4.3)</span>
 </div>
 
-                                    <p className="d-flex">
+                                   <p className="d-flex justify-content-center align-self-center text-center">
                                         <span className=" ">
                                             ₹{p.ProductPrice}
                                         </span>
-                                        <span className=" text-success fw-bold ms-1">
+                                        <span className=" text-success fw-bold ms-1 ">
                                             ₹{p.SalePrice}
                                         </span>
                                         
 
                                     </p>
-
                                     <div className='d-flex flex-column flex-md-row gap-1'>
                                         <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
                                             View Product
