@@ -37,7 +37,7 @@ export const Header = () => {
     }
     const wish=()=>{
         if(id){
-            navigate("/cart")
+            navigate("/wish")
         }
         else{
             navigate("/login")
