@@ -693,7 +693,7 @@ export const Main = () => {
 
             <div key={p._id} className="col-lg-3 col-md-4 col-sm-6 col-6">
 
-                <div className="card product-card border-0 shadow-sm text-center p-3" data-aos="fade-up">
+                <div className="card product-card w-100 border-0 shadow-sm text-center p-3" data-aos="fade-up">
 
                     {/* Icons */}
                     <div className="cardicons">
