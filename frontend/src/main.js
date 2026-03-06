@@ -412,7 +412,7 @@ export const Main = () => {
                                         <span className=" me-2">
                                             ₹{p.ProductPrice}
                                         </span>
-                                        <span className="h6 text-success fw-bold me-2">
+                                        <span className="h5 text-success fw-bold me-2">
                                             ₹{p.SalePrice}
                                         </span>
                                         
@@ -476,14 +476,15 @@ export const Main = () => {
     <span className="text-muted small ms-1">(4.3)</span>
 </div>
 
-                                    <p className="mb-3">
-                                        <span className="text-muted  me-2">
-
+                                   <p className="mb-3">
+                                        <span className=" me-2">
                                             ₹{p.ProductPrice}
                                         </span>
-                                        <span className="text-success fw-bold fs-5">
+                                        <span className="h5 text-success fw-bold me-2">
                                             ₹{p.SalePrice}
                                         </span>
+                                        
+
                                     </p>
                                     <div className='d-flex gap-3'>
                                         <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
@@ -537,13 +538,14 @@ export const Main = () => {
 </div>
 
                                     <p className="mb-3">
-                                        <span className="text-muted  me-2">
-
+                                        <span className=" me-2">
                                             ₹{p.ProductPrice}
                                         </span>
-                                        <span className="text-success fw-bold fs-5">
+                                        <span className="h5 text-success fw-bold me-2">
                                             ₹{p.SalePrice}
                                         </span>
+                                        
+
                                     </p>
                                     <div className='d-flex gap-3'>
                                         <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
@@ -595,17 +597,16 @@ export const Main = () => {
     <i className="bi bi-star"></i>
     <span className="text-muted small ms-1">(4.3)</span>
 </div>
-
-                                    <p className="mb-3">
-                                        <span className="text-muted  me-2">
-
+ <p className="mb-3">
+                                        <span className=" me-2">
                                             ₹{p.ProductPrice}
                                         </span>
-                                        <span className="text-success fw-bold fs-5">
+                                        <span className="h5 text-success fw-bold me-2">
                                             ₹{p.SalePrice}
                                         </span>
-                                    </p>
+                                        
 
+                                    </p>
                                     <div className='d-flex gap-3'>
                                         <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
                                             View Product
@@ -658,15 +659,15 @@ export const Main = () => {
 </div>
 
                                     <p className="mb-3">
-                                        <span className="text-muted  me-2">
-
+                                        <span className=" me-2">
                                             ₹{p.ProductPrice}
                                         </span>
-                                        <span className="text-success fw-bold fs-5">
+                                        <span className="h5 text-success fw-bold me-2">
                                             ₹{p.SalePrice}
                                         </span>
-                                    </p>
+                                        
 
+                                    </p>
                                     <div className='d-flex gap-3'>
                                         <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
                                             View Product
@@ -719,13 +720,14 @@ export const Main = () => {
 </div>
 
                                     <p className="mb-3">
-                                        <span className="text-muted  me-2">
-
+                                        <span className=" me-2">
                                             ₹{p.ProductPrice}
                                         </span>
-                                        <span className="text-success fw-bold fs-5">
+                                        <span className="h5 text-success fw-bold me-2">
                                             ₹{p.SalePrice}
                                         </span>
+                                        
+
                                     </p>
 
                                     <div className='d-flex gap-3'>
