@@ -9,11 +9,9 @@ export const Header = () => {
     const { setutype } = useContext(Context)
     const navigate = useNavigate()
     useEffect(() => {
-
         const token = localStorage.getItem("data")
         if (token) {
             setflag(true);
-
         }
         else {
             setflag(false);
@@ -27,6 +25,15 @@ export const Header = () => {
         setid("");
         alert("logged out");
         setutype("User")
+    }
+
+    const cart=()=>{
+        if(id){
+            navigate("/cart")
+        }
+        else{
+            navigate("/login")
+        }
     }
     return (
         <>
@@ -129,7 +136,7 @@ export const Header = () => {
                         </ul>
 
                         <div className="ms-5 d-flex ">
-                            <button className="fs-4 btn" onClick={() => navigate("/cart")} ><i className="bi bi-cart-fill"></i></button>
+                            <button className="fs-4 btn" onClick={() => cart()} ><i className="bi bi-cart-fill"></i></button>
                             <div className="fs-4 btn"><i className="bi bi-person-fill" onClick={() => navigate("/login")}></i></div>
                             <div className="fs-4 btn"><i className="bi bi-heart-fill" onClick={() => navigate("/wish")}></i></div>
                         </div>

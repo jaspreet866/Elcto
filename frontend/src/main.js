@@ -52,21 +52,15 @@ export const Main = () => {
     }, 300);
 
     useEffect(() => {
-
-        if(id){
-show();
+  
+        show();
         show2();
         show3();
         show4();
         show5();
         show6()
         show7()
-        show8()
-        }
-        else{
-            alert("id is not here")
-            navigate("/login")
-        }
+        show8() 
         
     }, [])
 
