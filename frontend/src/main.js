@@ -1,6 +1,6 @@
 
 import { useContext, useEffect, useState, } from 'react'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import banner1 from './images/banner1.png'
 import banner2 from './images/banner2.png'
 import banner3 from './images/banner3.png'
@@ -52,7 +52,9 @@ export const Main = () => {
     }, 300);
 
     useEffect(() => {
-        show();
+
+        if(id){
+show();
         show2();
         show3();
         show4();
@@ -60,6 +62,11 @@ export const Main = () => {
         show6()
         show7()
         show8()
+        }
+        else{
+            navigate("/login")
+        }
+        
     }, [])
 
     useEffect(() => {
