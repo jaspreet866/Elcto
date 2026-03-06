@@ -476,7 +476,7 @@ export const Main = () => {
     <span className="text-muted small ms-1">(4.3)</span>
 </div>
 
-                                   <p className="mb-3">
+                                   <p className="">
                                         <span className=" ">
                                             ₹{p.ProductPrice}
                                         </span>
@@ -537,7 +537,7 @@ export const Main = () => {
     <span className="text-muted small ms-1">(4.3)</span>
 </div>
 
-                                    <p className="mb-3">
+                                    <p className="">
                                         <span className="">
                                             ₹{p.ProductPrice}
                                         </span>
@@ -658,7 +658,7 @@ export const Main = () => {
     <span className="text-muted small ms-1">(4.3)</span>
 </div>
 
-                                    <p className="mb-3">
+                                    <p className="">
                                         <span className=" ">
                                             ₹{p.ProductPrice}
                                         </span>
@@ -719,7 +719,7 @@ export const Main = () => {
     <span className="text-muted small ms-1">(4.3)</span>
 </div>
 
-                                    <p className="mb-3">
+                                    <p className="">
                                         <span className=" ">
                                             ₹{p.ProductPrice}
                                         </span>
