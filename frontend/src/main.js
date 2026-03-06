@@ -412,7 +412,7 @@ export const Main = () => {
                                         <span className=" me-2">
                                             ₹{p.ProductPrice}
                                         </span>
-                                        <span className=" text-success fw-bold me-2">
+                                        <span className="h6 text-success fw-bold me-2">
                                             ₹{p.SalePrice}
                                         </span>
                                         
