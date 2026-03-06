@@ -197,6 +197,16 @@ export const Main = () => {
     }
 
     const wish = async (id, name, price, img, prr) => {
+          if (!id) {
+        Swal.fire({
+            icon: "warning",
+            title: "Please Login First",
+            text: "Login to add items to cart"
+        })
+        navigate("/login")
+        return
+    }
+
         const data = { id, name, price, img }
         const result = await fetch(`https://elcto-1.onrender.com/api/wishpost/${prr}`, {
             method: "post",
@@ -229,6 +239,16 @@ export const Main = () => {
         }
     }
     const cart = async (id, name, price, img, value = 1, prr) => {
+          if (!id) {
+        Swal.fire({
+            icon: "warning",
+            title: "Please Login First",
+            text: "Login to add items to cart"
+        })
+        navigate("/login")
+        return
+    }
+
         const data = { id, name, price, img, value }
         const result = await fetch(`https://elcto-1.onrender.com/api/cartdata/${prr}`, {
             method: "post",
