@@ -409,10 +409,10 @@ export const Main = () => {
 </div>
 
                                     <p className="mb-3">
-                                        <span className=" me-2">
+                                        <span className="">
                                             ₹{p.ProductPrice}
                                         </span>
-                                        <span className="text-success fw-bold me-2">
+                                        <span className="text-success fw-bold ">
                                             ₹{p.SalePrice}
                                         </span>
                                         
@@ -477,10 +477,10 @@ export const Main = () => {
 </div>
 
                                    <p className="mb-3">
-                                        <span className=" me-2">
+                                        <span className=" ">
                                             ₹{p.ProductPrice}
                                         </span>
-                                        <span className=" text-success fw-bold me-2">
+                                        <span className=" text-success fw-bold ">
                                             ₹{p.SalePrice}
                                         </span>
                                         
@@ -538,10 +538,10 @@ export const Main = () => {
 </div>
 
                                     <p className="mb-3">
-                                        <span className=" me-2">
+                                        <span className="">
                                             ₹{p.ProductPrice}
                                         </span>
-                                        <span className=" text-success fw-bold me-2">
+                                        <span className=" text-success fw-bold">
                                             ₹{p.SalePrice}
                                         </span>
                                         
@@ -598,10 +598,10 @@ export const Main = () => {
     <span className="text-muted small ms-1">(4.3)</span>
 </div>
  <p className="mb-3">
-                                        <span className=" me-2">
+                                        <span className=" ">
                                             ₹{p.ProductPrice}
                                         </span>
-                                        <span className=" text-success fw-bold me-2">
+                                        <span className=" text-success fw-bold ">
                                             ₹{p.SalePrice}
                                         </span>
                                         
@@ -659,10 +659,10 @@ export const Main = () => {
 </div>
 
                                     <p className="mb-3">
-                                        <span className=" me-2">
+                                        <span className=" ">
                                             ₹{p.ProductPrice}
                                         </span>
-                                        <span className=" text-success fw-bold me-2">
+                                        <span className=" text-success fw-bold ">
                                             ₹{p.SalePrice}
                                         </span>
                                         
@@ -720,10 +720,10 @@ export const Main = () => {
 </div>
 
                                     <p className="mb-3">
-                                        <span className=" me-2">
+                                        <span className=" ">
                                             ₹{p.ProductPrice}
                                         </span>
-                                        <span className=" text-success fw-bold me-2">
+                                        <span className=" text-success fw-bold">
                                             ₹{p.SalePrice}
                                         </span>
                                         
