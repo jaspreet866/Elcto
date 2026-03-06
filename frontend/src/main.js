@@ -537,11 +537,11 @@ export const Main = () => {
     <span className="text-muted small ms-1">(4.3)</span>
 </div>
 
-                                    <p className="">
+                                    <p className="d-flex">
                                         <span className="">
                                             ₹{p.ProductPrice}
                                         </span>
-                                        <span className=" text-success fw-bold ms-2">
+                                        <span className=" text-success ms-1">
                                             ₹{p.SalePrice}
                                         </span>
                                         
