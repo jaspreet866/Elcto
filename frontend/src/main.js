@@ -419,7 +419,7 @@ export const Main = () => {
 
                                     </p>
 
-                                    <div className='d-flex gap-3'>
+                                    <div className='d-flex flex-md-row gap-3'>
                                         <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-50 ">
                                             View Product
                                         </Link>
@@ -486,7 +486,7 @@ export const Main = () => {
                                         
 
                                     </p>
-                                    <div className='d-flex gap-3'>
+                                    <div className='d-flex  flex-md-row gap-3'>
                                         <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
                                             View Product
                                         </Link>
@@ -547,7 +547,7 @@ export const Main = () => {
                                         
 
                                     </p>
-                                    <div className='d-flex gap-3'>
+                                    <div className='d-flex flex-md-row gap-3'>
                                         <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
                                             View Product
                                         </Link>
@@ -607,7 +607,7 @@ export const Main = () => {
                                         
 
                                     </p>
-                                    <div className='d-flex gap-3'>
+                                    <div className='d-flex flex-md-row gap-3'>
                                         <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
                                             View Product
                                         </Link>
@@ -668,7 +668,7 @@ export const Main = () => {
                                         
 
                                     </p>
-                                    <div className='d-flex gap-3'>
+                                    <div className='d-flex flex-md-row gap-3'>
                                         <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
                                             View Product
                                         </Link>
@@ -730,7 +730,7 @@ export const Main = () => {
 
                                     </p>
 
-                                    <div className='d-flex gap-3'>
+                                    <div className='d-flex flex-md-row gap-3'>
                                         <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
                                             View Product
                                         </Link>
