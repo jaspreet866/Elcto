@@ -55,7 +55,7 @@ export const Check = () => {
     }
 
     const show = async () => {
-        const result = await fetch(`https://elcto-1.onrender.com/getcartdata/${id}`, {
+        const result = await fetch(`https://elcto-1.onrender.com/api/getcartdata/${id}`, {
             method: "get"
         })
         if (result.ok) {
