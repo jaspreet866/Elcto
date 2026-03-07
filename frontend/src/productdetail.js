@@ -514,7 +514,7 @@ const [activeTab, setActiveTab] = useState("specifications");
                                             <button className="btn btn-primary mt-auto w-100">
                                                 View Product
                                             </button></Link>
-                                        <button className="btn btn-primary mt-auto w-50" onClick={goto}>
+                                        <button className="btn btn-primary mt-auto w-100" onClick={goto}>
                                             Add to Cart
                                         </button>
                                     </div>

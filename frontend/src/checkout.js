@@ -113,7 +113,44 @@ export const Check = () => {
             </section>
             <div className="container">
                 <div className="row">
-                    <div className="col col-12 col-lg-7 mt-5">
+                    <div className="col mt-5" >
+                        <div className="card shadow-sm w-100 text-center">
+                            <div className="card-body">
+                                <h3 className="card-title mb-3">Your Order Details</h3>
+
+                                <table className="table align-middle mb-0 ">
+                                    <tbody>
+                                        {d.map((a) => (
+                                            <tr key={a._id}>
+                                                <td style={{ width: "50px" }}>
+                                                    <img
+                                                        src={`/uploads/${a.Img}`}
+                                                        alt={a.Name}
+                                                        className="img-fluid rounded"
+                                                        style={{ height: "40px", width: "40px", objectFit: "cover" }}
+                                                    />
+                                                </td>
+
+                                                <td>
+                                                    <p className="mb-0 fw-semibold">{a.Name}</p>
+                                                    <small className="text-muted">Qty: {a.Quantity}</small>
+                                                </td>
+
+                                                <td className="text-end fw-semibold">
+                                                    ₹{a.Price * a.Quantity}
+                                                </td>
+                                            </tr>
+
+                                        ))}
+                                    </tbody>
+
+                                </table>
+                                <h3 className="mt-3">Total:{totalprice}</h3>
+                                {payment}
+                            </div>
+                        </div>
+                    </div>
+ <div className="col col-12 col-lg-7 mt-5">
                         <form>
                             <div className="d-flex gap-3 mb-2">
                                 <input className="form-control w-50" placeholder="First Name" onChange={(e) => setfname(e.target.value)}></input>
@@ -234,44 +271,6 @@ export const Check = () => {
                             Checkout
                         </button>
                     </div>
-                    <div className="col mt-5" >
-                        <div className="card shadow-sm w-100 text-center">
-                            <div className="card-body">
-                                <h3 className="card-title mb-3">Your Order Details</h3>
-
-                                <table className="table align-middle mb-0 ">
-                                    <tbody>
-                                        {d.map((a) => (
-                                            <tr key={a._id}>
-                                                <td style={{ width: "50px" }}>
-                                                    <img
-                                                        src={`/uploads/${a.Img}`}
-                                                        alt={a.Name}
-                                                        className="img-fluid rounded"
-                                                        style={{ height: "40px", width: "40px", objectFit: "cover" }}
-                                                    />
-                                                </td>
-
-                                                <td>
-                                                    <p className="mb-0 fw-semibold">{a.Name}</p>
-                                                    <small className="text-muted">Qty: {a.Quantity}</small>
-                                                </td>
-
-                                                <td className="text-end fw-semibold">
-                                                    ₹{a.Price * a.Quantity}
-                                                </td>
-                                            </tr>
-
-                                        ))}
-                                    </tbody>
-
-                                </table>
-                                <h3 className="mt-3">Total:{totalprice}</h3>
-                                {payment}
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </>
