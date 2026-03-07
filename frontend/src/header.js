@@ -25,6 +25,7 @@ export const Header = () => {
         setid("");
         alert("logged out");
         setutype("User")
+        navigate("/")
     }
 
     const cart=()=>{
