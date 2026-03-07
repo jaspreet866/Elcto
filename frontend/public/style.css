@@ -417,11 +417,6 @@ font-size:15px;
 
 }
 
-.hero-carousel img{
-height:420px;
-object-fit:cover;
-}
-
 @media(max-width:768px){
 .hero-carousel img{
 height:220px;
