@@ -285,10 +285,15 @@ export const Header = () => {
                         <i class="bi bi-cart-fill"></i><br></br>
                         <span className=''>Cart</span>
                     </div>
-                    <div className="btn text-white" onClick={logout}>
-                        <i className="bi bi-person-fill"></i><br></br>
-                        <span className=''>{flag ? "LogOut" : "Login"}</span>
-                    </div>
+                   {
+                    flag ? <div className="btn text-white" onClick={() => { logout() }}>
+                    <i className="bi bi-box-arrow-right"></i><br></br>
+                    <span className=''>Logout</span>
+                </div> : <div className="btn text-white" onClick={() => { navigate("/login") }}>
+                    <i className="bi bi-person-fill"></i><br></br>
+                    <span className=''>Login</span>
+                </div>
+                   }
 
                 </div>
 
