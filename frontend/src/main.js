@@ -295,18 +295,26 @@ export const Main = () => {
         <>
    
   <div className='container-fluid'>
-    <div id="carouselExample" className='carousel slide'>
+    <div id="carouselExample" className='carousel slide' data-bs-ride="carousel">
         <div className='carousel-inner'>
-            <div className='carousel-item'>
-                <img src={banner1}></img>
+            <div className='carousel-item active'>
+                <img src={banner1} className="d-block w-100" alt="banner 1" />
             </div>
             <div className='carousel-item'>
-                <img src={banner2}></img>
+                <img src={banner2} className="d-block w-100" alt="banner 2" />
             </div>
             <div className='carousel-item'>
-                <img src={banner3}></img>
+                <img src={banner3} className="d-block w-100" alt="banner 3" />
             </div>
         </div>
+        <button className="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span className="visually-hidden">Previous</span>
+        </button>
+        <button className="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+            <span className="visually-hidden">Next</span>
+        </button>
     </div>
     </div>      
             <div className="container mt-5" data-aos="zoom-in">
