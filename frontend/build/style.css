@@ -417,4 +417,22 @@ font-size:15px;
 
 }
 
+.hero-carousel img{
+height:420px;
+object-fit:cover;
+}
+
+@media(max-width:768px){
+.hero-carousel img{
+height:220px;
+}
+}
+
+@media(max-width:480px){
+.hero-carousel img{
+height:160px;
+}
+}
+
+
 

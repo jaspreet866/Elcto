@@ -293,9 +293,8 @@ export const Main = () => {
 
     return (
         <>
-   
-  <div className='container-fluid'>
-    <div id="carouselExample" className='carousel slide' data-bs-ride="carousel">
+   <div className='container-fluid'>
+    <div id="carouselExample" className='carousel slide hero-carousel' data-bs-ride="carousel">
         <div className='carousel-inner'>
             <div className='carousel-item active'>
                 <img src={banner1} className="d-block w-100" alt="banner 1" />
