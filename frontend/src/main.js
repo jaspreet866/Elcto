@@ -1,7 +1,7 @@
 
 import { useContext, useEffect, useState, } from 'react'
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
-import banner1 from './images/banner1.png'
+
 import banner2 from './images/banner2.png'
 import banner3 from './images/banner3.png'
 import { Context } from './usecontext'
@@ -298,13 +298,13 @@ export const Main = () => {
     <div id="carouselExample" className='carousel slide'>
         <div className='carousel-inner'>
             <div className='carousel-item'>
-                <img src={banner1}></img>
+                <img src="/Elcto/frontend/src/images/banner1.png"></img>
             </div>
             <div className='carousel-item'>
-                <img src={banner2}></img>
+                <img src="/Elcto/frontend/src/images/banner2.png"></img>
             </div>
             <div className='carousel-item'>
-                <img src={banner3}></img>
+                <img src="/Elcto/frontend/src/images/banner3.png"></img>
             </div>
         </div>
     </div>
