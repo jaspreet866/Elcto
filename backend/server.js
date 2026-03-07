@@ -12,7 +12,7 @@ const app = express()
 
 
 const corsfront={
-    origin:"https://elcto-a5a8.onrender.com",
+    origin:["https://elcto-a5a8.onrender.com","https://elcto-self.vercel.app"],
     credentials:true
 }
 
