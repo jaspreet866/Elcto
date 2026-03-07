@@ -51,6 +51,24 @@ export const Main = () => {
             },
         }).mount();
     }, 300);
+    useEffect(() => {
+
+  new window.Swiper(".heroSwiper", {
+    loop: true,
+    autoplay: {
+      delay: 3000,
+    },
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+  });
+
+}, []);
 
     useEffect(() => {
   
@@ -295,29 +313,29 @@ export const Main = () => {
     return (
         <>
    
-  <div className='container-fluid'>
-    <div id="carouselExampleAutoplaying" className='carousel slide' data-bs-ride="carousel">
-        <div className='carousel-inner'>
-            <div className='carousel-item '>
-                <img src={banner1} className="d-block w-100" alt="banner 1" />
-            </div>
-            <div className='carousel-item'>
-                <img src={banner2} className="d-block w-100" alt="banner 2" />
-            </div>
-            <div className='carousel-item'>
-                <img src={banner3} className="d-block w-100" alt="banner 3" />
-            </div>
-        </div>
+  <div className="swiper heroSwiper">
+
+  <div className="swiper-wrapper">
+
+    <div className="swiper-slide">
+      <img src={banner1} className="hero-img"/>
     </div>
-     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
-    </div>      
+
+    <div className="swiper-slide">
+      <img src={banner2} className="hero-img"/>
+    </div>
+
+    <div className="swiper-slide">
+      <img src={banner3} className="hero-img"/>
+    </div>
+
+  </div>
+
+  <div className="swiper-pagination"></div>
+  <div className="swiper-button-next"></div>
+  <div className="swiper-button-prev"></div>
+
+</div>    
             <div className="container mt-5" data-aos="zoom-in">
                 <h2 className="fw-bold text-center mb-4">Product Categories</h2>
 
