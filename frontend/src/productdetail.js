@@ -491,10 +491,6 @@ const [activeTab, setActiveTab] = useState("specifications");
 
                                 <div className="card-body d-flex flex-column">
                                     <h6 className="fw-semibold">{a.ProductName}</h6>
-<div className="d-flex gap-3 text-center mx-auto align-items-center align-content-center">
-      <p className=" text-danger  h5">₹{a.ProductPrice}</p>
-      <p className="h4 fw-bold text-success">₹{a.SalePrice}</p>
-</div>
   <div className="mb-2 text-warning">
     <i className="bi bi-star-fill"></i>
     <i className="bi bi-star-fill"></i>
@@ -503,7 +499,17 @@ const [activeTab, setActiveTab] = useState("specifications");
     <i className="bi bi-star"></i>
     <span className="text-muted small ms-1">(4.3)</span>
 </div>
-                                    <div className="d-flex gap-2 py-2">
+ <p className="d-flex justify-content-center align-self-center text-center">
+                                        <span className=" ">
+                                            ₹{a.ProductPrice}
+                                        </span>
+                                        <span className=" text-success fw-bold ms-1 ">
+                                            ₹{a.SalePrice}
+                                        </span>
+                                        
+
+                                    </p>
+                                    <div className="d-flex flex-column flex-md-row gap-1">
                                         <Link to={`/detail?id=${a._id}&cid=${catidd} `}>
                                             <button className="btn btn-primary mt-auto w-100">
                                                 View Product

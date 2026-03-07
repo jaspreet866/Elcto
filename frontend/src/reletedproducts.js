@@ -212,10 +212,16 @@ export const Related = () => {
     <span className="text-muted small ms-1">(4.3)</span>
 </div>
 
-                                        <p className="mb-3">
-                                            <span className=" me-2">₹{b.ProductPrice}</span>
-                                            <span className="h6 fs-5 text-success fw-bold me-2">₹{b.SalePrice}</span>
-                                        </p>
+                                       <p className="d-flex justify-content-center align-self-center text-center">
+                                        <span className=" ">
+                                            ₹{b.ProductPrice}
+                                        </span>
+                                        <span className=" text-success fw-bold ms-1 ">
+                                            ₹{b.SalePrice}
+                                        </span>
+                                        
+
+                                    </p>
 
                                         <button className="btn btn-primary btn-sm w-75">
                                             View Product
