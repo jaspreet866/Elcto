@@ -1,9 +1,8 @@
 
 import { useContext, useEffect, useState, } from 'react'
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
-
-import banner1 from './images/banner1.png'
 import banner2 from './images/banner2.png'
+import banner1 from './images/banner1.png'
 import banner3 from './images/banner3.png'
 import { Context } from './usecontext'
 import Swal from 'sweetalert2'
@@ -51,24 +50,6 @@ export const Main = () => {
             },
         }).mount();
     }, 300);
-    useEffect(() => {
-
-  new window.Swiper(".heroSwiper", {
-    loop: true,
-    autoplay: {
-      delay: 3000,
-    },
-    pagination: {
-      el: ".swiper-pagination",
-      clickable: true,
-    },
-    navigation: {
-      nextEl: ".swiper-button-next",
-      prevEl: ".swiper-button-prev",
-    },
-  });
-
-}, []);
 
     useEffect(() => {
   
@@ -313,29 +294,21 @@ export const Main = () => {
     return (
         <>
    
-  <div className="swiper heroSwiper">
-
-  <div className="swiper-wrapper">
-
-    <div className="swiper-slide">
-      <img src={banner1} className="hero-img"/>
+  <div className='container-fluid'>
+    <div id="carouselExample" className='carousel slide'>
+        <div className='carousel-inner'>
+            <div className='carousel-item'>
+                <img src={banner1}></img>
+            </div>
+            <div className='carousel-item'>
+                <img src={banner2}></img>
+            </div>
+            <div className='carousel-item'>
+                <img src={banner3}></img>
+            </div>
+        </div>
     </div>
-
-    <div className="swiper-slide">
-      <img src={banner2} className="hero-img"/>
-    </div>
-
-    <div className="swiper-slide">
-      <img src={banner3} className="hero-img"/>
-    </div>
-
-  </div>
-
-  <div className="swiper-pagination"></div>
-  <div className="swiper-button-next"></div>
-  <div className="swiper-button-prev"></div>
-
-</div>    
+    </div>      
             <div className="container mt-5" data-aos="zoom-in">
                 <h2 className="fw-bold text-center mb-4">Product Categories</h2>
 
