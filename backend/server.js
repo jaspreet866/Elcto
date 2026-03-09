@@ -260,8 +260,7 @@ app.post("/api/product", upload.single("pic"), async (req, res) => {
         SalePrice: req.body.saleprice,
         Brand: req.body.brand,
         Specifications: req.body.Specifications,
-
-        Img: pic
+        Img: req.file.filename
     })
 
     if (result) {
