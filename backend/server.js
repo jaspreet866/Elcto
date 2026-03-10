@@ -2,8 +2,8 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 const express = require('express')
 const multer = require('multer')
-import { CloudinaryStorage } from "multer-storage-cloudinary"
-import cloudinary from "./cloudinary.js"
+const { CloudinaryStorage } = require('multer-storage-cloudinary')
+const cloudinary = require('cloudinary').v2
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const key = "$@*#5gf*yre@gutcf&@*#$234ju6"
