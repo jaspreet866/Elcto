@@ -1,7 +1,9 @@
 const mongoose = require('mongoose')
 const cors = require('cors')
 const express = require('express')
-const multer = require('multer')
+import multer from "multer"
+import { CloudinaryStorage } from "multer-storage-cloudinary"
+import cloudinary from "./cloudinary.js"
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const key = "$@*#5gf*yre@gutcf&@*#$234ju6"
@@ -130,28 +132,26 @@ app.put("/api/changestatus/:id", async (req, res) => {
 
 // category api
 
-var pic;
-
-const myStorage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "public/uploads")
-    },
-    filename: (req, file, cb) => {
-        pic = Date.now() + "-" + file.originalname
-        cb(null, pic)
-    }
+const myStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "electomart",
+    allowed_formats: ["jpg", "png", "jpeg", "webp"]
+  }
 })
+
+const upload = multer({ storage: myStorage })
 const Category = new mongoose.Schema({
     Name: String,
     Img: String
 })
-const upload = multer({ storage: myStorage })
+
 const Cate = mongoose.model("category", Category)
 
 app.post("/api/category", upload.single("pic"), async (req, res) => {
     const result = new Cate({
         Name: req.body.name,
-        Img: pic
+        Img: req.file.path
     })
     if (result) {
         const resp = await result.save()
@@ -188,7 +188,7 @@ app.post("/api/brand", upload.single("pic"), async (req, res) => {
     const result = new br({
         BrandName: req.body.brandname,
         Category: req.body.category,
-        Img: pic
+        Img: req.file.path
     })
     if (result) {
         const resp = await result.save()
@@ -260,7 +260,7 @@ app.post("/api/product", upload.single("pic"), async (req, res) => {
         SalePrice: req.body.saleprice,
         Brand: req.body.brand,
         Specifications: req.body.Specifications,
-        Img: pic
+        Img: req.file.path
     })
 
     if (result) {
@@ -347,7 +347,7 @@ app.put("/api/updatepro/:id", upload.single("pic"), async (req, res) => {
             SalePrice: req.body.saleprice,
             Brand: req.body.brand,
             Specifications: req.body.specifications,
-            Img: pic
+            Img: req.file.path
         }
     })
     if (result.modifiedCount === 1) {
