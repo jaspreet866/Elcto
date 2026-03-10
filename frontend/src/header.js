@@ -76,15 +76,15 @@ export const Header = () => {
                         <ul className="navbar-nav ms-auto mb-2 mb-lg-0 gap-lg-2">
 
                             <li className="nav-item">
-                                <a className="nav-link active fw-semibold" href="#">
+                                <Link className="nav-link active fw-semibold" to="/" >
                                     Home
-                                </a>
+                                </Link>
                             </li>
 
                             <li className="nav-item">
-                                <a className="nav-link" href="#">
+                                <Link className="nav-link" to="/about">
                                     About
-                                </a>
+                                </Link>
                             </li>
 
 
