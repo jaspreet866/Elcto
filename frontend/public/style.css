@@ -391,14 +391,6 @@ font-weight:700;
 font-size:16px;
 }
 
-/* Buttons */
-
-.product-buttons{
-display:flex;
-flex-direction:column;
-gap:6px;
-}
-
 /* Mobile Optimization */
 
 @media (max-width:576px){
