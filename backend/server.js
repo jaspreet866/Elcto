@@ -132,7 +132,7 @@ app.put("/api/changestatus/:id", async (req, res) => {
 
 
 
-const cloudinary=cloudinary.config({
+const cloudinaryy=cloudinary.config({
     cloud_name: process.env.Cloud_name,
     api_key: process.env.Api_key,
     api_secret: process.env.Secret_key
@@ -141,7 +141,7 @@ const cloudinary=cloudinary.config({
 // category api
 
 const myStorage = new CloudinaryStorage({
-  cloudinary: cloudinary,
+  cloudinary: cloudinaryy,
   params: {
     folder: "electomart",
     allowed_formats: ["jpg", "png", "jpeg", "webp"]
