@@ -1,1 +1,32 @@
+
+
+# dependencies
+node_modules/
+
+# environment variables
 .env
+
+# logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+
+
+# uploads (if you previously used multer local storage)
+public/uploads/
+
+# IDE
+.vscode/
+.idea/
+
+# temporary files
+*.tmp
+*.temp
+
