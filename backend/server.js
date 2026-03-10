@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const cors = require('cors')
 const express = require('express')
-import multer from "multer"
+const multer = require('multer')
 import { CloudinaryStorage } from "multer-storage-cloudinary"
 import cloudinary from "./cloudinary.js"
 const bcrypt = require('bcrypt')
