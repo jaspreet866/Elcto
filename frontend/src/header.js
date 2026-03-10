@@ -89,14 +89,14 @@ export const Header = () => {
 
 
                              <li className="nav-item dropdown">
-                                <a
+                                <Link
                                     className="nav-link dropdown-toggle"
                                     role="button"
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false"
                                 >
                                     Products
-                                </a>
+                                </Link>
                                 <ul className="dropdown-menu shadow-sm">
                                     <Link className="text-decoration-none" to={`/related?id=6970dd16300a757a6dcdb928`}><li><a className="dropdown-item">LED</a></li></Link>
                                     <Link className="text-decoration-none" to={`/related?id=6970dd60300a757a6dcdb92e`}><li><a className="dropdown-item">Laptops</a></li></Link>
