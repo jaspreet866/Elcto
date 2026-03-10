@@ -76,75 +76,71 @@ export const Header = () => {
                         <ul className="navbar-nav ms-auto mb-2 mb-lg-0 gap-lg-2">
 
                             <li className="nav-item">
-                                <Link className="nav-link active fw-semibold" to="/" >
+                                <a className="nav-link active fw-semibold" href="#">
                                     Home
-                                </Link>
+                                </a>
                             </li>
 
                             <li className="nav-item">
-                                <Link className="nav-link" to="/about">
+                                <a className="nav-link" href="#">
                                     About
-                                </Link>
+                                </a>
                             </li>
 
 
                             <li className="nav-item dropdown">
-                                    <button
-                                        className="nav-link dropdown-toggle btn btn-link p-0"
-                                        type="button"
-                                        data-bs-toggle="dropdown"
-                                        aria-expanded="false"
-                                    >
-                                        Products
-                                    </button>
-                                    <ul className="dropdown-menu shadow-sm">
-                                        <li><Link className="dropdown-item" to={`/related?id=6970dd16300a757a6dcdb928`}>LED</Link></li>
-                                        <li><Link className="dropdown-item" to={`/related?id=6970dd60300a757a6dcdb92e`}>Laptops</Link></li>
-                                        <li><Link className="dropdown-item" to={`/related?id=6970dd2d300a757a6dcdb92a`}>Mobiles</Link></li>
-                                        <li><Link className="dropdown-item" to={`/related?id=69849f299a77c6ecd3c2839b`}>Airpods</Link></li>
-                                        <li><Link className="dropdown-item" to={`/related?id=69849fa89a77c6ecd3c283af`}>Cameras</Link></li>
-                                    </ul>
+                                <a
+                                    className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" >
+                                    Products
+                                </a>
+                                <ul className="dropdown-menu shadow-sm">
+                                    <Link className="text-decoration-none" to={`/related?id=6970dd16300a757a6dcdb928`}><li><a className="dropdown-item">LED</a></li></Link>
+                                    <Link className="text-decoration-none" to={`/related?id=6970dd60300a757a6dcdb92e`}><li><a className="dropdown-item">Laptops</a></li></Link>
+                                    <Link className="text-decoration-none" to={`/related?id=6970dd2d300a757a6dcdb92a`}><li><a className="dropdown-item">Mobiles</a></li></Link>
+                                    <Link className="text-decoration-none" to={`/related?id=69849f299a77c6ecd3c2839b`}><li><a className="dropdown-item">Airpods</a></li></Link>
+                                    <Link className="text-decoration-none" to={`/related?id=69849fa89a77c6ecd3c283af`}><li><a className="dropdown-item">Cameras</a></li></Link>
+                                </ul>
                             </li>
 
 
                             <li className="nav-item dropdown">
-                                    <button
-                                        className="nav-link dropdown-toggle btn btn-link p-0"
-                                        type="button"
-                                        data-bs-toggle="dropdown"
-                                        aria-expanded="false"
-                                    >
-                                        Features
-                                    </button>
-                                    <ul className="dropdown-menu shadow-sm">
-                                        <li><Link className="dropdown-item" to="/about">About Us</Link></li>
-                                        <li><Link className="dropdown-item" to="/contact">Contact Us</Link></li>
-                                        <li><Link className="dropdown-item" to="/myorder">Order</Link></li>
-                                    </ul>
+                                <a
+                                    className="nav-link dropdown-toggle"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    Features
+                                </a>
+                                <ul className="dropdown-menu shadow-sm">
+                                    <li><a className="dropdown-item">About Us</a></li>
+                                    <li><a className="dropdown-item">Contact Us</a></li>
+                                    <li><a className="dropdown-item">Order</a></li>
+                                </ul>
                             </li>
 
                             {/* ACCOUNT */}
                             <li className="nav-item dropdown">
-                                    <button
-                                        className="nav-link dropdown-toggle btn btn-link p-0"
-                                        type="button"
-                                        data-bs-toggle="dropdown"
-                                        aria-expanded="false"
-                                    >
-                                        Account
-                                    </button>
-                                    <ul className="dropdown-menu dropdown-menu-end shadow-sm">
-                                        <li>
-                                            {flag ? (
-                                                <button className="dropdown-item text-center" onClick={logout}>Logout</button>
-                                            ) : (
-                                                <div className="px-3 py-2">
-                                                    <Link className="d-block text-decoration-none text-black mb-2" to="/login">Log IN</Link>
-                                                    <Link className="d-block text-decoration-none text-black" to="/register">SignUp</Link>
-                                                </div>
-                                            )}
-                                        </li>
-                                    </ul>
+                                <a
+                                    className="nav-link dropdown-toggle"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    Account
+                                </a>
+                                <ul className="dropdown-menu dropdown-menu-end shadow-sm">
+                                    <li>
+                                        {flag ? <>
+                                            <p onClick={logout} className=" text-center dropdown-item justify-content-center align-content-center">
+                                                Logout
+                                            </p></>
+                                            : <>
+                                                <Link className=" text-decoration-none text-black text-center ms-4" to="/login">Log IN</Link><br></br>
+                                                <Link className="text-decoration-none text-black text-center ms-4" to="/register">SignUp</Link>
+                                            </>}
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
 
@@ -196,11 +192,11 @@ export const Header = () => {
                                 </span>
                                 <i className="bi bi-chevron-down"></i>
                             </a>
-                                <div className="collapse text-start" id="productsCollapse">
+                            <div className="collapse text-start" id="productsCollapse">
                                 <div className="ps-4 py-2">
-                                    <Link className="dropdown-item py-2" to={`/related?id=6970dd16300a757a6dcdb928`}>LEDs</Link>
-                                    <Link className="dropdown-item py-2" to={`/related?id=6970dd60300a757a6dcdb92e`}>Laptops</Link>
-                                    <Link className="dropdown-item py-2" to={`/related?id=6970dd2d300a757a6dcdb92a`}>Mobiles</Link>
+                                    <a className="dropdown-item py-2" >LEDs</a>
+                                    <a className="dropdown-item py-2" >Laptops</a>
+                                    <a className="dropdown-item py-2" >Mobiles</a>
                                 </div>
                             </div>
                         </li>
