@@ -2,6 +2,8 @@ import { Link, useNavigate } from "react-router-dom"
 import { useContext, useState, useEffect } from "react"
 import { Context } from "./usecontext";
 import logo from "./images/WhatsApp Image 2026-02-12 at 11.08.16 AM.png"
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 export const Header = () => {
     const [flag, setflag] = useState(false);
