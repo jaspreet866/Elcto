@@ -311,7 +311,7 @@ Camera: 48MP`} value={specifications}
                                 <div className="card  w-100 my-auto mt-3   " style={{ height: "auto" }}>
                                     <div className="d-flex align-items-center justify-content-between px-4 py-2">
                                         <div>
-                                            <img style={{ height: "80px", width: "80px" }} src={`/uploads/${a.Img}`}></img></div>
+                                            <img style={{ height: "80px", width: "80px" }} src={`${a.Img}`}></img></div>
                                         <div>
                                             <p>Name: {a.ProductName}</p>
                                             <div className="d-flex gap-4">
