@@ -132,7 +132,8 @@ app.put("/api/changestatus/:id", async (req, res) => {
 
 
 
-const cloud=cloudinary.config({
+// configure cloudinary (use the cloudinary object directly)
+cloudinary.config({
     cloud_name: process.env.Cloud_name,
     api_key: process.env.Api_key,
     api_secret: process.env.Secret_key
@@ -141,11 +142,11 @@ const cloud=cloudinary.config({
 // category api
 
 const myStorage = new CloudinaryStorage({
-  cloudinary: cloud,
-  params: {
-    folder: "electomart",
-    allowed_formats: ["jpg", "png", "jpeg", "webp"]
-  }
+    cloudinary: cloudinary,
+    params: {
+        folder: "electomart",
+        allowed_formats: ["jpg", "png", "jpeg", "webp"]
+    }
 })
 
 const upload = multer({ storage: myStorage })
@@ -461,7 +462,9 @@ app.post("/api/response", async (req, res) => {
     if (result) {
         const response = await result.save()
         if (response) {
-            res.send({ statuscode: 1 })
+        // multer-storage-cloudinary exposes the uploaded file info on req.file
+        // use req.file.path (Cloudinary URL) when present
+        Img: req.file ? req.file.path : "no-image.png"
         }
         else {
             res.send({ statuscode: 0 })
