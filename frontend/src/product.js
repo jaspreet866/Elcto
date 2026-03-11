@@ -195,6 +195,7 @@ export const Product = () => {
         setbrand(a.Brand)
         setproduct(a.Category)
         setSpecifications(a.Specifications)
+        setimg(a.Img)
     }
 
 
