@@ -145,7 +145,7 @@ const myStorage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: "electomart",
-        allowed_formats: ["jpg", "png", "jpeg", "webp"]
+        allowed_formats: ["jpg", "png", "jpeg", "webp","avif"]
     }
 })
 
