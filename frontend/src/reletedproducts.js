@@ -194,7 +194,7 @@ export const Related = () => {
 
                                     <div className="d-flex justify-content-center align-items-center mb-3" style={{ height: "150px" }}>
                                         <img
-                                            src={`/uploads/${b.Img}`}
+                                            src={`${b.Img}`}
                                             alt={b.ProductName}
                                             className="img-fluid"
                                             style={{ maxHeight: "120px" }}

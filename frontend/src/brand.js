@@ -41,7 +41,7 @@ export const Brand = () => {
                 <div className="card w-100 border-0 shadow-sm text-center p-3">
                   <div className=" rounded d-flex justify-content-center align-items-center mb-3" style={{ height: "150px" }}>
                     <img
-                      src={`/uploads/${a.Img}`}
+                      src={`${a.Img}`}
                       alt={a.name}
                       className="img-fluid"
                       style={{ maxHeight: "120px" }}
