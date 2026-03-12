@@ -345,8 +345,9 @@ app.delete("/api/deletepro/:id", async (req, res) => {
 })
 
 app.put("/api/updatepro/:id", upload.single("pic"), async (req, res) => {
-    const result = await pro.updateOne({ _id: req.params.id }, {
-        $set: {
+    try {
+        // Build update object conditionally to avoid accessing req.file when undefined
+        const updateFields = {
             Category: req.body.productt,
             ProductName: req.body.name,
             ProductPrice: req.body.price,
@@ -355,17 +356,27 @@ app.put("/api/updatepro/:id", upload.single("pic"), async (req, res) => {
             Date: new Date(),
             SalePrice: req.body.saleprice,
             Brand: req.body.brand,
-            Specifications: req.body.specifications,
-            Img: req.file.path
+            Specifications: req.body.specifications || req.body.Specifications
+        };
+
+        // If a file was uploaded, set Img to the Cloudinary path; otherwise leave unchanged
+        if (req.file && req.file.path) {
+            updateFields.Img = req.file.path;
         }
-    })
-    if (result.modifiedCount === 1) {
-        res.send({ statuscode: 1 })
+
+        const result = await pro.updateOne({ _id: req.params.id }, { $set: updateFields });
+
+        if (result.modifiedCount === 1) {
+            res.send({ statuscode: 1 });
+        } else {
+            // If nothing was modified, still return success with info (caller can interpret)
+            res.send({ statuscode: 0, message: 'No changes made' });
+        }
+    } catch (err) {
+        console.error('Error in /api/updatepro/:id', err);
+        res.status(500).send({ statuscode: 0, error: err.message });
     }
-    else {
-        res.send({ statuscode: 0 })
-    }
-})
+});
 
 app.get("/api/related/:id", async (req, res) => {
     const result = await pro.find({ Category: req.params.id })
