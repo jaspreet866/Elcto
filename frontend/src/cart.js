@@ -135,7 +135,7 @@ export const Cart = () => {
                                         d.map((a, index) =>
                                             <tr key={index}>
                                                 <td><button className="btn" onClick={() => remove(a._id)}><i class="bi bi-trash3-fill"></i></button></td>
-                                                <td><img style={{ height: "60px" }} src={`/uploads/${a.Img}`}></img></td>
+                                                <td><img style={{ height: "60px" }} src={`${a.Img}`}></img></td>
                                                 <td>{a.Name}</td>
                                                 <td>{a.Price}</td>
                                                 <td><div className="d-flex justify-content-center align-items-center gap-2">

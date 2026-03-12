@@ -340,7 +340,7 @@ export const Dashboard = () => {
                                                 {order.Order.map((item, idx) => (
                                                     <div key={idx} className="d-flex align-items-center gap-3 mb-2">
                                                         <img
-                                                            src={`/uploads/${item.Img}`}
+                                                            src={`${item.Img}`}
                                                             width="50"
                                                             height="50"
                                                             className="rounded"

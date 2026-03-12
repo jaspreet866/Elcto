@@ -246,7 +246,7 @@ const [activeTab, setActiveTab] = useState("specifications");
                         {/* Product Image */}
                         <div className="col-lg-6 text-center col-12">
                             <img
-                                src={`/uploads/${img}`}
+                                src={`${img}`}
                                 className="img-fluid rounded"
                                 style={{ maxHeight: "420px", objectFit: "contain" }}
                                 alt={name}
@@ -482,7 +482,7 @@ const [activeTab, setActiveTab] = useState("specifications");
                                 </div>
                                 <div className="">
                                     <img
-                                        src={`/uploads/${a.Img}`}
+                                        src={`${a.Img}`}
                                         className="card-img-top p-3"
                                         alt={a.ProductName}
                                         style={{ height: "140px", objectFit: "contain" }}

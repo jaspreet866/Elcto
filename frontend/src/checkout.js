@@ -124,7 +124,7 @@ export const Check = () => {
                                             <tr key={a._id}>
                                                 <td style={{ width: "50px" }}>
                                                     <img
-                                                        src={`/uploads/${a.Img}`}
+                                                        src={`${a.Img}`}
                                                         alt={a.Name}
                                                         className="img-fluid rounded"
                                                         style={{ height: "40px", width: "40px", objectFit: "cover" }}
