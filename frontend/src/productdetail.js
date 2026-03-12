@@ -509,14 +509,11 @@ const [activeTab, setActiveTab] = useState("specifications");
                                         
 
                                     </p>
-                                    <div className="d-flex flex-column flex-md-row gap-1">
-                                        <Link to={`/detail?id=${a._id}&cid=${catidd} `}>
-                                            <button className="btn btn-sm btn-primary w-100">
-                                                View Product
-                                            </button></Link>
-                                        <button className="btn btn-sm btn-primary w-100" onClick={goto}>
-                                            Add to Cart
-                                        </button>
+                                    <div className='d-flex flex-column flex-md-row gap-1'>
+                                        <Link to={`/detail?id=${a._id}&cid=${catid} `} className="btn btn-primary btn-sm w-100 ">
+                                            View Product
+                                        </Link>
+                                        <button className='btn btn-danger btn-sm w-100 ' onClick={goto}>Add to Cart</button>
                                     </div>
                                 </div>
                             </div>
