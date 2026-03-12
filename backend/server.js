@@ -157,6 +157,32 @@ const Category = new mongoose.Schema({
 
 const Cate = mongoose.model("category", Category)
 
+app.post("/api/category", upload.single("pic"), async (req, res) => {
+    const result = new Cate({
+        Name: req.body.name,
+        Img: pic
+    })
+    if (result) {
+        const resp = await result.save()
+        if (resp) {
+            res.send({ statuscode: 1 })
+        }
+        else {
+            res.send({ statuscode: 0 })
+        }
+    }
+})
+
+app.get("/api/getcategory", async (req, res) => {
+    const result = await Cate.find()
+    if (result) {
+        res.send({ statuscode: 1, data: result })
+    }
+    else {
+        res.send({ statuscode: 0 })
+    }
+})
+
 app.put("/api/updatepro/:id", async (req, res) => {
     // Run multer upload inside the route so we can catch upload errors (Cloudinary/multer)
     upload.single("pic")(req, res, async function (uploadErr) {
