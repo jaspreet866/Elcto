@@ -397,7 +397,7 @@ export const Main = () => {
                                     style={{ height: "150px" }}
                                 >
                                     <img
-                                        src={`/uploads/${p.Img}`}
+                                        src={`${p.Img}`}
                                         alt={p.name}
                                         className="img-fluid rounded"
                                         style={{ height: "150px" }}
@@ -465,7 +465,7 @@ export const Main = () => {
                                 </div>
                                 <div className=" rounded d-flex justify-content-center align-items-center mb-3" style={{ height: "150px" }}>
                                     <img
-                                        src={`/uploads/${p.Img}`}
+                                        src={`${p.Img}`}
                                         alt={p.name}
                                         className="img-fluid"
                                         style={{ maxHeight: "120px" }}
@@ -526,7 +526,7 @@ export const Main = () => {
                                 </div>
                                 <div className=" rounded d-flex justify-content-center align-items-center mb-3" style={{ height: "150px" }}>
                                     <img
-                                        src={`/uploads/${p.Img}`}
+                                        src={`${p.Img}`}
                                         alt={p.name}
                                         className="img-fluid"
                                         style={{ maxHeight: "120px" }}
@@ -587,7 +587,7 @@ export const Main = () => {
                                 </div>
                                 <div className=" rounded d-flex justify-content-center align-items-center mb-3" style={{ height: "150px" }}>
                                     <img
-                                        src={`/uploads/${p.Img}`}
+                                        src={`${p.Img}`}
                                         alt={p.name}
                                         className="img-fluid"
                                         style={{ maxHeight: "120px" }}
@@ -647,7 +647,7 @@ export const Main = () => {
                                 </div>
                                 <div className=" rounded d-flex justify-content-center align-items-center mb-3" style={{ height: "150px" }}>
                                     <img
-                                        src={`/uploads/${p.Img}`}
+                                        src={`${p.Img}`}
                                         alt={p.name}
                                         className="img-fluid"
                                         style={{ maxHeight: "120px" }}
@@ -708,7 +708,7 @@ export const Main = () => {
                                 </div>
                                 <div className=" rounded d-flex justify-content-center align-items-center mb-3" style={{ height: "150px" }}>
                                     <img
-                                        src={`/uploads/${p.Img}`}
+                                        src={`${p.Img}`}
                                         alt={p.name}
                                         className="img-fluid"
                                         style={{ maxHeight: "120px" }}
