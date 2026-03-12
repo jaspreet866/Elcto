@@ -67,7 +67,8 @@ export const Product = () => {
             }
         }
     }
-    const show = async () => {
+    const show = async (e) => {
+        e.preventDefault()
         const result = await fetch("https://elcto-1.onrender.com/api/getcategory", {
             method: "get"
         })
