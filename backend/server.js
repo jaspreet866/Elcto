@@ -199,6 +199,12 @@ app.put("/api/updatepro/:id", async (req, res) => {
     });
 });
 
+const brand = new mongoose.Schema({
+    BrandName: String,
+    Category: String,
+    Img: String
+})
+
 const br = mongoose.model("Brands", brand)
 
 app.post("/api/brand", upload.single("pic"), async (req, res) => {
