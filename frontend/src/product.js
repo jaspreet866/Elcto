@@ -155,7 +155,8 @@ export const Product = () => {
     };
 
 
-    const update = async () => {
+    const update = async (e) => {
+        e.preventDefault()
         const formData2 = new FormData()
         formData2.append("name", name)
         formData2.append("productt", product)
