@@ -35,7 +35,8 @@ export const Product = () => {
         }
     }, [id])
 
-    const add = async () => {
+    const add = async (e) => {
+        e.preventDefault()
 
         const formData = new FormData()
         formData.append("name", name)
@@ -67,7 +68,8 @@ export const Product = () => {
             }
         }
     }
-    const show = async () => {
+    const show = async (e) => {
+        e.preventDefault()
        
         const result = await fetch("https://elcto-1.onrender.com/api/getcategory", {
             method: "get"
@@ -160,7 +162,7 @@ export const Product = () => {
 
     const update = async (e) => {
 
-
+e.preventDefault()
     const formData2 = new FormData()
     formData2.append("name", name)
     formData2.append("productt", product)
