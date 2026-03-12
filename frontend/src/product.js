@@ -286,7 +286,7 @@ Camera: 48MP`} value={specifications}
                                     <input class="form-control mt-3" type="file" id="formFile" onChange={(e) => setimg(e.target.files[0])} />
                                 </div>
                                 <button className="btn btn-primary" onClick={add}>Add Product </button>
-                                <button className="btn ms-5 btn-danger" onClick={update}>Update</button>
+                                <button type="button" className="btn ms-5 btn-danger" onClick={update}>Update</button>
 
                             </form>
                         </div>
