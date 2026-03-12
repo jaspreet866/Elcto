@@ -156,36 +156,42 @@ export const Product = () => {
 
 
     const update = async (e) => {
-        e.preventDefault()
-        const formData2 = new FormData()
-        formData2.append("name", name)
-        formData2.append("productt", product)
-        formData2.append("price", price)
-        formData2.append("pic", img)
-        formData2.append("saleprice", saleprice)
-        formData2.append("detail", detail)
-        formData2.append("sale", sale)
-        formData2.append("brand", brand)
-        formData2.append("specifications", specifications);
+    e.preventDefault()
 
-        const result = await fetch(`https://elcto-1.onrender.com/api/updatepro/${idd}`, {
-            method: "put",
-            body: formData2
-        })
-        if (result.ok) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                Swal.fire({
-                    icon: "success",
-                    title: "Updation",
-                    text: "Updated Successfully"
-                })
-            }
-            else {
-                alert("not")
-            }
+    const formData2 = new FormData()
+    formData2.append("name", name)
+    formData2.append("productt", product)
+    formData2.append("price", price)
+    formData2.append("saleprice", saleprice)
+    formData2.append("detail", detail)
+    formData2.append("sale", sale)
+    formData2.append("brand", brand)
+    formData2.append("specifications", specifications)
+
+    // send image ONLY if it is a File
+    if (img instanceof File) {
+        formData2.append("pic", img)
+    }
+
+    const result = await fetch(`https://elcto-1.onrender.com/api/updatepro/${idd}`, {
+        method: "PUT",
+        body: formData2
+    })
+
+    if (result.ok) {
+        const res = await result.json()
+
+        if (res.statuscode === 1) {
+            Swal.fire({
+                icon: "success",
+                title: "Updation",
+                text: "Updated Successfully"
+            })
+
+            show3()
         }
     }
+}
     const updatedata = (a) => {
         setidd(a._id)
         setname(a.ProductName)
@@ -196,7 +202,7 @@ export const Product = () => {
         setbrand(a.Brand)
         setproduct(a.Category)
         setSpecifications(a.Specifications)
-        setimg(a.Img)
+        // setimg(a.Img)
     }
 
 
