@@ -157,39 +157,47 @@ const Category = new mongoose.Schema({
 
 const Cate = mongoose.model("category", Category)
 
-app.post("/api/category", upload.single("pic"), async (req, res) => {
-    const result = new Cate({
-        Name: req.body.name,
-        Img: req.file.path
-    })
-    if (result) {
-        const resp = await result.save()
-        if (resp) {
-            res.send({ statuscode: 1 })
+app.put("/api/updatepro/:id", async (req, res) => {
+    // Run multer upload inside the route so we can catch upload errors (Cloudinary/multer)
+    upload.single("pic")(req, res, async function (uploadErr) {
+        if (uploadErr) {
+            console.error('Upload error in /api/updatepro/:id', uploadErr);
+            return res.status(500).send({ statuscode: 0, error: uploadErr.message });
         }
-        else {
-            res.send({ statuscode: 0 })
+
+        try {
+            // Build update object conditionally to avoid accessing req.file when undefined
+            const updateFields = {
+                Category: req.body.productt,
+                ProductName: req.body.name,
+                ProductPrice: req.body.price,
+                ProductDetail: req.body.detail,
+                OnSale: req.body.sale,
+                Date: new Date(),
+                SalePrice: req.body.saleprice,
+                Brand: req.body.brand,
+                Specifications: req.body.specifications || req.body.Specifications
+            };
+
+            // If a file was uploaded, set Img to the Cloudinary path; otherwise leave unchanged
+            if (req.file && req.file.path) {
+                updateFields.Img = req.file.path;
+            }
+
+            const result = await pro.updateOne({ _id: req.params.id }, { $set: updateFields });
+
+            if (result.modifiedCount === 1) {
+                res.send({ statuscode: 1 });
+            } else {
+                // If nothing was modified, still return informative response
+                res.send({ statuscode: 0, message: 'No changes made' });
+            }
+        } catch (err) {
+            console.error('Error in /api/updatepro/:id', err);
+            res.status(500).send({ statuscode: 0, error: err.message });
         }
-    }
-})
-
-app.get("/api/getcategory", async (req, res) => {
-    const result = await Cate.find()
-    if (result) {
-        res.send({ statuscode: 1, data: result })
-    }
-    else {
-        res.send({ statuscode: 0 })
-    }
-})
-
-//brand api
-
-const brand = new mongoose.Schema({
-    BrandName: String,
-    Category: String,
-    Img: String
-})
+    });
+});
 
 const br = mongoose.model("Brands", brand)
 
@@ -345,9 +353,8 @@ app.delete("/api/deletepro/:id", async (req, res) => {
 })
 
 app.put("/api/updatepro/:id", upload.single("pic"), async (req, res) => {
-    try {
-        // Build update object conditionally to avoid accessing req.file when undefined
-        const updateFields = {
+    const result = await pro.updateOne({ _id: req.params.id }, {
+        $set: {
             Category: req.body.productt,
             ProductName: req.body.name,
             ProductPrice: req.body.price,
@@ -356,27 +363,17 @@ app.put("/api/updatepro/:id", upload.single("pic"), async (req, res) => {
             Date: new Date(),
             SalePrice: req.body.saleprice,
             Brand: req.body.brand,
-            Specifications: req.body.specifications || req.body.Specifications
-        };
-
-        // If a file was uploaded, set Img to the Cloudinary path; otherwise leave unchanged
-        if (req.file && req.file.path) {
-            updateFields.Img = req.file.path;
+            Specifications: req.body.specifications,
+            Img: req.file.path
         }
-
-        const result = await pro.updateOne({ _id: req.params.id }, { $set: updateFields });
-
-        if (result.modifiedCount === 1) {
-            res.send({ statuscode: 1 });
-        } else {
-            // If nothing was modified, still return success with info (caller can interpret)
-            res.send({ statuscode: 0, message: 'No changes made' });
-        }
-    } catch (err) {
-        console.error('Error in /api/updatepro/:id', err);
-        res.status(500).send({ statuscode: 0, error: err.message });
+    })
+    if (result.modifiedCount === 1) {
+        res.send({ statuscode: 1 })
     }
-});
+    else {
+        res.send({ statuscode: 0 })
+    }
+})
 
 app.get("/api/related/:id", async (req, res) => {
     const result = await pro.find({ Category: req.params.id })
@@ -762,5 +759,11 @@ app.get("/api/sales/monthly", async (req, res) => {
         labels: Object.keys(monthly),
         values: Object.values(monthly)
     });
+});
+
+// Global error handler to catch any middleware errors not handled above
+app.use((err, req, res, next) => {
+    console.error('Unhandled server error:', err);
+    res.status(500).send({ statuscode: 0, error: err.message || 'Internal Server Error' });
 });
 
