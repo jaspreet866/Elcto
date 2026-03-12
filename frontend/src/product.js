@@ -214,8 +214,7 @@ e.preventDefault()
 
     return (
       <>
-      {
-        utype ==="admin"?  <>
+     
             <section className="s-page-title d-flex align-items-center justify-content-center text-center">
                 <div className="container-fluid bread">
                     <div className="content">
@@ -343,7 +342,6 @@ Camera: 48MP`} value={specifications}
                 </div>
             </section>
 
-        </>:navigate("/")
-}</>
+  </>
     )
 }
