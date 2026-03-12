@@ -162,7 +162,7 @@ export const Product = () => {
 
     const update = async (e) => {
 
-e.preventDefault()
+    if (e && e.preventDefault) e.preventDefault()
     const formData2 = new FormData()
     formData2.append("name", name)
     formData2.append("productt", product)
@@ -246,7 +246,7 @@ e.preventDefault()
                     <div className="row mt-4">
                         <div className="col col-lg-6 col-md-6 col-sm-12">
                             <h1>Add Product</h1>
-                            <form>
+                            <form onSubmit={add}>
                                 <select className="form-select" value={product} aria-label="Default select example " onChange={(e) => {
                                     setproduct(e.target.value)
                                     setid(e.target.value)
@@ -279,18 +279,17 @@ Camera: 48MP`} value={specifications}
                                 ></textarea>
 
                                 <input type="number" className="form-control mt-3" value={price} placeholder="Product Price" onChange={(e) => setprice(e.target.value)}></input>
-                                <div class="form-check form-switch mt-3">
-                                    <input class="form-check-input" type="checkbox" checked={sale} onChange={(e) => setsale(e.target.checked)} />
-                                    <label class="form-check-label" for="switchCheckChecked">On Sale</label>
+                                <div className="form-check form-switch mt-3">
+                                    <input className="form-check-input" type="checkbox" checked={sale} onChange={(e) => setsale(e.target.checked)} />
+                                    <label className="form-check-label" htmlFor="switchCheckChecked">On Sale</label>
                                 </div>
 
                                 <input type="number" className="form-control mt-3" value={saleprice} placeholder="Sale Price" onChange={(e) => setsaleprice(e.target.value)}></input>
 
-                                <div class="mb-3">
-
-                                    <input class="form-control mt-3" type="file" id="formFile" onChange={(e) => setimg(e.target.files[0])} />
+                                <div className="mb-3">
+                                    <input className="form-control mt-3" type="file" id="formFile" onChange={(e) => setimg(e.target.files[0])} />
                                 </div>
-                                <button className="btn btn-primary" onClick={add}>Add Product </button>
+                                <button type="submit" className="btn btn-primary">Add Product </button>
                                 <button type="button" className="btn ms-5 btn-danger" onClick={update}>Update</button>
 
                             </form>
@@ -324,7 +323,7 @@ Camera: 48MP`} value={specifications}
                                 <div className="card  w-100 my-auto mt-3   " style={{ height: "auto" }}>
                                     <div className="d-flex align-items-center justify-content-between px-4 py-2">
                                         <div>
-                                            <img style={{ height: "80px", width: "80px" }} src={`${a.Img}`}></img></div>
+                                            <img style={{ height: "80px", width: "80px" }} src={`${a.Img}`} alt={a.ProductName || 'product'} /></div>
                                         <div>
                                             <p>Name: {a.ProductName}</p>
                                             <div className="d-flex gap-4">
