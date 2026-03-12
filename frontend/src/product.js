@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import Swal from "sweetalert2"
 import { Context } from "./usecontext"
+import e from "cors"
 
 export const Product = () => {
 
@@ -93,7 +94,8 @@ export const Product = () => {
             }
         }
     }
-    const show3 = async () => {
+    const show3 = async (e) => {
+        e.preventDefault()
         const result = await fetch("https://elcto-1.onrender.com/api/getproduct", {
             method: "get"
         })
