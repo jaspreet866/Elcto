@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import Swal from "sweetalert2"
 import { Context } from "./usecontext"
-import e from "cors"
+
 
 export const Product = () => {
 
