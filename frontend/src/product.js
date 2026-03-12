@@ -26,7 +26,7 @@ export const Product = () => {
 
 
     useEffect(() => {
-        show();
+     
         show3()
     }, [])
     useEffect(() => {
