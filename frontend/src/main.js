@@ -373,7 +373,7 @@ export const Main = () => {
                 </div>
 
             </div>
-            <section className="container " data-aos="fade-up">
+            <section className="container py-4 mt-2" data-aos="fade-up">
                 <div className=" align-items-center  ">
                     <h2 className="fw-bold">Latest Products</h2>
                     <span className="text-muted small">New arrivals just for you</span>
@@ -440,7 +440,7 @@ export const Main = () => {
                     ))}
                 </div>
             </section>
-            <section className="container  py-3">
+            <section className="container  py-4 mt-2" data-aos="fade-up">
                 <div className=" align-items-center mb-4 mt-2">
                     <h2 className="fw-bold">🔥 On Sale Products</h2>
 
@@ -506,7 +506,7 @@ export const Main = () => {
                     ))}
                 </div>
             </section>
-            <section className="container  py-3">
+            <section className="container  py-4 mt-2" data-aos="fade-up">
                 <div className=" align-items-center mb-4 ">
                     <h2 className="fw-bold">🔥 Our Mobile Collection</h2>
 
@@ -567,7 +567,7 @@ export const Main = () => {
                     ))}
                 </div>
             </section>
-            <section className="container py-3">
+            <section className="container py-4 mt-2" data-aos="fade-up">
                 <div className=" align-items-center mb-4 ">
                     <h2 className="fw-bold">🔥 Our Laptop Collection</h2>
 
@@ -627,7 +627,7 @@ export const Main = () => {
                     ))}
                 </div>
             </section>
-            <section className="container  py-3">
+            <section className="container  py-4 mt-2" data-aos="fade-up">
                 <div className=" align-items-center mb-4 ">
                     <h2 className="fw-bold">🔥 Our Airpods Collection</h2>
 
@@ -688,7 +688,7 @@ export const Main = () => {
                     ))}
                 </div>
             </section>
-            <section className="container  py-3">
+            <section className="container  py-4 mt-2" data-aos="fade-up" >
                 <div className=" align-items-center mb-4 ">
                     <h2 className="fw-bold">🔥 Our Led Collection</h2>
 
