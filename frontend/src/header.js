@@ -171,20 +171,20 @@ export const Header = () => {
                 </div>
                 <div className="offcanvas-body">
                     <ul className="navbar-nav">
-                        <li className="nav-item">
+                        <li className="nav-item" data-bs-dismiss="offcanvas">
                             <Link to="/" className="nav-link active fw-semibold py-3 text-start " >
                                 Home
                             </Link>
                         </li>
 
-                        <li className="nav-item">
+                        <li className="nav-item" data-bs-dismiss="offcanvas">
                             <Link to="/about" className="nav-link text-start ">
                                 About
                             </Link>
                         </li>
 
 
-                        <li className="nav-item">
+                        <li className="nav-item" data-bs-dismiss="offcanvas">
                             <a
                                 className="nav-link py-3  d-flex justify-content-between align-items-center"
                                 data-bs-toggle="collapse"
@@ -192,6 +192,7 @@ export const Header = () => {
                                 role="button"
                                 aria-expanded="false"
                                 aria-controls="productsCollapse"
+                                data-bs-dismiss="offcanvas"  
                             >
                                 <span>
                                     Products
