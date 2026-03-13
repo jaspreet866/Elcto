@@ -201,15 +201,15 @@ export const Header = () => {
                             </a>
                             <div className="collapse text-start" id="productsCollapse">
                                 <div className="ps-4 py-2">
-                                    <a className="dropdown-item py-2" >LEDs</a>
-                                    <a className="dropdown-item py-2" >Laptops</a>
-                                    <a className="dropdown-item py-2" >Mobiles</a>
+                                    <a className="dropdown-item py-2" data-bs-dismiss="offcanvas">LEDs</a>
+                                    <a className="dropdown-item py-2" data-bs-dismiss="offcanvas">Laptops</a>
+                                    <a className="dropdown-item py-2" data-bs-dismiss="offcanvas">Mobiles</a>
                                 </div>
                             </div>
                         </li>
 
 
-                        <li className="nav-item">
+                        <li className="nav-item" data-bs-dismiss="offcanvas">
                             <a
                                 className="nav-link py-3  d-flex justify-content-between align-items-center"
                                 data-bs-toggle="collapse"
@@ -225,15 +225,15 @@ export const Header = () => {
                             </a>
                             <div className="collapse text-start" id="featuresCollapse">
                                 <div className="ps-4 py-2">
-                                    <Link to="/about" className="dropdown-item py-2" >About Us</Link>
-                                    <Link className="dropdown-item py-2" >Contact Us</Link>
-                                    <Link to="/myorder" className="dropdown-item py-2" >Order</Link>
+                                    <Link to="/about" className="dropdown-item py-2" data-bs-dismiss="offcanvas">About Us</Link>
+                                    <Link className="dropdown-item py-2" data-bs-dismiss="offcanvas">Contact Us</Link>
+                                    <Link to="/myorder" className="dropdown-item py-2" data-bs-dismiss="offcanvas">Order</Link>
                                 </div>
                             </div>
                         </li>
 
 
-                        <li className="nav-item">
+                        <li className="nav-item" data-bs-dismiss="offcanvas">
                             <a
                                 className="nav-link py-3  d-flex justify-content-between align-items-center"
                                 data-bs-toggle="collapse"
@@ -249,8 +249,8 @@ export const Header = () => {
                             </a>
                             <div className="collapse text-start" id="accountCollapse">
                                 <div className="ps-4 py-2">
-                                    <Link to="/login" className="dropdown-item py-2">Login</Link>
-                                    <Link to="/register" className="dropdown-item py-2" >Sign Up</Link>
+                                    <Link to="/login" className="dropdown-item py-2" data-bs-dismiss="offcanvas">Login</Link>
+                                    <Link to="/register" className="dropdown-item py-2" data-bs-dismiss="offcanvas">Sign Up</Link>
                                 </div>
                             </div>
                         </li>
