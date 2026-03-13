@@ -374,7 +374,7 @@ export const Main = () => {
 
             </div>
             <section className="container " data-aos="fade-up">
-                <div className=" align-items-center  mt-5">
+                <div className=" align-items-center  ">
                     <h2 className="fw-bold">Latest Products</h2>
                     <span className="text-muted small">New arrivals just for you</span>
                 </div>
@@ -440,8 +440,8 @@ export const Main = () => {
                     ))}
                 </div>
             </section>
-            <section className="container mt-5 py-3">
-                <div className=" align-items-center mb-4 mt-5">
+            <section className="container  py-3">
+                <div className=" align-items-center mb-4 mt-2">
                     <h2 className="fw-bold">🔥 On Sale Products</h2>
 
                 </div>
@@ -506,8 +506,8 @@ export const Main = () => {
                     ))}
                 </div>
             </section>
-            <section className="container mt-5 py-3">
-                <div className=" align-items-center mb-4 mt-5">
+            <section className="container  py-3">
+                <div className=" align-items-center mb-4 ">
                     <h2 className="fw-bold">🔥 Our Mobile Collection</h2>
 
                 </div>
@@ -567,8 +567,8 @@ export const Main = () => {
                     ))}
                 </div>
             </section>
-            <section className="container mt-5 py-3">
-                <div className=" align-items-center mb-4 mt-5">
+            <section className="container py-3">
+                <div className=" align-items-center mb-4 ">
                     <h2 className="fw-bold">🔥 Our Laptop Collection</h2>
 
                 </div>
@@ -627,8 +627,8 @@ export const Main = () => {
                     ))}
                 </div>
             </section>
-            <section className="container mt-5 py-3">
-                <div className=" align-items-center mb-4 mt-5">
+            <section className="container  py-3">
+                <div className=" align-items-center mb-4 ">
                     <h2 className="fw-bold">🔥 Our Airpods Collection</h2>
 
                 </div>
@@ -688,8 +688,8 @@ export const Main = () => {
                     ))}
                 </div>
             </section>
-            <section className="container mt-5 py-3">
-                <div className=" align-items-center mb-4 mt-5">
+            <section className="container  py-3">
+                <div className=" align-items-center mb-4 ">
                     <h2 className="fw-bold">🔥 Our Led Collection</h2>
 
                 </div>
@@ -749,7 +749,7 @@ export const Main = () => {
                     ))}
                 </div>
             </section>
-            <section className="container mt-5 py-4" data-aos="fade-up">
+            <section className="container mt-2 py-4" data-aos="fade-up">
                 <h2 className="fw-bold text-center mb-4">Why Choose Us</h2>
                 <div className="row g-4 py-5">
                     <div className="col-md-3 col-6 text-center">
@@ -822,7 +822,7 @@ export const Main = () => {
                 </div>
             </section>
             <section>
-                <div className="container mt-5" >
+                <div className="container mt-3" >
                     <h2>Trusted By</h2>
 
                     <div className="marquee py-5">
