@@ -388,7 +388,7 @@ export const Main = () => {
                                 <div className='cardicons justify-self-end'>
 
                                     <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id) }}><i class="bi bi-heart-fill"></i>
-                                    </p><br></br>
+                                    </p>
                                     <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}><i class="bi bi-cart"></i></p>
                                     <p><i class="bi bi-eye"></i></p>
                                 </div>
@@ -459,7 +459,7 @@ export const Main = () => {
                                 <div className='cardicons justify-self-end'>
 
                                     <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img) }}><i class="bi bi-heart-fill"></i>
-                                    </p><br></br>
+                                    </p>
                                     <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity) }}><i class="bi bi-cart"></i></p>
                                     <p><i class="bi bi-eye"></i></p>
                                 </div>
@@ -520,7 +520,7 @@ export const Main = () => {
                                 <div className='cardicons justify-self-end'>
 
                                     <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id) }}><i class="bi bi-heart-fill"></i>
-                                    </p><br></br>
+                                    </p>
                                     <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}><i class="bi bi-cart"></i></p>
                                     <p><i class="bi bi-eye"></i></p>
                                 </div>
@@ -581,7 +581,7 @@ export const Main = () => {
                                 <div className='cardicons justify-self-end'>
 
                                     <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id) }}><i class="bi bi-heart-fill"></i>
-                                    </p><br></br>
+                                    </p>
                                     <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}><i class="bi bi-cart"></i></p>
                                     <p><i class="bi bi-eye"></i></p>
                                 </div>
@@ -641,7 +641,7 @@ export const Main = () => {
                                 <div className='cardicons justify-self-end'>
 
                                     <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id) }}><i class="bi bi-heart-fill"></i>
-                                    </p><br></br>
+                                    </p>
                                     <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}><i class="bi bi-cart"></i></p>
                                     <p><i class="bi bi-eye"></i></p>
                                 </div>
@@ -702,7 +702,7 @@ export const Main = () => {
                                 <div className='cardicons justify-self-end'>
 
                                     <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id) }}><i class="bi bi-heart-fill"></i>
-                                    </p><br></br>
+                                    </p>
                                     <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}><i class="bi bi-cart"></i></p>
                                     <p><i class="bi bi-eye"></i></p>
                                 </div>
