@@ -201,9 +201,11 @@ export const Header = () => {
                             </a>
                             <div className="collapse text-start" id="productsCollapse">
                                 <div className="ps-4 py-2">
-                                    <a className="dropdown-item py-2" data-bs-dismiss="offcanvas">LEDs</a>
-                                    <a className="dropdown-item py-2" data-bs-dismiss="offcanvas">Laptops</a>
-                                    <a className="dropdown-item py-2" data-bs-dismiss="offcanvas">Mobiles</a>
+                                    <Link to={`/related?id=6970dd16300a757a6dcdb928`} className="dropdown-item py-2" data-bs-dismiss="offcanvas">LEDs</Link>
+                                    <Link to={`/related?id=6970dd16300a757a6dcdb92e`} className="dropdown-item py-2" data-bs-dismiss="offcanvas">Laptops</Link>
+                                    <Link to={`/related?id=6970dd16300a757a6dcdb92a`} className="dropdown-item py-2" data-bs-dismiss="offcanvas">Mobiles</Link>
+                                    <Link to={`/related?id=69849f299a77c6ecd3c2839b`} className="dropdown-item py-2" data-bs-dismiss="offcanvas">LEDs</Link>
+                                    <Link to={`/related?id=69849f299a77c6ecd3c283af`} className="dropdown-item py-2" data-bs-dismiss="offcanvas">Cameras</Link>
                                 </div>
                             </div>
                         </li>
