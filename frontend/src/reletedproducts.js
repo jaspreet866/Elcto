@@ -320,6 +320,14 @@ onClick={()=>setpricesort("high")}
 
 </ul>
 
+ <select className="form-select  mt-4 " aria-label="Default select example" onChange={(e)=>setbrandSort(e.target.value)}>
+                           <option value="">Select Brand</option>
+                           {datta.map((a) => (
+                               <option key={a._id} value={a._id}>{a.BrandName}</option>
+                           ))}
+                       </select>    
+
+   
 </div>
 
 </div>
