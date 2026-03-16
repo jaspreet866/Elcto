@@ -390,6 +390,35 @@ color:#198754;
 font-weight:700;
 font-size:16px;
 }
+.search-box{
+  position: relative;
+  width: 300px;
+}
+.search-result{
+  position: absolute;
+  left: 15px;
+  top: 45px;
+  width: 100%;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.search-result li{
+  padding: 10px;
+  cursor: pointer;
+}
+
+.search-result li:hover{
+  background: #f2f2f2;
+}
+
 
 /* Mobile Optimization */
 

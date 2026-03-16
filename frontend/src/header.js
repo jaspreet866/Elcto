@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom"
-import { useContext, useState, useEffect } from "react"
+import { useContext, useState, useEffect ,useRef} from "react"
 import { Context } from "./usecontext";
 import logo from "./images/WhatsApp Image 2026-02-12 at 11.08.16 AM.png"
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -9,6 +9,9 @@ export const Header = () => {
     const [flag, setflag] = useState(false);
     const { id, setid } = useContext(Context)
     const { setutype } = useContext(Context)
+     const[d,setd]=useState([])
+    const searchRef = useRef(null);
+    const [search,setsearch] = useState("")
     const navigate = useNavigate()
     useEffect(() => {
         const token = localStorage.getItem("data")
@@ -19,6 +22,32 @@ export const Header = () => {
             setflag(false);
         }
     }, [id])
+
+     useEffect(()=>{
+        handleSearch();
+    },[search])
+
+    const handleSearch = async () => {
+        const result = await fetch(`https://elcto-1.onrender.com/api/getproduct`, {
+            method: "get"
+        })
+        if (result.ok) {
+            const res= await result.json();
+            if(res.statuscode===1){
+                setd(res.data);
+                console.log(res.data);
+            }
+        }
+         if(searchRef.current){
+            clearTimeout(searchRef.current);
+        }
+        searchRef.current = setTimeout(() => {
+            setsearch("");
+        }, 5000);
+    }
+    const filteredProducts = [...d].filter((product) =>
+    product.ProductName.toLowerCase().includes(search.toLowerCase())
+  );
 
 
     const logout = () => {
@@ -70,6 +99,24 @@ export const Header = () => {
 
                     </div>
 
+ <div className="search-box">
+  <input
+    className="ms-3 form-control rounded-pill"
+    type="text"
+    placeholder="Search..."
+    onChange={(e) => {setsearch(e.target.value)}}
+  />
+    
+   {search.length > 0 && (
+    <ul className="search-result">
+      {filteredProducts.map((a) => (
+        <Link key={a._id} to={`/detail?id=${a._id}&cid=${a.Category}`} className="text-decoration-none text-dark"   onClick={() => setsearch("")}>
+          <li>{a.ProductName}</li>
+        </Link>
+      ))}
+    </ul>
+  )}
+</div>
 
 
                     <div className="collapse navbar-collapse d-none d-lg-block" id="navbarSupportedContent">
