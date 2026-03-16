@@ -6,6 +6,8 @@ import { Context } from "./usecontext"
 
 export const Related = () => {
     const [d, setd] = useState([])
+     const [pricesort, setpricesort] = useState("")
+    const [brandSort, setbrandSort] = useState("")  
     const [datta, setdatta] = useState([])
     const { id } = useContext(Context)
     const [pr] = useSearchParams()
@@ -111,6 +113,20 @@ export const Related = () => {
         }
 
     }
+     const products = [...d]
+.filter((p) => {
+    if (!brandSort) return true
+    return p.Brand === brandSort
+})
+.sort((a,b)=>{
+    if(pricesort==="low"){
+        return a.ProductPrice - b.ProductPrice
+    }
+    if(pricesort==="high"){
+        return b.ProductPrice - a.ProductPrice
+    }
+    return 0
+})
 
     return (
         <>
@@ -173,12 +189,41 @@ export const Related = () => {
                 </div>
             </section>
 
+   <div className="container mt-5">
 
-            <div className="container mt-5">
-                <h1>Our Collection</h1>
+<div className="d-flex justify-content-between align-items-center d-lg-block">
+   <div><h2 className="fw-bold text-start text-lg-center">Our Collection</h2></div>
+<div>
+<button
+className="btn  d-lg-none"
+data-bs-toggle="offcanvas"
+data-bs-target="#offcanvasRight"
+><i class="fa-duotone fa-solid fa-sliders"></i>
+Filters
+</button>
+</div>
+</div>
+
+
 
                 <div className="row mt-4 g-4 justify-content-center">
-                    {d.map((b) => (
+                   <div className="col-lg-3 d-none d-md-block">
+                       <h2 className="text-center">Filters</h2>
+                       <select className="form-select  mt-5 " aria-label="Default select example" onChange={(e)=>setpricesort(e.target.value)}>
+                           <option value="">Select Price</option>
+                           <option value="low">Low to High</option>
+                           <option value="high">High to Low</option>
+                       </select>   
+                       <select className="form-select  mt-4 " aria-label="Default select example" onChange={(e)=>setbrandSort(e.target.value)}>
+                           <option value="">Select Brand</option>
+                           {datta.map((a) => (
+                               <option key={a._id} value={a._id}>{a.BrandName}</option>
+                           ))}
+                       </select>         
+                   </div>
+                   <div className="col">
+                    <div className="row">
+                             {products.map((b) => (
                         <div key={b._id} className="col-lg-3 col-md-4 col-6 ">
 
                             <Link className="text-decoration-none text-black" to={`/detail?id=${b._id}&cid=${prr}`}>
@@ -234,8 +279,51 @@ export const Related = () => {
 
                         </div>
                     ))}
+                       
+                    </div>
+                   </div>
                 </div>
             </div>
+
+        <div className="offcanvas offcanvas-start" id="offcanvasRight">
+
+<div className="offcanvas-header">
+<h5>Filters</h5>
+<button className="btn-close" data-bs-dismiss="offcanvas"></button>
+</div>
+
+<div className="offcanvas-body">
+
+<h6 className="fw-bold">Price</h6>
+
+<ul className="list-group">
+
+<li className="list-group-item border-0">
+<button
+className="btn w-100 text-start"
+data-bs-dismiss="offcanvas"
+onClick={()=>setpricesort("low")}
+>
+⬇ Low to High
+</button>
+</li>
+
+<li className="list-group-item border-0">
+<button
+className="btn w-100 text-start"
+data-bs-dismiss="offcanvas"
+onClick={()=>setpricesort("high")}
+>
+⬆ High to Low
+</button>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+
 
         </>
     )
