@@ -319,11 +319,11 @@ onClick={()=>setpricesort("high")}
 </li>
 
 </ul>
-
- <select className="form-select  mt-4 " aria-label="Default select example" onChange={(e)=>setbrandSort(e.target.value)}>
+<h5>Brand</h5>
+ <select className="form-select  mt-4  " aria-label="Default select example" onChange={(e)=>setbrandSort(e.target.value)}>
                            <option value="">Select Brand</option>
                            {datta.map((a) => (
-                               <option key={a._id} value={a._id}>{a.BrandName}</option>
+                             <li data-bs-dismiss="offcanvas" key={a._id}><button className="btn w-100 text-start" onClick={() => setbrandSort(a._id)}>{a.BrandName}</button></li>
                            ))}
                        </select>    
 
