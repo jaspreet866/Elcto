@@ -143,9 +143,9 @@ export const Wish = () => {
 
                                     <div className="d-flex flex-column flex-md-row gap-1">
 
-                                        <button onClick={() => { cart(id, a.Name, a.Price, a.Img, a.Quantity) }} className="btn btn-sm btn-primary mt-auto w-50">Add to Cart </button>
+                                        <button onClick={() => { cart(id, a.Name, a.Price, a.Img, a.Quantity) }} className="btn btn-sm btn-primary mt-auto w-100">Add to Cart </button>
 
-                                        <button className="btn btn-danger mt-auto w-50" onClick={() => remove(a._id)}>
+                                        <button className="btn btn-danger mt-auto w-100" onClick={() => remove(a._id)}>
                                             Remove
                                         </button>
                                     </div>

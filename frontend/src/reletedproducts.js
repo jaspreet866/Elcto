@@ -49,6 +49,20 @@ export const Related = () => {
             }
         }
     }
+     setTimeout(() => {
+        new window.Splide(".brandSlider", {
+            perPage: 6,
+            gap: 20,
+            autoplay: true,
+            arrows: false,
+            pagination: false,
+            breakpoints: {
+                992: { perPage: 4, arrows: true },
+                768: { perPage: 3, arrows: true },
+                576: { perPage: 2, arrows: true },
+            },
+        }).mount();
+    }, 300);
     const wish = async (id, name, price, img, prr) => {
         if (!prr || !id) return;
         const data = { id, name, price, img }
@@ -156,38 +170,44 @@ export const Related = () => {
                 </div>
             </section>
             <section>
-                <div className="container mt-5">
+  <div className="container mt-5">
 
-                    <h1 className="text-center">SHOP BY BRAND</h1>
+    <h1 className="text-center">SHOP BY BRAND</h1>
 
-                    <div className="row mt-4 g-4">
+    <div className="splide brandSlider mt-4">
+      <div className="splide__track">
 
-                        {datta.map((a, i) => (
-                            <div key={i} className="col-6 col-sm-4 col-md-3 col-lg-2 text-center">
+        <ul className="splide__list">
 
-                                <Link
-                                    className="text-decoration-none text-black d-block"
-                                    to={`/brand?id=${a._id}`}
-                                >
+          {datta.map((a, i) => (
+            <li className="splide__slide text-center" key={i}>
 
-                                    <img
-                                        src={`/uploads/${a.Img}`}
-                                        className="object-fit-cover rounded"
-                                        style={{ width: "100px", height: "100px" }}
-                                        alt=""
-                                    />
+              <Link
+                className="text-decoration-none text-black d-block"
+                to={`/brand?id=${a._id}`}
+              >
 
-                                    <h6 className="mt-2">{a.BrandName}</h6>
+                <img
+                  src={`/uploads/${a.Img}`}
+                  className="object-fit-cover rounded mx-auto"
+                  style={{ width: "100px", height: "100px" }}
+                  alt=""
+                />
 
-                                </Link>
+                <h6 className="mt-2">{a.BrandName}</h6>
 
-                            </div>
-                        ))}
+              </Link>
 
-                    </div>
+            </li>
+          ))}
 
-                </div>
-            </section>
+        </ul>
+
+      </div>
+    </div>
+
+  </div>
+</section>
 
    <div className="container mt-5">
 

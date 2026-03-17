@@ -37,7 +37,7 @@ export const Brand = () => {
         <div className="row g-4">
           {
             d.map((a) => (
-              <div className="col-lg-3 col-md-4 col-sm-6" key={a._id}>
+              <div className="col-lg-3 col-md-4 col-6" key={a._id}>
                 <div className="card w-100 border-0 shadow-sm text-center p-3">
                   <div className=" rounded d-flex justify-content-center align-items-center mb-3" style={{ height: "150px" }}>
                     <img
