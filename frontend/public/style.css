@@ -440,6 +440,12 @@ font-size:15px;
 .hero-carousel img{
 height:230px;
 }
+.search-result{
+  position:absolute;
+  left:10px;
+  top:100px;
+  width:280px;
+}
 }
 
 
