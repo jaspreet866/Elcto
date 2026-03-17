@@ -99,7 +99,7 @@ export const Header = () => {
 
                     </div>
 
- <div className="search-box">
+ <div className="search-box d-none d-lg-block">
   <input
     className="ms-3 form-control rounded-pill"
     type="text"
@@ -196,7 +196,6 @@ export const Header = () => {
                                 </ul>
                             </li>
                         </ul>
-
                         <div className="ms-5 d-flex ">
                             <button className="fs-4 btn" onClick={() => cart()} ><i className="bi bi-cart-fill"></i></button>
                             <div className="fs-4 btn"><i className="bi bi-person-fill" onClick={() => navigate("/login")}></i></div>
@@ -327,8 +326,12 @@ export const Header = () => {
             <div className="container-fluid">
                 <div className="bottom-toolbar ">
                     <div className="btn text-white" onClick={() => { navigate("/") }}>
-                        <i className="bi bi-house-fill"></i><br></br>
-                        <span className=''>Home</span>
+                        <i className=" bi bi-search"
+                         data-bs-toggle="offcanvas"
+                            data-bs-target="#searchOffcanvas"
+                            aria-controls="searchOffcanvas"
+                            aria-label="Toggle navigation"></i><br></br>
+                        <span className=''>Search</span>
                     </div>
                     <div className="btn text-white" onClick={() => { navigate("/myorder") }}>
                         <i className="bi bi-bag-fill" ></i><br></br>
@@ -355,6 +358,33 @@ export const Header = () => {
                 </div>
 
             </div>
+        <div className="offcanvas offcanvas-start d-lg-none" id="searchOffcanvas" tabindex="-1" aria-labelledby="searchOffcanvasLabel">
+            <div className="offcanvas-header border-bottom">
+                <h4 className="offcanvas-title" id="searchOffcanvasLabel">Search</h4>
+                <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"  ></button>
+            </div>
+            <div className="offcanvas-body">
+                 <div className="search-box">
+  <input
+    className="ms-3 form-control rounded-pill"
+    type="text"
+    placeholder="Search..."
+    onChange={(e) => {setsearch(e.target.value)}}
+  />
+    
+   {search.length > 0 && (
+    <ul className="search-result">
+      {filteredProducts.map((a) => (
+        <Link key={a._id} to={`/detail?id=${a._id}&cid=${a.Category}`} className="text-decoration-none text-dark"   onClick={() => setsearch("")}>
+          <li className="py-2" data-bs-dismiss="offcanvas">{a.ProductName}</li>
+        </Link>
+      ))}
+    </ul>
+  )}
+</div>
+
+            </div>
+        </div>
         </>
     )
 }
