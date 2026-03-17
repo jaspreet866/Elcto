@@ -393,6 +393,7 @@ font-size:16px;
 .search-box{
   position: relative;
   width: 300px;
+  left:80px
 }
 .search-result{
   position: absolute;
@@ -441,9 +442,8 @@ font-size:15px;
 height:230px;
 }
 .search-result{
-  position:absolute;
-  left:10px;
-  top:100px;
+  left:30px;
+  top:160px;
   width:280px;
 }
 }
