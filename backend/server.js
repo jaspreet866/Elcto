@@ -538,7 +538,7 @@ app.post("/api/cartdata/:proid", async (req, res) => {
             ProductId: proid,
             Name: req.body.name,
             Price: req.body.price,
-            Img: req.body.img,
+            Img: req.file ? req.file.path : "no-image.png",
             Quantity: req.body.value,
             User: req.body.id
         })
