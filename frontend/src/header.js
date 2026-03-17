@@ -371,7 +371,7 @@ export const Header = () => {
                 <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"  ></button>
             </div>
             <div className="offcanvas-body">
-                 <div className="search-box">
+                 <div className="ms-3">
   <input
     className="ms-3 form-control rounded-pill"
     type="text"
