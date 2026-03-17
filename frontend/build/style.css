@@ -393,8 +393,6 @@ font-size:16px;
 .search-box{
   position: relative;
   width: 300px;
-   left:80px;
-  top:3px
 }
 .search-result{
   position: absolute;

@@ -196,12 +196,19 @@ export const Header = () => {
                                 </ul>
                             </li>
                         </ul>
-                        <div className="ms-5 d-flex ">
+                         {
+                        flag ? 
+                            <div className="ms-5 d-flex align-items-center justify-content-center">
                             <button className="fs-4 btn" onClick={() => cart()} ><i className="bi bi-cart-fill"></i></button>
-                            <div className="fs-4 btn"><i className="bi bi-person-fill" onClick={() => navigate("/login")}></i></div>
                             <div className="fs-4 btn"><i className="bi bi-heart-fill" onClick={() => wish()}></i></div>
+                            <button className="btn bg-black text-white log-out ms-3 rounded-pill" onClick={logout}>Logout</button>
                         </div>
-
+                        :<div className="ms-5 d-flex align-items-center justify-content-center">
+                            <button className="fs-4 btn" onClick={() => cart()} ><i className="bi bi-cart-fill"></i></button>
+                            <div className="fs-4 btn"><i className="bi bi-heart-fill" onClick={() => wish()}></i></div>
+                               <button className="btn bg-black text-white log-out  ms-3 rounded-pill" onClick={()=>{navigate("/login")}}>LogIn</button>
+                        </div>
+                      }
                     </div>
                 </div>
             </nav>
