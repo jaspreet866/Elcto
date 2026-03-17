@@ -141,7 +141,7 @@ export const Wish = () => {
                                         ₹{a.Price}
                                     </h5>
 
-                                    <div className="d-flex gap-3">
+                                    <div className="d-flex flex-column flex-md-row gap-1">
 
                                         <button onClick={() => { cart(id, a.Name, a.Price, a.Img, a.Quantity) }} className="btn btn-sm btn-primary mt-auto w-50">Add to Cart </button>
 
