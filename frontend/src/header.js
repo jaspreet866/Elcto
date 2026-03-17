@@ -373,7 +373,7 @@ export const Header = () => {
             <div className="offcanvas-body">
                  <div className="ms-3">
   <input
-    className="ms-3 form-control rounded-pill"
+    className="ms-3 form-control w-50 rounded-pill"
     type="text"
     placeholder="Search..."
     onChange={(e) => {setsearch(e.target.value)}}

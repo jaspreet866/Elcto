@@ -393,8 +393,6 @@ font-size:16px;
 .search-box{
   position: relative;
   width: 300px;
-   left:80px;
-  top:3px
 }
 .search-result{
   position: absolute;
@@ -442,10 +440,6 @@ font-size:15px;
 .hero-carousel img{
 height:230px;
 }
-}
-.log-out {
-width: 100px;
-height: 40px;
 }
 
 
