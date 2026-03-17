@@ -124,7 +124,7 @@ export const Wish = () => {
 
                                 <div className="position-relative">
                                     <img
-                                        src={`/uploads/${a.Img}`}
+                                        src={`${a.Img}`}
                                         className="card-img-top p-3"
                                         alt="product"
                                         style={{ height: "200px", objectFit: "contain" }}
@@ -133,7 +133,7 @@ export const Wish = () => {
 
 
                                 <div className="card-body d-flex flex-column">
-                                    <h6 className="card-title text-truncate">
+                                    <h6 className="card-title text-truncate product-title">
                                         {a.Name}
                                     </h6>
 

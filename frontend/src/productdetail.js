@@ -490,7 +490,7 @@ const [activeTab, setActiveTab] = useState("specifications");
                                 </div>
 
                                 <div className="card-body d-flex flex-column">
-                                    <h6 className="fw-semibold">{a.ProductName}</h6>
+                                    <h6 className="fw-semibold product-title">{a.ProductName}</h6>
   <div className="mb-2 text-warning">
     <i className="bi bi-star-fill"></i>
     <i className="bi bi-star-fill"></i>

@@ -136,7 +136,7 @@ export const Cart = () => {
                                             <tr key={index}>
                                                 <td><button className="btn" onClick={() => remove(a._id)}><i class="bi bi-trash3-fill"></i></button></td>
                                                 <td><img style={{ height: "60px" }} src={`${a.Img}`}></img></td>
-                                                <td>{a.Name}</td>
+                                                <td className="product-title">{a.Name}</td>
                                                 <td>{a.Price}</td>
                                                 <td><div className="d-flex justify-content-center align-items-center gap-2">
                                                     <button className="btn btn-sm " onClick={() => qty(index, -1)}> − </button>

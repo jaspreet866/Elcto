@@ -132,7 +132,7 @@ export const Check = () => {
                                                 </td>
 
                                                 <td>
-                                                    <p className="mb-0 fw-semibold">{a.Name}</p>
+                                                    <p className="mb-0 fw-semibold product-title">{a.Name}</p>
                                                     <small className="text-muted">Qty: {a.Quantity}</small>
                                                 </td>
 

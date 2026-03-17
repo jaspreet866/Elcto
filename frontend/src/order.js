@@ -98,7 +98,7 @@ export const Order = () => {
                                                             }}
                                                         />
                                                         <div>
-                                                            <div className="fw-semibold">{b.ProductName}</div>
+                                                            <div className="fw-semibold product-title">{b.ProductName}</div>
                                                             <small className="text-muted">₹{b.Price}</small>
                                                         </div>
                                                     </div>

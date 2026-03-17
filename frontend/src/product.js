@@ -325,7 +325,7 @@ Camera: 48MP`} value={specifications}
                                         <div>
                                             <img style={{ height: "80px", width: "80px" }} src={`${a.Img}`} alt={a.ProductName || 'product'} /></div>
                                         <div>
-                                            <p>Name: {a.ProductName}</p>
+                                            <p className="product-title">Name: {a.ProductName}</p>
                                             <div className="d-flex gap-4">
                                                 <span>Price: {a.ProductPrice}</span><span>SalePrice: {a.SalePrice}</span>
                                             </div>

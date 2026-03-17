@@ -49,7 +49,7 @@ export const Brand = () => {
                   </div>
 
                   <div className="card-body p-0">
-                    <h6 className="fw-semibold mb-2">{a.ProductName}</h6>
+                    <h6 className="fw-semibold mb-2 product-title">{a.ProductName}</h6>
 <div className="mb-2 text-warning">
     <i className="bi bi-star-fill"></i>
     <i className="bi bi-star-fill"></i>
