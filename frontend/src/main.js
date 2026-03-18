@@ -387,7 +387,7 @@ export const Main = () => {
                             <div className="card w-100 border-0 card-sm- shadow-sm text-center p-3" data-aos="fade-up">
                                 <div className='cardicons justify-self-end'>
 
-                                    <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice,p.SalePrice, p.Img, p._id) }}><i class="bi bi-heart-fill"></i>
+                                    <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id, p.SalePrice) }}><i class="bi bi-heart-fill"></i>
                                     </p>
                                     <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}><i class="bi bi-cart"></i></p>
                                     <p><i class="bi bi-eye"></i></p>
