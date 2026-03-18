@@ -3,6 +3,7 @@ import { useContext, useState, useEffect ,useRef} from "react"
 import { Context } from "./usecontext";
 import logo from "./images/WhatsApp Image 2026-02-12 at 11.08.16 AM.png"
 import 'bootstrap/dist/css/bootstrap.min.css'
+import Swal from "sweetalert2";
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 export const Header = () => {
@@ -67,7 +68,7 @@ export const Header = () => {
         localStorage.removeItem("data");
         setflag(false);
         setid("");
-        alert("logged out");
+       Swal.fire("Logout Successfull", "", "success");
         setutype("User")
         navigate("/")
     }
