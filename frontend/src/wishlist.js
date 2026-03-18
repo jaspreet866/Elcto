@@ -137,15 +137,18 @@ export const Wish = () => {
                                         {a.Name}
                                     </h6>
 
-                                    <h5 className="fw-bold  mb-3">
-                                        ₹{a.Price}
-                                    </h5>
+                                   <div className="d-flex align-items-center gap-1">
+                                       <h5 className="fw-bold  mb-3">
+                                           ₹{a.Price}
+                                       </h5>
+                                      <h5>₹{a.SalePrice}</h5>
+                                   </div>
 
                                     <div className="d-flex flex-column flex-md-row gap-1">
 
                                         <button onClick={() => { cart(id, a.Name, a.Price, a.Img, a.Quantity) }} className="btn btn-sm btn-primary mt-auto w-100">Add to Cart </button>
 
-                                        <button className="btn btn-danger mt-auto w-100" onClick={() => remove(a._id)}>
+                                        <button className="btn btn-sm btn-danger mt-auto w-100" onClick={() => remove(a._id)}>
                                             Remove
                                         </button>
                                     </div>

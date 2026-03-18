@@ -652,6 +652,7 @@ app.post("/api/wishpost/:proid", async (req, res) => {
             Productid: proid,
             Name: req.body.name,
             Img: req.body.img,
+            SalePrice: req.body.saleprice,
             Price: req.body.price,
             Date: new Date(),
             UserId: req.body.id
