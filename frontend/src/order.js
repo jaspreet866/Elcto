@@ -88,7 +88,7 @@ export const Order = () => {
 
                                                     <div className="d-flex align-items-center gap-3">
                                                         <img
-                                                            src={`/uploads/${b.Img}`}
+                                                            src={`${b.Img}`}
                                                             alt={b.ProductName}
                                                             style={{
                                                                 height: "70px",
