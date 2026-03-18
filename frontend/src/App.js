@@ -5,6 +5,7 @@ import { Context } from './usecontext';
 import { Header } from './header';
 import { Rout } from './routes';
 import { AdminHeader } from './adminheader';
+import ScrollToTop from './scroll'; 
 
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
           utype === "admin" ? <AdminHeader></AdminHeader> : <Header></Header>
 
         }
+        <ScrollToTop></ScrollToTop>
         <Rout></Rout>
         <Footer></Footer>
       </Context.Provider>
