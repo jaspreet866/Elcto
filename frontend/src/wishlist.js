@@ -8,7 +8,9 @@ export const Wish = () => {
 
     const [d, setd] = useState([])
     const { id } = useContext(Context)
+    const [pr] = useSearchParams()
     const navigate = useNavigate()
+    const prr = pr.get("id")
 
     useEffect(() => {
         show()
@@ -32,7 +34,7 @@ export const Wish = () => {
 
     const cart = async (id, name, price, img, value = 1) => {
         const data = { id, name, price, img, value }
-        const result = await fetch("https://elcto-1.onrender.com/api/cartdata", {
+        const result = await fetch(`https://elcto-1.onrender.com/api/cartdata/${prr}`, {
             method: "post",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }
