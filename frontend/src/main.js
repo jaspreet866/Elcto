@@ -728,7 +728,7 @@ export const Main = () => {
 
                                    <p className="d-flex justify-content-center align-self-center text-center">
                                         <span className=" ">
-                                            ₹{p.ProductPrice}
+                                            ₹{p.Price}
                                         </span>
                                         <span className=" text-success fw-bold ms-1 ">
                                             ₹{p.SalePrice}
