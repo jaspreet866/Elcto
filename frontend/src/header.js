@@ -180,9 +180,9 @@ export const Header = () => {
                                     Features
                                 </a>
                                 <ul className="dropdown-menu shadow-sm">
-                                    <li><a className="dropdown-item">About Us</a></li>
-                                    <li><a className="dropdown-item">Contact Us</a></li>
-                                    <li><a className="dropdown-item">Order</a></li>
+                                   <Link className="text-decoration-none" to="/about"><li><a className="dropdown-item">About Us</a></li></Link>
+                                   <Link className="text-decoration-none" to="/contact"><li><a className="dropdown-item">Contact Us</a></li></Link>
+                                  <Link className="text-decoration-none" to="/myorder"><li><a className="dropdown-item">Order</a></li></Link>
                                 </ul>
                             </li>
 
