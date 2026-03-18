@@ -630,6 +630,7 @@ const wish = new mongoose.Schema({
     Productid: String,
     Name: String,
     Img: String,
+    SalePrice: String,
     Price: Number,
     Date: String,
     UserId: String
