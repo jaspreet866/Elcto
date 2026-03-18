@@ -8,9 +8,8 @@ export const Wish = () => {
 
     const [d, setd] = useState([])
     const { id } = useContext(Context)
-    const [pr] = useSearchParams()
     const navigate = useNavigate()
-    const prr = pr.get("id")
+   
 
     useEffect(() => {
         show()
@@ -34,7 +33,7 @@ export const Wish = () => {
 
     const cart = async (id, name, price, img, value = 1) => {
         const data = { id, name, price, img, value }
-        const result = await fetch(`https://elcto-1.onrender.com/api/cartdata/${prr}`, {
+        const result = await fetch(`https://elcto-1.onrender.com/api/cartdata/`, {
             method: "post",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }
@@ -152,7 +151,7 @@ export const Wish = () => {
 
                                     <div className="d-flex flex-column flex-md-row gap-1">
 
-                                        <button onClick={() => { cart(id, a.Name, a.Price, a.Img, a.Quantity) }} className="btn btn-sm btn-primary mt-auto w-100">Add to Cart </button>
+                                        <button onClick={() => navigate(`/detail/${a._id}`)} className="btn btn-sm btn-primary mt-auto w-100">View Product</button>
 
                                         <button className="btn btn-sm btn-danger mt-auto w-100" onClick={() => remove(a._id)}>
                                             Remove
