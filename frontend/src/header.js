@@ -48,7 +48,7 @@ export const Header = () => {
 
         searchRef.current = setTimeout(() => {
             setsearch(query);
-        }, 300); // debounce delay in ms
+        }, 3000); // debounce delay in ms
 
         return () => {
             if (searchRef.current) {
