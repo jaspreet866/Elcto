@@ -11,6 +11,7 @@ export const Header = () => {
     const { setutype } = useContext(Context)
      const[d,setd]=useState([])
     const searchRef = useRef(null);
+    const[query,setquery]=useState("")
     const [search,setsearch] = useState("")
     const navigate = useNavigate()
     useEffect(() => {
@@ -38,13 +39,25 @@ export const Header = () => {
                 console.log(res.data);
             }
         }
-         if(searchRef.current){
+    }
+
+      useEffect(() => {
+        if (searchRef.current) {
             clearTimeout(searchRef.current);
         }
+
         searchRef.current = setTimeout(() => {
-            setsearch("");
-        }, 5000);
-    }
+            setsearch(query);
+        }, 300); // debounce delay in ms
+
+        return () => {
+            if (searchRef.current) {
+                clearTimeout(searchRef.current);
+            }
+        };
+    }, [query]);
+
+
     const filteredProducts = [...d].filter((product) =>
     product.ProductName.toLowerCase().includes(search.toLowerCase())
   );
