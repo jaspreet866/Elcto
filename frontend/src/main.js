@@ -209,7 +209,7 @@ export const Main = () => {
         return
     }
 
-        const data = { id, name, price, img,saleprice }
+        const data = { id, name, price, img, prr, saleprice }
         const result = await fetch(`https://elcto-1.onrender.com/api/wishpost/${prr}`, {
             method: "post",
             body: JSON.stringify(data),
