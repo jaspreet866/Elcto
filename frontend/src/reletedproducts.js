@@ -288,7 +288,7 @@ Filters
 
                                     </p>
 
-                                        <button className="btn btn-primary btn-sm w-75">
+                                        <button className="btn btn-primary btn-sm w-100">
                                             View Product
                                         </button>
                                     </div>
