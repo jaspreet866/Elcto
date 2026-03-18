@@ -137,9 +137,9 @@ export const Wish = () => {
                                         {a.Name}
                                     </h6>
 
-                                 <p className="d-flex justify-content-center align-self-center text-center">
+                                <p className="d-flex justify-content-center align-self-center text-center">
                                         <span className=" ">
-                                            ₹{a.ProductPrice}
+                                            ₹{a.Price}
                                         </span>
                                         <span className=" text-success fw-bold ms-1 ">
                                             ₹{a.SalePrice}
