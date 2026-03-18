@@ -151,7 +151,9 @@ export const Wish = () => {
 
                                     <div className="d-flex flex-column flex-md-row gap-1">
 
-                                        <button onClick={() => navigate(`/detail/${a._id}`)} className="btn btn-sm btn-primary mt-auto w-100">View Product</button>
+                                       <Link to={`/detail?id=${a._id}&cid=${a.Category} `} className="btn btn-primary btn-sm w-100 ">
+                                            View Product
+                                        </Link>
 
                                         <button className="btn btn-sm btn-danger mt-auto w-100" onClick={() => remove(a._id)}>
                                             Remove
