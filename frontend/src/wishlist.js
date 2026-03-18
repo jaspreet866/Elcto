@@ -137,12 +137,16 @@ export const Wish = () => {
                                         {a.Name}
                                     </h6>
 
-                                   <div className="d-flex align-items-center gap-1">
-                                       <h5 className="fw-bold  mb-3">
-                                           ₹{a.Price}
-                                       </h5>
-                                      <h5>₹{a.SalePrice}</h5>
-                                   </div>
+                                 <p className="d-flex justify-content-center align-self-center text-center">
+                                        <span className=" ">
+                                            ₹{a.ProductPrice}
+                                        </span>
+                                        <span className=" text-success fw-bold ms-1 ">
+                                            ₹{a.SalePrice}
+                                        </span>
+                                        
+
+                                    </p>
 
                                     <div className="d-flex flex-column flex-md-row gap-1">
 
