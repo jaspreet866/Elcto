@@ -252,7 +252,7 @@ Filters
                                     <div className='cardicons justify-self-end'>
 
                                         <p className='text-danger btn' onClick={() => { wish(id, b.ProductName, b.ProductPrice, b.Img, b._id) }}><i class="bi bi-heart-fill"></i>
-                                        </p><br></br>
+                                        </p>
                                         <p className="btn" onClick={() => { cart(id, b.ProductName, b.ProductPrice, b.Img, b.Quantity, b._id) }}><i class="bi bi-cart"></i></p>
                                         <p><i class="bi bi-eye"></i></p>
                                     </div>

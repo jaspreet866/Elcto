@@ -476,7 +476,7 @@ const [activeTab, setActiveTab] = useState("specifications");
                             <div className="card w-100 border-0 shadow-sm wishlist-card">
                                 <div className='cardicons justify-self-end'>
                                     <p className='text-danger btn' onClick={() => { wish2(id, a.ProductName, a.ProductPrice, a.Img, a._id) }}><i class="bi bi-heart-fill"></i>
-                                    </p><br></br>
+                                    </p>
                                     <p className="btn" onClick={() => { cart(id, a.ProductName, a.ProductPrice, a.Img, a.Quantity, a._id) }}><i class="bi bi-cart"></i></p>
                                     <p><i class="bi bi-eye"></i></p>
                                 </div>

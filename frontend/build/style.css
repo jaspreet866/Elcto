@@ -228,7 +228,6 @@ footer i:hover {
 .bottom-toolbar span {
   font-size: 12px;
 }
-
 /* Mobile only (optional) */
 @media (min-width: 768px) {
   .bottom-toolbar {
