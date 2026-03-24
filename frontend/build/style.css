@@ -255,6 +255,9 @@ footer i:hover {
     bottom:80px;
     font-size: 35px;
   }
+  .bread{
+    height:60px;
+  }
 }
 
 .txt {
