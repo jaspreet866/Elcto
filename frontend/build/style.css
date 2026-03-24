@@ -255,18 +255,6 @@ footer i:hover {
     bottom:80px;
     font-size: 35px;
   }
-  .bread{
-    height:100px;
-    font-size: 40px;
-    display: none;
-  }
-  .content{
-    padding:10px
-  }
-  .cart-phn{
-    width:100%;
-    box-sizing: border-box;
-  }
 }
 
 .txt {

@@ -15,6 +15,9 @@ import { Dashboard } from "./adminpanel"
 import { Order } from "./order"
 import { About } from "./aboutus"
 import { Contact } from "./contact"
+import { Vendor } from "./vendor"
+import { VendorDashboard } from "./vendordash"
+import { VendorLogin } from "./vendorlog"
 
 
 export const Rout = () => {
@@ -38,6 +41,9 @@ export const Rout = () => {
                 <Route path="/myorder" element={<Order></Order>} />
                 <Route path="/about" element={<About></About>} />
                 <Route path="/contact" element={<Contact></Contact>} />
+                <Route path="/vendor" element={<Vendor></Vendor>}></Route>
+                <Route path="/vendordash" element={<VendorDashboard></VendorDashboard>}></Route>
+                <Route path="/vlogin" element={<VendorLogin></VendorLogin>} />
             </Routes>
         </>
     )

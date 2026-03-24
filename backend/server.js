@@ -801,3 +801,84 @@ app.use((err, req, res, next) => {
     res.status(500).send({ statuscode: 0, error: err.message || 'Internal Server Error' });
 });
 
+const vendor=new mongoose.Schema({
+    Name:String,
+    Email:String,
+    Phone:String,
+    Password:String,
+    Username:String,
+    Bank:String,
+    City:String,
+    State:String,
+    UserType:String,
+    Status:String,
+})
+
+const vendordata=mongoose.model("Vendor", vendor)
+
+app.post("/api/vendorregister",async(req,res)=>{
+    const hashedPassword=await bcrypt.hash(req.body.pass,10)
+    const result=new vendordata({
+        Name:req.body.name,
+        Email:req.body.email,
+        Phone:req.body.phn,
+        Password:hashedPassword,
+        Username:req.body.uname,
+        Bank:req.body.bank,
+        City:req.body.city,
+        State:req.body.state,
+        UserType:"Vendor",
+        Status:"Pending"
+    })
+    const resp=await result.save()
+    if(resp){
+        res.send({statuscode:1})
+    }
+    else{
+        res.send({statuscode:0})
+    }
+})
+
+app.get("/api/vendordata",async(req,res)=>{
+    const result=await vendordata.find()
+    if(result){
+        console.log(result)
+        res.send({statuscode:1,data:result})
+    }
+    else{
+        res.send({statuscode:0})
+    }
+})
+
+app.post("/api/vlog",async(req,res)=>{
+    const result=await vendordata.findOne({Email:req.body.email})
+    const respass2=result.Password
+    const passw2=bcrypt.compareSync(req.body.pass,respass2)
+    console.log("Entered Password:", req.body.pass)
+console.log("DB Password:", result.Password)
+console.log("Match:", passw2)
+console.log("Status:", result.Status)
+    if(result.Email===req.body.email && passw2===true && result.Status==="Accept"){
+        let vtoken=jwt.sign({id:result._id,usertype:result.UserType,mail:result.Email},key,{expiresIn:"1h"})
+        res.send({statuscode:1,data:result,token:vtoken})
+    }
+    else{
+        res.send({statuscode:0})
+    }
+})
+
+app.put("/api/approval/:id",async(req,res)=>{
+    const result=vendordata.updateOne({_id:req.params.id},{
+        $set:{
+            Status:req.body.status,
+        }
+    })
+  if((await result).modifiedCount==1){
+    res.send({statuscode:1})
+  }
+  else{
+    res.send({statuscode:0})
+  }
+})
+ 
+

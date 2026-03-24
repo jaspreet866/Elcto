@@ -33,6 +33,8 @@ export const Dashboard = () => {
     const [bycredit, setcredit] = useState(0)
     const [saledata, setsaledata] = useState(0)
     const [total, settotal] = useState("")
+     const [vdata,setvdata]=useState([])
+    const [status,setstatus]=useState("")
     const {utype}=useContext(Context)
     const navigate=useNavigate()
 
@@ -66,7 +68,7 @@ export const Dashboard = () => {
         show3();
         show4();
         show5()
-
+show6()
     }, [])
 
     const show = async () => {
@@ -197,6 +199,43 @@ export const Dashboard = () => {
             }
             else {
                 alert("df")
+            }
+        }
+    }
+
+      const show6=async()=>{
+        const result=await fetch("https://elcto-1.onrender.com/api/vendordata",{
+            method:"get"
+        })
+        if(result){
+            const res=await result.json()
+            if(res.statuscode===1){
+                setvdata(res.data)
+                console.log(res.data)
+            }
+            else{
+                alert("dfedg")
+            }
+        }
+    }
+
+    const approval=async(id)=>{
+        const result=await fetch(`https://elcto-1.onrender.com/api/approval/${id}`,{
+            method:"put",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+                status
+            })
+        })
+        if(result){
+            const res=await result.json()
+            if(res.statuscode===1){
+                alert("approved")
+            }
+            else{
+                alert("noy")
             }
         }
     }
@@ -405,6 +444,55 @@ export const Dashboard = () => {
                                 </table>
                             </div>
                         </div>
+
+                           <div className="card w-100 shadow-sm border-top mt-5" >
+                            <div className="card-header bg-white d-flex justify-content-between align-items-center">
+                                <h4>Vendor List</h4>
+                            </div>
+                            <div className="table-responsive">
+                                <table className="table table-hover align-middle mb-0">
+                                    <thead className="table-light">
+                                       <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Status</th>
+                                        <th>Phone</th>
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            vdata.map((a)=>(
+                                                <>
+                                                <tr>
+                                                    <td>{a._id}</td>
+                                                    <td>{a.Name} </td>
+                                                    <td>{a.Email}</td>
+                                                   <div className="d-flex gap-3">
+                                                    <div> <td>{a.Status}</td>
+                                                    </div>
+                                                    <div>
+                                                        <select onChange={(e)=>setstatus(e.target.value)}>
+                                                            <option>Select</option>
+                                                        <option>Accept </option>
+                                                        <option>Pending</option>
+                                                        </select></div>
+                                                    </div>
+                                                    <td>{a.Phone}</td>
+                                                </tr>
+                                                  <button className="m-3" onClick={()=>approval(a._id)}>Approve</button>
+                                                  </>
+                                            ))
+                                            
+                                        }
+                                        
+                                    </tbody>
+                                  
+                                </table>
+                            </div>
+
+                        </div>
+
 
 
                     </div>
