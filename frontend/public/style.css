@@ -247,6 +247,9 @@ footer i:hover {
   .navbar-logo {
     height: 36px;
   }
+  #goTopbtn{
+    bottom:70px;
+  }
 }
 
 .txt {
