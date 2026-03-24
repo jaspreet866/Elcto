@@ -258,6 +258,7 @@ footer i:hover {
   .bread{
     height:100px;
     font-size: 40px;
+    display: none;
   }
   .content{
     padding:10px
