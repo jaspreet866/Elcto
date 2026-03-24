@@ -118,7 +118,7 @@ export const Cart = () => {
 
                 <div className="container mt-5">
                     <div className="row">
-                        <div className="col-lg-9 table-responsive">
+                        <div className="col-lg-9 cart-phn table-responsive">
                             <table className="table align-middle table-outlined">
                                 <thead className="table-dark">
                                     <tr>
