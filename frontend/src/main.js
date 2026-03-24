@@ -838,9 +838,9 @@ export const Main = () => {
             </section>
 
             {showTop && (
-                <div id='goTopBtn' className=' position-fixed bottom-0 end-0 me-4 mb-4 '
+                <div id='goTopBtn' 
                     onClick={gotop}
-                    style={{ zIndex: 999 }}>
+                  >
 
                     <i className="bi bi-arrow-up-circle-fill"></i>
 

@@ -161,9 +161,13 @@ footer i:hover {
 }
 
 #goTopBtn {
+   position: fixed;
+  bottom: 20px;
+  right: 15px;
   font-size: 40px;
-  right: 10px;
+  color: black;
   cursor: pointer;
+  z-index: 9999;
 }
 
 /* Bounce on hover */
@@ -248,7 +252,8 @@ footer i:hover {
     height: 36px;
   }
   #goTopBtn{
-    bottom:70px;
+    bottom:80px;
+    font-size: 35px;
   }
 }
 
