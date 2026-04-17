@@ -520,7 +520,9 @@ const [activeTab, setActiveTab] = useState("specifications");
                         </div>
                     ))}
                 </div>
+                
             </div>
+            
         </>
     )
 }

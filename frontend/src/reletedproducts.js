@@ -15,12 +15,13 @@ export const Related = () => {
     const prr = pr.get("id")
 
     useEffect(() => {
-        show();
-        show2()
-    }, [])
-
-    const show = async () => {
-        const result = await fetch(`https://elcto-1.onrender.com/api/related/${prr}`, {
+    if (prr) {
+        show(prr);
+        show2(prr);
+    }
+}, [prr]);
+    const show = async (id) => {
+        const result = await fetch(`https://elcto-1.onrender.com/api/related/${id}`, {
             method: "get"
         })
         if (result.ok) {

@@ -1,9 +1,9 @@
 import { Link, useNavigate } from "react-router-dom"
 import { useContext, useState, useEffect ,useRef} from "react"
+import Swal from "sweetalert2";
 import { Context } from "./usecontext";
 import logo from "./images/WhatsApp Image 2026-02-12 at 11.08.16 AM.png"
 import 'bootstrap/dist/css/bootstrap.min.css'
-import Swal from "sweetalert2";
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 export const Header = () => {
@@ -12,7 +12,6 @@ export const Header = () => {
     const { setutype } = useContext(Context)
      const[d,setd]=useState([])
     const searchRef = useRef(null);
-    const[query,setquery]=useState("")
     const [search,setsearch] = useState("")
     const navigate = useNavigate()
     useEffect(() => {
@@ -30,35 +29,23 @@ export const Header = () => {
     },[search])
 
     const handleSearch = async () => {
-        const result = await fetch(`https://elcto-1.onrender.com/api/getproduct`, {
+        const result = await fetch(`http://localhost:8000/api/getproduct`, {
             method: "get"
         })
         if (result.ok) {
             const res= await result.json();
             if(res.statuscode===1){
                 setd(res.data);
-                console.log(res.data);
+               
             }
         }
-    }
-
-      useEffect(() => {
-        if (searchRef.current) {
+         if(searchRef.current){
             clearTimeout(searchRef.current);
         }
-
         searchRef.current = setTimeout(() => {
-            setsearch(query);
-        }, 3000); // debounce delay in ms
-
-        return () => {
-            if (searchRef.current) {
-                clearTimeout(searchRef.current);
-            }
-        };
-    }, [query]);
-
-
+            setsearch("");
+        }, 5000);
+    }
     const filteredProducts = [...d].filter((product) =>
     product.ProductName.toLowerCase().includes(search.toLowerCase())
   );
@@ -68,9 +55,8 @@ export const Header = () => {
         localStorage.removeItem("data");
         setflag(false);
         setid("");
-       Swal.fire("Logout Successfull", "", "success");
-        setutype("User")
-        navigate("/")
+        Swal.fire("Logout Successfull", "", "success");
+       
     }
 
     const cart=()=>{
@@ -97,14 +83,14 @@ export const Header = () => {
                 <div className="container">
                     <div className="d-flex gap-4">
                         <button
-                            className="navbar-toggler d-lg-none"
+                            className="navbar-toggler  d-lg-none"
                             type="button"
                             data-bs-toggle="offcanvas"
                             data-bs-target="#mobileOffcanvas"
                             aria-controls="mobileOffcanvas"
                             aria-label="Toggle navigation"
                         >
-                            <span className="navbar-toggler-icon"></span>
+                            <span className="navbar-toggler-icon "></span>
                         </button>
                         <Link to="/" className="navbar-brand fw-bold fs-4">
                             <img src={logo} alt="logo" style={{ height: "40px" }} className="navbar-logo" />
@@ -180,9 +166,9 @@ export const Header = () => {
                                     Features
                                 </a>
                                 <ul className="dropdown-menu shadow-sm">
-                                   <Link className="text-decoration-none" to="/about"><li><a className="dropdown-item">About Us</a></li></Link>
-                                   <Link className="text-decoration-none" to="/contact"><li><a className="dropdown-item">Contact Us</a></li></Link>
-                                  <Link className="text-decoration-none" to="/myorder"><li><a className="dropdown-item">Order</a></li></Link>
+                                    <li><a className="dropdown-item">About Us</a></li>
+                                    <li><a className="dropdown-item">Contact Us</a></li>
+                                    <li><a className="dropdown-item">Order</a></li>
                                 </ul>
                             </li>
 
@@ -210,7 +196,7 @@ export const Header = () => {
                                 </ul>
                             </li>
                         </ul>
-                         {
+                      {
                         flag ? 
                             <div className="ms-5 d-flex align-items-center justify-content-center">
                             <button className="fs-4 btn" onClick={() => cart()} ><i className="bi bi-cart-fill"></i></button>
@@ -223,6 +209,7 @@ export const Header = () => {
                                <button className="btn bg-black text-white log-out  ms-3 rounded-pill" onClick={()=>{navigate("/login")}}>LogIn</button>
                         </div>
                       }
+                                            
                     </div>
                 </div>
             </nav>
@@ -251,7 +238,7 @@ export const Header = () => {
                         </li>
 
 
-                        <li className="nav-item" data-bs-dismiss="offcanvas">
+                        <li className="nav-item" >
                             <a
                                 className="nav-link py-3  d-flex justify-content-between align-items-center"
                                 data-bs-toggle="collapse"
@@ -259,7 +246,6 @@ export const Header = () => {
                                 role="button"
                                 aria-expanded="false"
                                 aria-controls="productsCollapse"
-                                data-bs-dismiss="offcanvas"  
                             >
                                 <span>
                                     Products
@@ -267,18 +253,18 @@ export const Header = () => {
                                 <i className="bi bi-chevron-down"></i>
                             </a>
                             <div className="collapse text-start" id="productsCollapse">
-                                <div className="ps-4 py-2">
-                                    <Link to={`/related?id=6970dd16300a757a6dcdb928`} className="dropdown-item py-2" data-bs-dismiss="offcanvas">LEDs</Link>
-                                    <Link to={`/related?id=6970dd16300a757a6dcdb92e`} className="dropdown-item py-2" data-bs-dismiss="offcanvas">Laptops</Link>
-                                    <Link to={`/related?id=6970dd16300a757a6dcdb92a`} className="dropdown-item py-2" data-bs-dismiss="offcanvas">Mobiles</Link>
-                                    <Link to={`/related?id=69849f299a77c6ecd3c2839b`} className="dropdown-item py-2" data-bs-dismiss="offcanvas">LEDs</Link>
-                                    <Link to={`/related?id=69849f299a77c6ecd3c283af`} className="dropdown-item py-2" data-bs-dismiss="offcanvas">Cameras</Link>
+                                <div className="ps-4 py-2" data-bs-dismiss="offcanvas">
+                                   <Link className="text-decoration-none text-black" to={`/related?id=6970dd16300a757a6dcdb928`}><li><a className="dropdown-item">LED</a></li></Link>
+                                    <Link className="text-decoration-none text-black" to={`/related?id=6970dd60300a757a6dcdb92e`}><li><a className="dropdown-item">Laptops</a></li></Link>
+                                    <Link className="text-decoration-none text-black" to={`/related?id=6970dd2d300a757a6dcdb92a`}><li><a className="dropdown-item">Mobiles</a></li></Link>
+                                    <Link className="text-decoration-none text-black" to={`/related?id=69849f299a77c6ecd3c2839b`}><li><a className="dropdown-item">Airpods</a></li></Link>
+                                    <Link className="text-decoration-none text-black" to={`/related?id=69849fa89a77c6ecd3c283af`}><li><a className="dropdown-item">Cameras</a></li></Link>
                                 </div>
                             </div>
                         </li>
 
 
-                        <li className="nav-item" data-bs-dismiss="offcanvas">
+                        <li className="nav-item">
                             <a
                                 className="nav-link py-3  d-flex justify-content-between align-items-center"
                                 data-bs-toggle="collapse"
@@ -293,16 +279,16 @@ export const Header = () => {
                                 <i className="bi bi-chevron-down"></i>
                             </a>
                             <div className="collapse text-start" id="featuresCollapse">
-                                <div className="ps-4 py-2">
-                                    <Link to="/about" className="dropdown-item py-2" data-bs-dismiss="offcanvas">About Us</Link>
-                                    <Link className="dropdown-item py-2" data-bs-dismiss="offcanvas">Contact Us</Link>
-                                    <Link to="/myorder" className="dropdown-item py-2" data-bs-dismiss="offcanvas">Order</Link>
+                                <div className="ps-4 py-2 " data-bs-dismiss="offcanvas">
+                                    <Link to="/about" className="dropdown-item py-2">About Us</Link>
+                                    <Link className="dropdown-item py-2" >Contact Us</Link>
+                                    <Link to="/myorder" className="dropdown-item py-2">Order</Link>
                                 </div>
                             </div>
                         </li>
 
 
-                        <li className="nav-item" data-bs-dismiss="offcanvas">
+                        <li className="nav-item">
                             <a
                                 className="nav-link py-3  d-flex justify-content-between align-items-center"
                                 data-bs-toggle="collapse"
@@ -317,9 +303,9 @@ export const Header = () => {
                                 <i className="bi bi-chevron-down"></i>
                             </a>
                             <div className="collapse text-start" id="accountCollapse">
-                                <div className="ps-4 py-2">
-                                    <Link to="/login" className="dropdown-item py-2" data-bs-dismiss="offcanvas">Login</Link>
-                                    <Link to="/register" className="dropdown-item py-2" data-bs-dismiss="offcanvas">Sign Up</Link>
+                                <div className="ps-4 py-2" data-bs-dismiss="offcanvas">
+                                    <Link to="/login" className="dropdown-item py-2">Login</Link>
+                                    <Link to="/register" className="dropdown-item py-2" >Sign Up</Link>
                                 </div>
                             </div>
                         </li>
@@ -385,9 +371,9 @@ export const Header = () => {
                 <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"  ></button>
             </div>
             <div className="offcanvas-body">
-                 <div className="ms-3">
+                 <div className="search-box">
   <input
-    className=" form-control w-100 rounded-pill"
+    className="ms-3 form-control rounded-pill"
     type="text"
     placeholder="Search..."
     onChange={(e) => {setsearch(e.target.value)}}
