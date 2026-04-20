@@ -455,6 +455,9 @@ height:230px;
   top:138px;
   width:280px;
 }
+.s-page-title{
+  display: none;
+}
 }
 
 
