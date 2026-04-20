@@ -451,11 +451,11 @@ font-size:15px;
 height:230px;
 }
 .search-result{
-  left:30px;
+  left:10px;
   top:138px;
   width:280px;
 }
-.s-page-title{
+.bread{
   display: none;
 }
 }
