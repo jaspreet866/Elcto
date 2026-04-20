@@ -458,6 +458,10 @@ height:230px;
 .bread{
   display: none;
 }
+.search-box{
+  left:20px;
+  width:100%;
+}
 }
 
 
