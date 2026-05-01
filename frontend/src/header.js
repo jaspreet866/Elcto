@@ -29,7 +29,7 @@ export const Header = () => {
     },[search])
 
     const handleSearch = async () => {
-        const result = await fetch(`http://localhost:8000/api/getproduct`, {
+        const result = await fetch(`https://elcto-1.onrender.com/api/getproduct`, {
             method: "get"
         })
         if (result.ok) {
