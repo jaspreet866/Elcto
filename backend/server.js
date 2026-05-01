@@ -42,7 +42,6 @@ const Register = new mongoose.Schema({
 
 const user = mongoose.model("users", Register)
 const passwor = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\-])(?=.{8,}).*$/;
-const emailregex = /^\S+@\S+\.\S+$/;
 
 app.post("/api/register", async (req, res) => {
     const verify = req.body.email
