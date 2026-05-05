@@ -429,6 +429,12 @@ font-size:16px;
   background: #f2f2f2;
 }
 
+.bi-heart-fill{
+  color: rgb(230, 21, 21);
+  cursor: pointer;
+}
+
+
 
 /* Mobile Optimization */
 
