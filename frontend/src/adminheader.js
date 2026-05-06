@@ -80,12 +80,6 @@ export const AdminHeader = () => {
                                 </Link>
                             </li>
 
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/response">
-                                    Response
-                                </Link>
-                            </li>
-
 
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">

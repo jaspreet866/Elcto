@@ -428,10 +428,13 @@ font-size:16px;
 .search-result li:hover{
   background: #f2f2f2;
 }
+
 .bi-heart-fill{
   color: rgb(230, 21, 21);
   cursor: pointer;
 }
+
+
 
 /* Mobile Optimization */
 
@@ -470,6 +473,5 @@ height:230px;
     width:150px;
   }
 }
-
 
 
