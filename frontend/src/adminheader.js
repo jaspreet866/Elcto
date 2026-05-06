@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom"
 import { useState, useEffect, useContext } from "react";
 import { Context } from "./usecontext";
-import{Swal} from "sweetalert2"
+import Swal from "sweetalert2"
 import logo from "./images/WhatsApp Image 2026-02-12 at 11.08.16 AM.png"
 
 
@@ -27,14 +27,14 @@ export const AdminHeader = () => {
 
     const logout = () => {
         localStorage.removeItem("data");
-        setflag(false);
-        setid("");
-        Swal.fire({
+         Swal.fire({
             title: 'Logged Out',
             text: 'You have been logged out successfully.',
             icon: 'success',
             confirmButtonText: 'OK'
         });
+        setflag(false);
+        setid("");
         setutype("User")
     }
     return (
