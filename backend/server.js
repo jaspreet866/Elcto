@@ -105,6 +105,7 @@ app.get("/api/users", async (req, res) => {
 // forgot password api
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+const otpstore={}
 
 app.post("/api/forgot", async (req, res) => {
     const email = req.body.email;
@@ -114,7 +115,7 @@ app.post("/api/forgot", async (req, res) => {
     }
 
     const otp = Math.floor(100000 + Math.random() * 900000);
-
+    otpstore = otp;
     try {
         const data = await resend.emails.send({
             from: "onboarding@resend.dev", // default test sender
@@ -134,7 +135,7 @@ app.post("/api/forgot", async (req, res) => {
 app.post("/api/verify-otp", async (req, res) => {
     const otp = req.body.otp
     console.log(otpstore,email,otp)
-    if(otpstore[email]== otp){
+    if(otpstore== otp){
         res.send({ statuscode: 1, message: "OTP Verified Successfully" })
     }
     else{
