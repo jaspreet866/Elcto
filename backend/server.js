@@ -120,7 +120,7 @@ app.post("/api/forgot", async (req, res) => {
         const data = await resend.emails.send({
             from: "onboarding@resend.dev", // default test sender
             to: email,
-           text: `You requested a password reset. Click this link to reset your password: https://elcto-1.onrender.com/api/verify?email=${email}`,
+           subject: `You requested a password reset. Click this link to reset your password: https://elcto-1.onrender.com/api/verify?email=${email}`,
            html: `<p>You requested a password reset.</p><p><a href="https://elcto-1.onrender.com/api/verify?email=${email}">Click here to reset your password</a></p><p>Your OTP is ${otp}</P>`,
         });
 
