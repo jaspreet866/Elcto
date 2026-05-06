@@ -6,6 +6,7 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary')
 const cloudinary = require('cloudinary').v2
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const nodeMailer = require('nodemailer')
 const key = "$@*#5gf*yre@gutcf&@*#$234ju6"
 const dotenv = require("dotenv");
 dotenv.config();
@@ -100,6 +101,17 @@ app.get("/api/users", async (req, res) => {
         res.send({ statuscode: 0 })
     }
 })
+// forgot password api
+
+const transporter = nodeMailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.Email_user,
+        pass: process.env.Email_pass
+    }
+})
+
+let otpstore={};
 
 app.post("/api/forgot",async(req,res)=>{
     const email = req.body.email
