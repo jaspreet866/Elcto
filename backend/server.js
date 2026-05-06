@@ -111,8 +111,6 @@ const transporter = nodeMailer.createTransport({
     }
 })
 
-let otpstore={};
-
 app.post("/api/forgot",async(req,res)=>{
     const email = req.body.email
     let otp=Math.floor(Math.random() * 1000000)
@@ -138,8 +136,8 @@ app.post("/api/forgot",async(req,res)=>{
 })
 app.post("/api/verify-otp", async (req, res) => {
     const otp = req.body.otp
-    console.log(otpstore,otp)
-    if(otpstore== otp){
+    console.log(otpstore,email,otp)
+    if(otpstore[email]== otp){
         res.send({ statuscode: 1, message: "OTP Verified Successfully" })
     }
     else{
