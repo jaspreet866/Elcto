@@ -124,8 +124,8 @@ app.post("/api/forgot",async(req,res)=>{
         from: process.env.Email_user,
        to: email,
     subject: 'Password Reset Request',
-    text: `You requested a password reset. Click this link to reset your password: http://localhost:8000/api/verify?email=${email}`,
-    html: `<p>You requested a password reset.</p><p><a href="http://localhost:8000/api/verify?email=${email}">Click here to reset your password</a></p><p>Your OTP is ${otp}</P>`,
+    text: `You requested a password reset. Click this link to reset your password: https://elcto-1.onrender.com/api/verify?email=${email}`,
+    html: `<p>You requested a password reset.</p><p><a href="https://elcto-1.onrender.com/api/verify?email=${email}">Click here to reset your password</a></p><p>Your OTP is ${otp}</P>`,
   };
     if(email){
         await transporter.sendMail(mailoption)
