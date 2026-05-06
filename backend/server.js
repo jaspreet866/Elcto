@@ -101,6 +101,59 @@ app.get("/api/users", async (req, res) => {
     }
 })
 
+app.post("/api/forgot",async(req,res)=>{
+    const email = req.body.email
+    let otp=Math.floor(Math.random() * 1000000)
+    otpstore=otp
+    if(!email){
+        res.send({ statuscode: 2, message: "Email is Required" })
+    }
+    const mailoption = {
+        from: process.env.Email_user,
+       to: email,
+    subject: 'Password Reset Request',
+    text: `You requested a password reset. Click this link to reset your password: http://localhost:8000/api/verify?email=${email}`,
+    html: `<p>You requested a password reset.</p><p><a href="http://localhost:8000/api/verify?email=${email}">Click here to reset your password</a></p><p>Your OTP is ${otp}</P>`,
+  };
+    if(email){
+        await transporter.sendMail(mailoption)
+        console.log("Email sent")
+        res.send({ statuscode: 1, message: "Reset Link Sent to Your Mail" })
+    }
+    else{
+        res.send({ statuscode: 0, message: "Error in Sending Mail" })
+    }
+})
+app.post("/api/verify-otp", async (req, res) => {
+    const otp = req.body.otp
+    console.log(otpstore,otp)
+    if(otpstore== otp){
+        res.send({ statuscode: 1, message: "OTP Verified Successfully" })
+    }
+    else{
+        res.send({ statuscode: 0, message: "Invalid OTP" })
+    }
+})
+
+app.put("/api/resetpassword/:mail",async(req,res)=>{
+    const hash=bcrypt.hashSync(req.body.cpass,10)
+ if (!passwor.test(req.body.pass)) {
+        res.send({ statuscode: 3, message: "🚨 Password must contain Uppercase, Lowercase, Number & Special character" })
+    }
+
+    const result=await user.updateOne({Email:req.params.mail},{
+     $set:{
+        Password:hash,
+     }   
+    })
+  if(result.modifiedCount>0){
+    res.send({statuscode:1})
+  }
+  else{
+    res.send({statuscode:0})
+  }
+})
+
 //make admin
 app.put("/api/makeadmin/:id", async (req, res) => {
     const result = await user.updateOne({ _id: req.params.id }, {
