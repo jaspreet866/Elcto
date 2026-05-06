@@ -114,7 +114,7 @@ const transporter = nodeMailer.createTransport({
 let otpstore={};
 
 app.post("/api/forgot",async(req,res)=>{
-    const email = req.body.email
+    const email = req.body.mail
     let otp=Math.floor(Math.random() * 1000000)
     otpstore=otp
     if(!email){
