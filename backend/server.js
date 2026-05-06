@@ -114,9 +114,9 @@ const transporter = nodeMailer.createTransport({
 let otpstore={};
 
 app.post("/api/forgot",async(req,res)=>{
-    const email = req.body.mail
+    const email = req.body.email
     let otp=Math.floor(Math.random() * 1000000)
-    otpstore=otp
+    otpstore[email]=otp
     if(!email){
         res.send({ statuscode: 2, message: "Email is Required" })
     }

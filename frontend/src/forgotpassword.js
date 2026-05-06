@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 export const ForgetPass=()=>{
 
-const [mail,setmail]=useState()
+const [email,setemail]=useState("")
 const navigate=useNavigate()
 
 const sendlink=async(e)=>{
@@ -10,16 +10,16 @@ const sendlink=async(e)=>{
    
     const result=await fetch("https://elcto-1.onrender.com/api/forgot",{
         method:"post",
-        body:JSON.stringify({mail}),
+        body:JSON.stringify({email}),
         headers:{"Content-type":"application/json;charset=UTF-8"}
     })
     if(result){
         const res=await result.json()
         if(res.statuscode===1){
             alert(res.message)
-            localStorage.setItem("email",mail)
+            localStorage.setItem("email",email)
             navigate("/verify")
-            setmail("")
+            setemail("")
         }
         else{
             alert(res.message)
@@ -34,7 +34,7 @@ const sendlink=async(e)=>{
        <div className="p-5">
          <h1 className="">Forget Password</h1>
         <form className="d-flex flex-column align-items-center"> 
-            <input className="form-control w-50" type="email" placeholder="Enter your email" onChange={(e)=>setmail(e.target.value)} /><br></br>
+            <input className="form-control w-50" type="email" placeholder="Enter your email" onChange={(e)=>setemail(e.target.value)} /><br></br>
             <button className="btn btn-primary" type="submit" onClick={sendlink}>Send Reset Link</button>
         </form>
        </div>
