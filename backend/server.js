@@ -134,7 +134,6 @@ app.post("/api/forgot", async (req, res) => {
 });
 app.post("/api/verify-otp", async (req, res) => {
     const otp = req.body.otp
-    console.log(otpstore,email,otp)
     if(otpstore== otp){
         res.send({ statuscode: 1, message: "OTP Verified Successfully" })
     }
