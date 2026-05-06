@@ -1,6 +1,7 @@
 import { useContext, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import Swal from "sweetalert2"
+import { Link } from "react-router-dom"
 import { Context } from "./usecontext"
 
 export const Login = () => {
@@ -119,9 +120,9 @@ export const Login = () => {
 
 
                                     <p className="mt-3 text-center">
-                                        <a href="/forgot-password" className="text-decoration-none">
+                                        <Link to="/forgot" className="text-decoration-none">
                                             Forgot password?
-                                        </a>
+                                        </Link>
                                     </p>
                                 </div>
                             </form>
