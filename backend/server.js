@@ -6,10 +6,11 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary')
 const cloudinary = require('cloudinary').v2
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const nodeMailer = require('nodemailer')
 const key = "$@*#5gf*yre@gutcf&@*#$234ju6"
 const dotenv = require("dotenv");
+const {Resend} = require("resend");
 dotenv.config();
+
 
 const app = express()
 
@@ -103,43 +104,33 @@ app.get("/api/users", async (req, res) => {
 })
 // forgot password api
 
-const transporter = nodeMailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true, // true for 465
-    auth: {
-        user: process.env.Email_user,
-        pass: process.env.Email_pass
-    },
-    family: 4 // 👈 FORCE IPv4 (THIS FIXES YOUR ERROR)
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+app.post("/api/forgot", async (req, res) => {
+    const email = req.body.email;
+
+    if (!email) {
+        return res.send({ statuscode: 2, message: "Email is Required" });
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000);
+
+    try {
+        const data = await resend.emails.send({
+            from: "onboarding@resend.dev", // default test sender
+            to: email,
+            subject: "Password Reset",
+            html: `<p>Your OTP is <b>${otp}</b></p>`
+        });
+
+        console.log("Email sent:", data);
+        res.send({ statuscode: 1, message: "OTP Sent Successfully" });
+
+    } catch (error) {
+        console.log(error);
+        res.send({ statuscode: 0, message: "Error sending email" });
+    }
 });
-const otpstore={}
-
-app.post("/api/forgot",async(req,res)=>{
-    const email = req.body.email
-
-    console.log(req.body.email+" email is ")
-    let otp=Math.floor(Math.random() * 1000000)
-    otpstore[email]=otp
-    if(!email){
-        res.send({ statuscode: 2, message: "Email is Required" })
-    }
-    const mailoption = {
-        from: process.env.Email_user,
-       to:"itannjass@gmail.com",
-    subject: 'Password Reset Request',
-    text: `You requested a password reset. Click this link to reset your password: https://elcto-1.onrender.com/api/verify?email=${email}`,
-    html: `<p>You requested a password reset.</p><p><a href="https://elcto-1.onrender.com/api/verify?email=${email}">Click here to reset your password</a></p><p>Your OTP is ${otp}</P>`,
-  };
-    if(email){
-        await transporter.sendMail(mailoption)
-        console.log("Email sent")
-        res.send({ statuscode: 1, message: "Reset Link Sent to Your Mail" })
-    }
-    else{
-        res.send({ statuscode: 0, message: "Error in Sending Mail" })
-    }
-})
 app.post("/api/verify-otp", async (req, res) => {
     const otp = req.body.otp
     console.log(otpstore,email,otp)
