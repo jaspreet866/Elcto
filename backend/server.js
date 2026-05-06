@@ -114,6 +114,8 @@ const otpstore={}
 
 app.post("/api/forgot",async(req,res)=>{
     const email = req.body.email
+
+    console.log(req.body.email+" email is ")
     let otp=Math.floor(Math.random() * 1000000)
     otpstore[email]=otp
     if(!email){
