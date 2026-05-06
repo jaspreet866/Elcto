@@ -105,7 +105,7 @@ app.get("/api/users", async (req, res) => {
 // forgot password api
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const otpstore={}
+let otpstore={}
 
 app.post("/api/forgot", async (req, res) => {
     const email = req.body.email;
