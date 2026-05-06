@@ -12,8 +12,6 @@ export const ResetPassword=()=>{
  setmail(localStorage.getItem("email"))
 },[])
 
-
-
     const reset=async(e)=>{
         alert(mail)
         e.preventDefault()
