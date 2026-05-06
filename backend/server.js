@@ -104,12 +104,15 @@ app.get("/api/users", async (req, res) => {
 // forgot password api
 
 const transporter = nodeMailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true, // true for 465
     auth: {
         user: process.env.Email_user,
         pass: process.env.Email_pass
-    }
-})
+    },
+    family: 4 // 👈 FORCE IPv4 (THIS FIXES YOUR ERROR)
+});
 const otpstore={}
 
 app.post("/api/forgot",async(req,res)=>{
