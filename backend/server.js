@@ -110,6 +110,7 @@ const transporter = nodeMailer.createTransport({
         pass: process.env.Email_pass
     }
 })
+const otpstore={}
 
 app.post("/api/forgot",async(req,res)=>{
     const email = req.body.email
