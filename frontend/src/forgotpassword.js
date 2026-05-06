@@ -7,10 +7,10 @@ const navigate=useNavigate()
 
 const sendlink=async(e)=>{
     e.preventDefault()
-    const data={email}
+   
     const result=await fetch("https://elcto-1.onrender.com/api/forgot",{
         method:"post",
-        body:JSON.stringify(data),
+        body:JSON.stringify({email}),
         headers:{"Content-type":"application/json;charset=UTF-8"}
     })
     if(result){
