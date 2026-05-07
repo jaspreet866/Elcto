@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const key = "$@*#5gf*yre@gutcf&@*#$234ju6"
 const dotenv = require("dotenv");
-const {Resend} = require("resend");
+const nodemailer = require('nodemailer');
 dotenv.config();
 
 
@@ -104,62 +104,135 @@ app.get("/api/users", async (req, res) => {
 })
 // forgot password api
 
-// const resend = new Resend(process.env.RESEND_API_KEY);
-// let otpstore={}
+// simple in-memory OTP store: { [email]: { code: number, expiresAt: Date } }
+let otpstore = {};
+const OTP_TTL_SECONDS = parseInt(process.env.OTP_TTL_SECONDS) || 600; // default 10 minutes
 
-// app.post("/api/forgot", async (req, res) => {
-//     const email = req.body.email;
+// helper: send email via MailerSend API if MAILERSEND_API_KEY is present,
+// otherwise fall back to SMTP using nodemailer and SMTP credentials (MAILERSEND_SMTP_USER / MAILERSEND_SMTP_PASS)
+async function sendMailerSendEmail(toEmail, subject, html, text) {
+    const apiKey = process.env.MAILERSEND_API_KEY;
+    if (apiKey) {
+        // Use MailerSend HTTP API
+        const payload = {
+            from: {
+                email: process.env.MAIL_FROM_EMAIL || 'no-reply@example.com',
+                name: process.env.MAIL_FROM_NAME || 'Electo'
+            },
+            to: [{ email: toEmail }],
+            subject: subject,
+            html: html,
+            text: text || ''
+        };
 
-//     if (!email) {
-//         return res.send({ statuscode: 2, message: "Email is Required" });
-//     }
+        // Use global fetch (Node 18+). If not available this will throw and fall back to SMTP below.
+        if (typeof fetch === 'function') {
+            const resp = await fetch('https://api.mailersend.com/v1/email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify(payload)
+            });
+            const data = await resp.json();
+            if (!resp.ok) throw new Error(JSON.stringify(data));
+            return data;
+        } else {
+            throw new Error('fetch is not available in this Node runtime; please configure SMTP fallback variables');
+        }
+    }
 
-//     const otp = Math.floor(100000 + Math.random() * 900000);
-//     otpstore = otp;
-//     try {
-//         const data = await resend.emails.send({
-//             from: "onboarding@resend.dev", // default test sender
-//             to: email,
-//            subject: `You requested a password reset`,
-//            html: `<p>You requested a password reset.</p><p><a href="https://elcto-self.vercel.app/verify?email=${email}">Click here to reset your password</a></p><p>Your OTP is ${otp}</P>`,
-//         });
+    // SMTP fallback using nodemailer (requires MAILERSEND_SMTP_USER and MAILERSEND_SMTP_PASS)
+    if (process.env.MAILERSEND_SMTP_USER && process.env.MAILERSEND_SMTP_PASS) {
+        const transporter = nodemailer.createTransport({
+            host: process.env.MAILERSEND_SMTP_HOST || 'smtp.mailersend.net',
+            port: Number(process.env.MAILERSEND_SMTP_PORT) || 587,
+            secure: false,
+            auth: {
+                user: process.env.MAILERSEND_SMTP_USER,
+                pass: process.env.MAILERSEND_SMTP_PASS
+            }
+        });
 
-//         console.log("Email sent:", data);
-//         res.send({ statuscode: 1, message: "OTP Sent Successfully" });
+        const info = await transporter.sendMail({
+            from: `"${process.env.MAIL_FROM_NAME || 'Electo'}" <${process.env.MAIL_FROM_EMAIL || process.env.MAILERSEND_SMTP_USER}>`,
+            to: toEmail,
+            subject,
+            html,
+            text
+        });
+        return info;
+    }
 
-//     } catch (error) {
-//         console.log(error);
-//         res.send({ statuscode: 0, message: "Error sending email" });
-//     }
-// });
-// app.post("/api/verify-otp", async (req, res) => {
-//     const otp = req.body.otp
-//     if(otpstore== otp){
-//         res.send({ statuscode: 1, message: "OTP Verified Successfully" })
-//     }
-//     else{
-//         res.send({ statuscode: 0, message: "Invalid OTP" })
-//     }
-// })
+    throw new Error('No MailerSend credentials configured (MAILERSEND_API_KEY or MAILERSEND_SMTP_USER/PASS)');
+}
 
-// app.put("/api/resetpassword/:mail",async(req,res)=>{
-//     const hash=bcrypt.hashSync(req.body.cpass,10)
-//  if (!passwor.test(req.body.pass)) {
-//         res.send({ statuscode: 3, message: "🚨 Password must contain Uppercase, Lowercase, Number & Special character" })
-//     }
+app.post('/api/forgot', async (req, res) => {
+    const email = req.body.email;
 
-//     const result=await user.updateOne({Email:req.params.mail},{
-//      $set:{
-//         Password:hash,
-//      }   
-//     })
-//   if(result.modifiedCount>0){
-//     res.send({statuscode:1})
-//   }
-//   else{
-//     res.send({statuscode:0})
-//   }
-// })
+    if (!email) {
+        return res.send({ statuscode: 2, message: 'Email is Required' });
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000);
+    // store OTP per-email (do not overwrite whole store)
+    otpstore[email] = { code: otp, expiresAt: Date.now() + OTP_TTL_SECONDS * 1000 };
+    // schedule removal after TTL
+    setTimeout(() => {
+        if (otpstore[email] && otpstore[email].expiresAt <= Date.now()) {
+            delete otpstore[email];
+        }
+    }, OTP_TTL_SECONDS * 1000 + 1000);
+
+    const subject = 'You requested a password reset';
+    const html = `<p>You requested a password reset.</p><p><a href="https://elcto-self.vercel.app/verify?email=${encodeURIComponent(email)}">Click here to reset your password</a></p><p>Your OTP is ${otp}</p>`;
+    const text = `You requested a password reset. Your OTP is ${otp}. Visit https://elcto-self.vercel.app/verify?email=${encodeURIComponent(email)} to continue.`;
+
+    try {
+        const data = await sendMailerSendEmail(email, subject, html, text);
+        console.log('Email sent:', data);
+        res.send({ statuscode: 1, message: 'OTP Sent Successfully' });
+    } catch (error) {
+        console.error('Error sending forgot email:', error);
+        res.send({ statuscode: 0, message: 'Error sending email' });
+    }
+});
+
+app.post('/api/verify-otp', async (req, res) => {
+    const { email, otp } = req.body;
+    if (!email || !otp) {
+        return res.send({ statuscode: 2, message: 'Email and OTP are required' });
+    }
+
+    const stored = otpstore[email];
+    if (stored && stored.code && stored.code.toString() === otp.toString()) {
+        // OTP verified, remove it so it can't be reused
+        delete otpstore[email];
+        res.send({ statuscode: 1, message: 'OTP Verified Successfully' });
+    } else {
+        res.send({ statuscode: 0, message: 'Invalid OTP' });
+    }
+});
+
+app.put("/api/resetpassword/:mail",async(req,res)=>{
+    const hash=bcrypt.hashSync(req.body.cpass,10)
+ if (!passwor.test(req.body.pass)) {
+        res.send({ statuscode: 3, message: "🚨 Password must contain Uppercase, Lowercase, Number & Special character" })
+    }
+
+    const result=await user.updateOne({Email:req.params.mail},{
+     $set:{
+        Password:hash,
+     }   
+    })
+  if(result.modifiedCount>0){
+    res.send({statuscode:1})
+  }
+  else{
+    res.send({statuscode:0})
+  }
+})
 
 //make admin
 app.put("/api/makeadmin/:id", async (req, res) => {
