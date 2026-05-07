@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const key = "$@*#5gf*yre@gutcf&@*#$234ju6"
 const dotenv = require("dotenv");
-const {Resend} = require("resend");
+const nodeMailer = require("nodemailer")
 dotenv.config();
 
 
@@ -103,35 +103,59 @@ app.get("/api/users", async (req, res) => {
     }
 })
 // forgot password api
+const nodeMailer = require("nodemailer")
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-let otpstore={}
+const transporter = nodeMailer.createTransport({
+    host: "smtp-relay.brevo.com",
+    port: 587,
+    secure: false,
+    family: 4,
+
+    auth: {
+        user: process.env.Email_user,
+        pass: process.env.Email_pass
+    }
+})
+
+let otpstore = {}
 
 app.post("/api/forgot", async (req, res) => {
-    const email = req.body.email;
-
-    if (!email) {
-        return res.send({ statuscode: 2, message: "Email is Required" });
-    }
-
-    const otp = Math.floor(100000 + Math.random() * 900000);
-    otpstore = otp;
     try {
-        const data = await resend.emails.send({
-            from: "onboarding@resend.dev", // default test sender
+        const email = req.body.email
+        if (!email) {
+            return res.send({
+                statuscode: 2,
+                message: "Email is Required"
+            })
+        }
+        let otp = Math.floor(100000 + Math.random() * 900000)
+        otpstore[email] = otp
+        const mailoption = {
+            from: process.env.RESEND_API_KEY,
             to: email,
-           subject: `You requested a password reset`,
-           html: `<p>You requested a password reset.</p><p><a href="https://elcto-self.vercel.app/verify?email=${email}">Click here to reset your password</a></p><p>Your OTP is ${otp}</P>`,
-        });
-
-        console.log("Email sent:", data);
-        res.send({ statuscode: 1, message: "OTP Sent Successfully" });
-
-    } catch (error) {
-        console.log(error);
-        res.send({ statuscode: 0, message: "Error sending email" });
+            subject: "Password Reset Request",
+            text: `Your OTP is ${otp}`,
+            html: `
+                <h2>Password Reset</h2>
+                <p>Your OTP is:</p>
+                <h1>${otp}</h1>    `
+        }
+        await transporter.sendMail(mailoption)
+        console.log("Email sent successfully")
+        res.send({
+            statuscode: 1,
+            message: "Reset Link Sent to Your Mail"
+        })
     }
-});
+    catch (error) {
+    console.log(error)
+        res.send({
+            statuscode: 0,
+            message: "Error in Sending Mail",
+            error: error.message
+        })
+    }
+})
 app.post("/api/verify-otp", async (req, res) => {
     const otp = req.body.otp
     if(otpstore== otp){
