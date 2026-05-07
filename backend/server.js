@@ -103,7 +103,6 @@ app.get("/api/users", async (req, res) => {
     }
 })
 // forgot password api
-const nodeMailer = require("nodemailer")
 
 const transporter = nodeMailer.createTransport({
     host: "smtp-relay.brevo.com",
@@ -112,8 +111,8 @@ const transporter = nodeMailer.createTransport({
     family: 4,
 
     auth: {
-        user: process.env.Email_user,
-        pass: process.env.Email_pass
+        user: process.env.RESEND_API_KEY,
+        pass: process.env.RESEND_API_KEY
     }
 })
 
