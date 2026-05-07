@@ -104,62 +104,62 @@ app.get("/api/users", async (req, res) => {
 })
 // forgot password api
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-let otpstore={}
+// const resend = new Resend(process.env.RESEND_API_KEY);
+// let otpstore={}
 
-app.post("/api/forgot", async (req, res) => {
-    const email = req.body.email;
+// app.post("/api/forgot", async (req, res) => {
+//     const email = req.body.email;
 
-    if (!email) {
-        return res.send({ statuscode: 2, message: "Email is Required" });
-    }
+//     if (!email) {
+//         return res.send({ statuscode: 2, message: "Email is Required" });
+//     }
 
-    const otp = Math.floor(100000 + Math.random() * 900000);
-    otpstore = otp;
-    try {
-        const data = await resend.emails.send({
-            from: "onboarding@resend.dev", // default test sender
-            to: email,
-           subject: `You requested a password reset`,
-           html: `<p>You requested a password reset.</p><p><a href="https://elcto-self.vercel.app/verify?email=${email}">Click here to reset your password</a></p><p>Your OTP is ${otp}</P>`,
-        });
+//     const otp = Math.floor(100000 + Math.random() * 900000);
+//     otpstore = otp;
+//     try {
+//         const data = await resend.emails.send({
+//             from: "onboarding@resend.dev", // default test sender
+//             to: email,
+//            subject: `You requested a password reset`,
+//            html: `<p>You requested a password reset.</p><p><a href="https://elcto-self.vercel.app/verify?email=${email}">Click here to reset your password</a></p><p>Your OTP is ${otp}</P>`,
+//         });
 
-        console.log("Email sent:", data);
-        res.send({ statuscode: 1, message: "OTP Sent Successfully" });
+//         console.log("Email sent:", data);
+//         res.send({ statuscode: 1, message: "OTP Sent Successfully" });
 
-    } catch (error) {
-        console.log(error);
-        res.send({ statuscode: 0, message: "Error sending email" });
-    }
-});
-app.post("/api/verify-otp", async (req, res) => {
-    const otp = req.body.otp
-    if(otpstore== otp){
-        res.send({ statuscode: 1, message: "OTP Verified Successfully" })
-    }
-    else{
-        res.send({ statuscode: 0, message: "Invalid OTP" })
-    }
-})
+//     } catch (error) {
+//         console.log(error);
+//         res.send({ statuscode: 0, message: "Error sending email" });
+//     }
+// });
+// app.post("/api/verify-otp", async (req, res) => {
+//     const otp = req.body.otp
+//     if(otpstore== otp){
+//         res.send({ statuscode: 1, message: "OTP Verified Successfully" })
+//     }
+//     else{
+//         res.send({ statuscode: 0, message: "Invalid OTP" })
+//     }
+// })
 
-app.put("/api/resetpassword/:mail",async(req,res)=>{
-    const hash=bcrypt.hashSync(req.body.cpass,10)
- if (!passwor.test(req.body.pass)) {
-        res.send({ statuscode: 3, message: "🚨 Password must contain Uppercase, Lowercase, Number & Special character" })
-    }
+// app.put("/api/resetpassword/:mail",async(req,res)=>{
+//     const hash=bcrypt.hashSync(req.body.cpass,10)
+//  if (!passwor.test(req.body.pass)) {
+//         res.send({ statuscode: 3, message: "🚨 Password must contain Uppercase, Lowercase, Number & Special character" })
+//     }
 
-    const result=await user.updateOne({Email:req.params.mail},{
-     $set:{
-        Password:hash,
-     }   
-    })
-  if(result.modifiedCount>0){
-    res.send({statuscode:1})
-  }
-  else{
-    res.send({statuscode:0})
-  }
-})
+//     const result=await user.updateOne({Email:req.params.mail},{
+//      $set:{
+//         Password:hash,
+//      }   
+//     })
+//   if(result.modifiedCount>0){
+//     res.send({statuscode:1})
+//   }
+//   else{
+//     res.send({statuscode:0})
+//   }
+// })
 
 //make admin
 app.put("/api/makeadmin/:id", async (req, res) => {
