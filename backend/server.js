@@ -141,13 +141,16 @@ app.post('/api/forgot', async (req, res) => {
         html: `<p>Your OTP code is <strong>${otp}</strong></p>`
     };
 
-if(email){
+try{
+
+
 await transporter.sendMail(mailOptions)
 console.log("email send")
-res.send({statuscode:1})
+res.send({statuscode:1}) 
 }
-else{
+catch(err){
     res.send({statuscode:0})
+    console.log(err)
 }
 
 });
