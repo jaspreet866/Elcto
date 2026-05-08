@@ -141,28 +141,17 @@ app.post('/api/forgot', async (req, res) => {
         html: `<p>Your OTP code is <strong>${otp}</strong></p>`
     };
 
-    try {
+if(email){
+await transporter.sendMail(mailOptions)
+console.log("email send")
+res.send({statuscode:1})
+}
+else{
+    res.send({statuscode:0})
+}
 
-        const info = await transporter.sendMail(mailOptions);
-
-        console.log('Email sent:', info);
-
-        res.send({
-            statuscode: 1,
-            message: 'OTP sent successfully'
-        });
-
-    } catch (error) {
-
-        console.error('Error sending email:', error);
-
-        res.send({
-            statuscode: 0,
-            message: 'Error sending email'
-        });
-    }
 });
-
+  
 app.post('/api/verify-otp', async (req, res) => {
     const email = (req.body.email || '').trim().toLowerCase();
     const { otp } = req.body;
