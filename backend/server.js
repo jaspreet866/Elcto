@@ -106,22 +106,29 @@ app.get("/api/users", async (req, res) => {
 })
 // forgot password api
 
-const transporter=nodemailer.createTransport({
-    service:"Mailersend",
-    secure:false,
-    auth:{
-        user:process.env.MAILERSEND_SMTP_USER,
-        pass:process.env.MAILERSEND_SMTP_PASS
-    }
-})
+const nodemailer = require("nodemailer");
 
-let otpstore = {}
+const transporter = nodemailer.createTransport({
+    host: "smtp.mailersend.net",
+    port: 587,
+    secure: false,
+    auth: {
+        user: process.env.MAILERSEND_SMTP_USER,
+        pass: process.env.MAILERSEND_SMTP_PASS
+    }
+});
+
+let otpstore = {};
 
 app.post('/api/forgot', async (req, res) => {
-    const email = (req.body.email || '');
+
+    const email = req.body.email || '';
 
     if (!email) {
-        return res.send({ statuscode: 2, message: 'Email is Required' });
+        return res.send({
+            statuscode: 2,
+            message: 'Email is Required'
+        });
     }
 
     const otp = Math.floor(100000 + Math.random() * 900000);
@@ -137,12 +144,24 @@ app.post('/api/forgot', async (req, res) => {
     };
 
     try {
+
         const info = await transporter.sendMail(mailOptions);
+
         console.log('Email sent:', info);
-        res.send({ statuscode: 1, message: 'OTP sent successfully' });
+
+        res.send({
+            statuscode: 1,
+            message: 'OTP sent successfully'
+        });
+
     } catch (error) {
+
         console.error('Error sending email:', error);
-        res.send({ statuscode: 0, message: 'Error sending email' });
+
+        res.send({
+            statuscode: 0,
+            message: 'Error sending email'
+        });
     }
 });
 
