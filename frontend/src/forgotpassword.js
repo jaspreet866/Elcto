@@ -23,6 +23,7 @@ const sendlink=async(e)=>{
         }
         else{
             alert(res.message)
+            console.log(res.err)
         }
     }   
 }

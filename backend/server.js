@@ -149,7 +149,7 @@ console.log("email send")
 res.send({statuscode:1}) 
 }
 catch(err){
-    res.send({statuscode:0})
+    res.send({statuscode:0 ,err:err})
     console.log(err)
 }
 
