@@ -24,8 +24,10 @@ const corsfront={
 app.use(express.json())
 app.use(cors(corsfront))
 
-app.listen(9000, () => {
-    console.log("Server is running on 9000")
+const PORT = process.env.PORT || 9000;
+
+app.listen(PORT, () => {
+    console.log(`Server is running on ${PORT}`)
    
 })
 
@@ -110,6 +112,9 @@ const transporter = nodemailer.createTransport({
     host: "smtp.mailersend.net",
     port: 587,
     secure: false,
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
     auth: {
         user: process.env.MAILERSEND_SMTP_USER,
         pass: process.env.MAILERSEND_SMTP_PASS
@@ -117,10 +122,13 @@ const transporter = nodemailer.createTransport({
 });
 
 let otpstore = {};
+let resetTokenStore = {};
+const OTP_TTL_SECONDS = 5 * 60;
+const RESET_TOKEN_TTL_SECONDS = 10 * 60;
 
 app.post('/api/forgot', async (req, res) => {
 
-    const email = req.body.email || '';
+    const email = (req.body.email || '').trim().toLowerCase();
 
     if (!email) {
         return res.send({
@@ -129,29 +137,64 @@ app.post('/api/forgot', async (req, res) => {
         });
     }
 
+    if (!process.env.MAILERSEND_SMTP_USER || !process.env.MAILERSEND_SMTP_PASS) {
+        console.error("MailerSend SMTP env vars are missing");
+        return res.send({
+            statuscode: 0,
+            message: "Email service is not configured"
+        });
+    }
+
+    const existingUser = await user.findOne({ Email: new RegExp(`^${escapeRegExp(email)}$`, 'i') });
+    if (!existingUser) {
+        return res.send({
+            statuscode: 0,
+            message: "No account found with this email"
+        });
+    }
+
     const otp = Math.floor(100000 + Math.random() * 900000);
 
-    otpstore[email] = otp;
+    otpstore[email] = {
+        code: otp,
+        expiresAt: Date.now() + OTP_TTL_SECONDS * 1000
+    };
+
+    setTimeout(() => {
+        if (otpstore[email] && otpstore[email].expiresAt <= Date.now()) {
+            delete otpstore[email];
+        }
+    }, OTP_TTL_SECONDS * 1000 + 1000);
 
     const mailOptions = {
-        from: process.env.MAILERSEND_SMTP_USER,
+        from: process.env.MAIL_FROM || process.env.MAILERSEND_SMTP_USER,
         to: email,
         subject: 'Your OTP Code',
         text: `Your OTP code is ${otp}`,
         html: `<p>Your OTP code is <strong>${otp}</strong></p>`
     };
 
-try{
-
-
-await transporter.sendMail(mailOptions)
-console.log("email send")
-res.send({statuscode:1}) 
-}
-catch(err){
-    res.send({statuscode:0 ,err:err})
-    console.log(err)
-}
+    try {
+        await transporter.sendMail(mailOptions)
+        console.log("email sent")
+        res.send({
+            statuscode: 1,
+            message: "OTP sent to your email"
+        })
+    }
+    catch (err) {
+        console.error("MailerSend error:", {
+            code: err.code,
+            command: err.command,
+            responseCode: err.responseCode,
+            response: err.response,
+            message: err.message
+        });
+        res.send({
+            statuscode: 0,
+            message: err.response || err.message || "Unable to send OTP right now"
+        })
+    }
 
 });
   
