@@ -106,112 +106,42 @@ app.get("/api/users", async (req, res) => {
 })
 // forgot password api
 
-// simple in-memory OTP store: { [email]: { code: number, expiresAt: Date } }
-let otpstore = {};
-let resetTokenStore = {};
-const OTP_TTL_SECONDS = parseInt(process.env.OTP_TTL_SECONDS) || 600; // default 10 minutes
-const RESET_TOKEN_TTL_SECONDS = parseInt(process.env.RESET_TOKEN_TTL_SECONDS) || 600;
-
-// helper: send email via MailerSend API if MAILERSEND_API_KEY is present,
-// otherwise fall back to SMTP using nodemailer and SMTP credentials (MAILERSEND_SMTP_USER / MAILERSEND_SMTP_PASS)
-async function sendMailerSendEmail(toEmail, subject, html, text) {
-    const apiKey = process.env.MAILERSEND_API_KEY;
-    if (apiKey) {
-        // Use MailerSend HTTP API
-        const payload = {
-            from: {
-                email: process.env.MAILERSEND_SMTP_USER || 'no-reply@example.com',
-                name: process.env.MAIL_FROM_NAME || 'Electo'
-            },
-            to: [{ email: toEmail }],
-            subject: subject,
-            html: html,
-            text: text || ''
-        };
-
-        // Use global fetch (Node 18+). If not available this will throw and fall back to SMTP below.
-        if (typeof fetch === 'function') {
-            const resp = await fetch('https://api.mailersend.com/v1/email', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`
-                },
-                body: JSON.stringify(payload)
-            });
-            const responseText = await resp.text();
-            let data = {};
-            if (responseText) {
-                try {
-                    data = JSON.parse(responseText);
-                } catch {
-                    data = { message: responseText };
-                }
-            }
-            if (!resp.ok) throw new Error(JSON.stringify(data));
-            return data;
-        } else {
-            throw new Error('fetch is not available in this Node runtime; please configure SMTP fallback variables');
-        }
+const transporter=nodemailer.createTransport({
+    service:"Mailersend",
+    secure:false,
+    auth:{
+        user:process.env.MAILERSEND_SMTP_USER,
+        pass:process.env.MAILERSEND_SMTP_PASS
     }
+})
 
-    // SMTP fallback using nodemailer (requires MAILERSEND_SMTP_USER and MAILERSEND_SMTP_PASS)
-    if (process.env.MAILERSEND_SMTP_USER && process.env.MAILERSEND_SMTP_PASS) {
-        const transporter = nodemailer.createTransport({
-            host: process.env.MAILERSEND_SMTP_HOST || 'smtp.mailersend.net',
-            port: Number(process.env.MAILERSEND_SMTP_PORT) || 587,
-            secure: false,
-            auth: {
-                user: process.env.MAILERSEND_SMTP_USER,
-                pass: process.env.MAILERSEND_SMTP_PASS
-            }
-        });
-
-        const info = await transporter.sendMail({
-            from: `"${process.env.MAIL_FROM_NAME || 'Electo'}" <${process.env.MAIL_FROM_EMAIL || process.env.MAILERSEND_SMTP_USER}>`,
-            to: toEmail,
-            subject,
-            html,
-            text
-        });
-        return info;
-    }
-
-    throw new Error('No MailerSend credentials configured (MAILERSEND_API_KEY or MAILERSEND_SMTP_USER/PASS)');
-}
+let otpstore = {}
 
 app.post('/api/forgot', async (req, res) => {
-    const email = (req.body.email || '').trim().toLowerCase();
+    const email = (req.body.email || '');
 
     if (!email) {
         return res.send({ statuscode: 2, message: 'Email is Required' });
     }
 
-    const account = await user.findOne({ Email: new RegExp(`^${escapeRegExp(email)}$`, 'i') });
-    if (!account) {
-        return res.send({ statuscode: 0, message: 'No account found with this email' });
-    }
-
     const otp = Math.floor(100000 + Math.random() * 900000);
-    // store OTP per-email (do not overwrite whole store)
-    otpstore[email] = { code: otp, expiresAt: Date.now() + OTP_TTL_SECONDS * 1000 };
-    // schedule removal after TTL
-    setTimeout(() => {
-        if (otpstore[email] && otpstore[email].expiresAt <= Date.now()) {
-            delete otpstore[email];
-        }
-    }, OTP_TTL_SECONDS * 1000 + 1000);
 
-    const subject = 'You requested a password reset';
-    const html = `<p>You requested a password reset.</p><p><a href="https://elcto-self.vercel.app/verify?email=${encodeURIComponent(email)}">Click here to reset your password</a></p><p>Your OTP is ${otp}</p>`;
-    const text = `You requested a password reset. Your OTP is ${otp}. Visit https://elcto-self.vercel.app/verify?email=${encodeURIComponent(email)} to continue.`;
+    otpstore[email] = otp;
+
+    const mailOptions = {
+        from: process.env.MAILERSEND_SMTP_USER,
+        to: email,
+        subject: 'Your OTP Code',
+        text: `Your OTP code is ${otp}`,
+        html: `<p>Your OTP code is <strong>${otp}</strong></p>`
+    };
 
     try {
-        const data = await sendMailerSendEmail(email, subject, html, text);
-        console.log('Email sent:', data);
-        res.send({ statuscode: 1, message: 'OTP Sent Successfully' });
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Email sent:', info);
+        res.send({ statuscode: 1, message: 'OTP sent successfully' });
     } catch (error) {
-        console.error('Error sending forgot email:', error);
+        console.error('Error sending email:', error);
         res.send({ statuscode: 0, message: 'Error sending email' });
     }
 });
