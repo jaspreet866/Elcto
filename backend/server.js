@@ -137,6 +137,62 @@ let resetTokenStore = {};
 const OTP_TTL_SECONDS = 5 * 60;
 const RESET_TOKEN_TTL_SECONDS = 10 * 60;
 
+const sendOtpEmail = async ({ to, otp }) => {
+    const fromEmail = process.env.MAIL_FROM || process.env.MAILERSEND_SMTP_USER;
+    const subject = 'Your OTP Code';
+    const text = `Your OTP code is ${otp}`;
+    const html = `<p>Your OTP code is <strong>${otp}</strong></p>`;
+
+    if (process.env.MAILERSEND_API_KEY) {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 15000);
+
+        try {
+            const response = await fetch('https://api.mailersend.com/v1/email', {
+                method: 'POST',
+                signal: controller.signal,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${process.env.MAILERSEND_API_KEY}`
+                },
+                body: JSON.stringify({
+                    from: {
+                        email: fromEmail,
+                        name: 'ElectoMart'
+                    },
+                    to: [
+                        {
+                            email: to
+                        }
+                    ],
+                    subject,
+                    text,
+                    html
+                })
+            });
+
+            const responseText = await response.text();
+            if (!response.ok) {
+                throw new Error(responseText || `MailerSend API failed with status ${response.status}`);
+            }
+
+            return;
+        } finally {
+            clearTimeout(timeout);
+        }
+    }
+
+    const mailOptions = {
+        from: fromEmail,
+        to,
+        subject,
+        text,
+        html
+    };
+
+    await transporter.sendMail(mailOptions);
+};
+
 app.post('/api/forgot', async (req, res) => {
 
     const email = (req.body.email || '').trim().toLowerCase();
@@ -148,8 +204,8 @@ app.post('/api/forgot', async (req, res) => {
         });
     }
 
-    if (!process.env.MAILERSEND_SMTP_USER || !process.env.MAILERSEND_SMTP_PASS) {
-        console.error("MailerSend SMTP env vars are missing");
+    if (!process.env.MAILERSEND_API_KEY && (!process.env.MAILERSEND_SMTP_USER || !process.env.MAILERSEND_SMTP_PASS)) {
+        console.error("MailerSend API key or SMTP env vars are missing");
         return res.send({
             statuscode: 0,
             message: "Email service is not configured"
@@ -169,16 +225,8 @@ app.post('/api/forgot', async (req, res) => {
         }
     }, OTP_TTL_SECONDS * 1000 + 1000);
 
-    const mailOptions = {
-        from: process.env.MAIL_FROM || process.env.MAILERSEND_SMTP_USER,
-        to: email,
-        subject: 'Your OTP Code',
-        text: `Your OTP code is ${otp}`,
-        html: `<p>Your OTP code is <strong>${otp}</strong></p>`
-    };
-
     try {
-        await transporter.sendMail(mailOptions)
+        await sendOtpEmail({ to: email, otp })
         console.log("email sent")
         res.send({
             statuscode: 1,
@@ -195,7 +243,7 @@ app.post('/api/forgot', async (req, res) => {
         });
         res.send({
             statuscode: 0,
-            message: err.response || err.message || "Unable to send OTP right now"
+            message: err.name === 'AbortError' ? "Email request timeout" : err.response || err.message || "Unable to send OTP right now"
         })
     }
 
