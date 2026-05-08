@@ -106,8 +106,6 @@ app.get("/api/users", async (req, res) => {
 })
 // forgot password api
 
-const nodemailer = require("nodemailer");
-
 const transporter = nodemailer.createTransport({
     host: "smtp.mailersend.net",
     port: 587,
