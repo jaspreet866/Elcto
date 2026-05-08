@@ -4,11 +4,22 @@ import { useNavigate } from "react-router-dom";
 export const Verifyy=()=>{
 
     const [otp,setOtp]=useState("");
+    const [email,setEmail]=useState("");
     const navigate=useNavigate()
+
+    useEffect(()=>{
+        const params = new URLSearchParams(window.location.search);
+        const emailFromUrl = params.get("email");
+        const savedEmail = emailFromUrl || localStorage.getItem("email") || "";
+        setEmail(savedEmail);
+        if (emailFromUrl) {
+            localStorage.setItem("email", emailFromUrl);
+        }
+    },[])
  
    const verify=async(e)=>{
     e.preventDefault();
-    const data={otp}
+    const data={email,otp}
     const result=await fetch("https://elcto-1.onrender.com/api/verify-otp",{
         method:"post",
         body:JSON.stringify(data),
@@ -18,6 +29,7 @@ export const Verifyy=()=>{
         const res=await result.json()
         if(res.statuscode===1){
           alert("OTP Verified Successfully")
+            localStorage.setItem("resetToken", res.resetToken)
             navigate("/resetpassword")
         }
         else{

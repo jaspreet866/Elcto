@@ -6,6 +6,7 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary')
 const cloudinary = require('cloudinary').v2
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const crypto = require('crypto')
 const key = "$@*#5gf*yre@gutcf&@*#$234ju6"
 const dotenv = require("dotenv");
 const nodemailer = require('nodemailer');
@@ -44,6 +45,7 @@ const Register = new mongoose.Schema({
 
 const user = mongoose.model("users", Register)
 const passwor = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\-])(?=.{8,}).*$/;
+const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 app.post("/api/register", async (req, res) => {
     const verify = req.body.email
@@ -106,7 +108,9 @@ app.get("/api/users", async (req, res) => {
 
 // simple in-memory OTP store: { [email]: { code: number, expiresAt: Date } }
 let otpstore = {};
+let resetTokenStore = {};
 const OTP_TTL_SECONDS = parseInt(process.env.OTP_TTL_SECONDS) || 600; // default 10 minutes
+const RESET_TOKEN_TTL_SECONDS = parseInt(process.env.RESET_TOKEN_TTL_SECONDS) || 600;
 
 // helper: send email via MailerSend API if MAILERSEND_API_KEY is present,
 // otherwise fall back to SMTP using nodemailer and SMTP credentials (MAILERSEND_SMTP_USER / MAILERSEND_SMTP_PASS)
@@ -135,7 +139,15 @@ async function sendMailerSendEmail(toEmail, subject, html, text) {
                 },
                 body: JSON.stringify(payload)
             });
-            const data = await resp.json();
+            const responseText = await resp.text();
+            let data = {};
+            if (responseText) {
+                try {
+                    data = JSON.parse(responseText);
+                } catch {
+                    data = { message: responseText };
+                }
+            }
             if (!resp.ok) throw new Error(JSON.stringify(data));
             return data;
         } else {
@@ -169,10 +181,15 @@ async function sendMailerSendEmail(toEmail, subject, html, text) {
 }
 
 app.post('/api/forgot', async (req, res) => {
-    const email = req.body.email;
+    const email = (req.body.email || '').trim().toLowerCase();
 
     if (!email) {
         return res.send({ statuscode: 2, message: 'Email is Required' });
+    }
+
+    const account = await user.findOne({ Email: new RegExp(`^${escapeRegExp(email)}$`, 'i') });
+    if (!account) {
+        return res.send({ statuscode: 0, message: 'No account found with this email' });
     }
 
     const otp = Math.floor(100000 + Math.random() * 900000);
@@ -200,37 +217,71 @@ app.post('/api/forgot', async (req, res) => {
 });
 
 app.post('/api/verify-otp', async (req, res) => {
-    const { email, otp } = req.body;
+    const email = (req.body.email || '').trim().toLowerCase();
+    const { otp } = req.body;
     if (!email || !otp) {
         return res.send({ statuscode: 2, message: 'Email and OTP are required' });
     }
 
     const stored = otpstore[email];
+    if (stored && stored.expiresAt <= Date.now()) {
+        delete otpstore[email];
+        return res.send({ statuscode: 0, message: 'OTP expired' });
+    }
+
     if (stored && stored.code && stored.code.toString() === otp.toString()) {
         // OTP verified, remove it so it can't be reused
         delete otpstore[email];
-        res.send({ statuscode: 1, message: 'OTP Verified Successfully' });
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        resetTokenStore[email] = {
+            token: resetToken,
+            expiresAt: Date.now() + RESET_TOKEN_TTL_SECONDS * 1000
+        };
+        setTimeout(() => {
+            if (resetTokenStore[email] && resetTokenStore[email].expiresAt <= Date.now()) {
+                delete resetTokenStore[email];
+            }
+        }, RESET_TOKEN_TTL_SECONDS * 1000 + 1000);
+        res.send({ statuscode: 1, message: 'OTP Verified Successfully', resetToken });
     } else {
         res.send({ statuscode: 0, message: 'Invalid OTP' });
     }
 });
 
 app.put("/api/resetpassword/:mail",async(req,res)=>{
-    const hash=bcrypt.hashSync(req.body.cpass,10)
- if (!passwor.test(req.body.pass)) {
-        res.send({ statuscode: 3, message: "🚨 Password must contain Uppercase, Lowercase, Number & Special character" })
+    const email = (req.params.mail || '').trim().toLowerCase();
+    const { pass, cpass, resetToken } = req.body;
+
+    if (!email || !pass || !cpass || !resetToken) {
+        return res.send({ statuscode: 2, message: "Email, password, confirm password and reset token are required" });
     }
 
-    const result=await user.updateOne({Email:req.params.mail},{
+    if (pass !== cpass) {
+        return res.send({ statuscode: 4, message: "Password and confirm password do not match" });
+    }
+
+    if (!passwor.test(pass)) {
+        return res.send({ statuscode: 3, message: "🚨 Password must contain Uppercase, Lowercase, Number & Special character" });
+    }
+
+    const storedResetToken = resetTokenStore[email];
+    if (!storedResetToken || storedResetToken.token !== resetToken || storedResetToken.expiresAt <= Date.now()) {
+        delete resetTokenStore[email];
+        return res.send({ statuscode: 0, message: "Reset session expired. Please request a new OTP." });
+    }
+
+    const hash=bcrypt.hashSync(pass,10)
+    const result=await user.updateOne({Email:new RegExp(`^${escapeRegExp(email)}$`, 'i')},{
      $set:{
         Password:hash,
      }   
     })
   if(result.modifiedCount>0){
-    res.send({statuscode:1})
+    delete resetTokenStore[email];
+    res.send({statuscode:1, message: "Password updated successfully"})
   }
   else{
-    res.send({statuscode:0})
+    res.send({statuscode:0, message: "Password was not updated"})
   }
 })
 
@@ -1013,4 +1064,3 @@ app.put("/api/approval/:id",async(req,res)=>{
   }
 })
  
-

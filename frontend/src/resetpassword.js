@@ -13,28 +13,24 @@ export const ResetPassword=()=>{
 },[])
 
     const reset=async(e)=>{
-        alert(mail)
         e.preventDefault()
+        const resetToken = localStorage.getItem("resetToken")
         const result=await fetch(`https://elcto-1.onrender.com/api/resetpassword/${mail}`,{
             method:"put",
-            body:JSON.stringify({pass,cpass}),
+            body:JSON.stringify({pass,cpass,resetToken}),
             headers:{"Content-type":"application/json;charset=UTF-8"}
         })
         if(result){
             const res=await result.json()
- if(res.statuscode===3){
-            alert(res.message)
-        }
-
-            if(res.statuscode===1 && cpass===pass){
-                alert("updated")
+            if(res.statuscode===1){
+                alert(res.message || "updated")
+                localStorage.removeItem("email")
+                localStorage.removeItem("resetToken")
             }
             else{
-                alert("Your password and confirm password do not match")
+                alert(res.message)
             }
-            if(res.statuscode===3){
             setmsg(res.message)
-        }
         }
         
     }
@@ -46,8 +42,8 @@ export const ResetPassword=()=>{
         <div>
             <h2 className="fw-bold mb-4">Reset Password</h2>
             <form onSubmit={reset}>
-                <input className="mt-2" type="text" placeholder="Enter your new password" onChange={(e)=>setpass(e.target.value)}></input><br></br>
-                <input className="mt-2" type="text" placeholder="Confirm your new password" onChange={(e)=>setcpass(e.target.value)}></input><br></br>
+                <input className="mt-2" type="password" placeholder="Enter your new password" onChange={(e)=>setpass(e.target.value)}></input><br></br>
+                <input className="mt-2" type="password" placeholder="Confirm your new password" onChange={(e)=>setcpass(e.target.value)}></input><br></br>
                 <p>{msg}</p>
                 <button type="submit" className="btn btn-primary mt-2" >Reset Password</button>
             </form>
