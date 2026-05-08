@@ -48,26 +48,33 @@ const Register = new mongoose.Schema({
 const user = mongoose.model("users", Register)
 const passwor = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\-])(?=.{8,}).*$/;
 const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const emailQuery = (email) => {
+    const emailRegex = new RegExp(`^${escapeRegExp(email)}$`, 'i');
+    return {
+        $or: [
+            { Email: emailRegex },
+            { email: emailRegex }
+        ]
+    };
+};
 
 app.post("/api/register", async (req, res) => {
-    const verify = req.body.email
-    const exist = await user.findOne({
-        Email: verify,
-    })
+    const verify = (req.body.email || '').trim().toLowerCase();
+    const exist = await user.findOne(emailQuery(verify))
 
     if (!passwor.test(req.body.pass)) {
-        res.send({ statuscode: 3, message: "🚨 Password must contain Uppercase, Lowercase, Number & Special character" })
+        return res.send({ statuscode: 3, message: "🚨 Password must contain Uppercase, Lowercase, Number & Special character" })
     }
    
     if (exist) {
-        res.send({ statuscode: 2, message: "Email is Already Used" })
+        return res.send({ statuscode: 2, message: "Email is Already Used" })
     }
     else {
         const hash = bcrypt.hashSync(req.body.pass, 10)
         const result = new user({
             FirstName: req.body.fname,
             LastName: req.body.lname,
-            Email: req.body.email,
+            Email: verify,
             Password: hash,
             UserType: "User",
             Status: "Active"
@@ -85,7 +92,11 @@ app.post("/api/register", async (req, res) => {
 // Login api
 
 app.post("/api/login", async (req, res) => {
-    const result = await user.findOne({ Email: req.body.email})
+    const email = (req.body.email || '').trim().toLowerCase();
+    const result = await user.findOne(emailQuery(email))
+    if (!result) {
+        return res.send({ statuscode: 0, message: "Invalid email or password" })
+    }
     const respass = result.Password
     const passw = bcrypt.compareSync(req.body.pass, respass)
     if (passw === true && result.Status === "Active") {
@@ -142,14 +153,6 @@ app.post('/api/forgot', async (req, res) => {
         return res.send({
             statuscode: 0,
             message: "Email service is not configured"
-        });
-    }
-
-    const existingUser = await user.findOne({ Email: new RegExp(`^${escapeRegExp(email)}$`, 'i') });
-    if (!existingUser) {
-        return res.send({
-            statuscode: 0,
-            message: "No account found with this email"
         });
     }
 
@@ -253,7 +256,7 @@ app.put("/api/resetpassword/:mail",async(req,res)=>{
     }
 
     const hash=bcrypt.hashSync(pass,10)
-    const result=await user.updateOne({Email:new RegExp(`^${escapeRegExp(email)}$`, 'i')},{
+    const result=await user.updateOne(emailQuery(email),{
      $set:{
         Password:hash,
      }   
