@@ -120,7 +120,7 @@ async function sendMailerSendEmail(toEmail, subject, html, text) {
         // Use MailerSend HTTP API
         const payload = {
             from: {
-                email: process.env.MAIL_FROM_EMAIL || 'no-reply@example.com',
+                email: process.env.MAILERSEND_SMTP_USER || 'no-reply@example.com',
                 name: process.env.MAIL_FROM_NAME || 'Electo'
             },
             to: [{ email: toEmail }],
