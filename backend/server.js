@@ -117,9 +117,9 @@ app.get("/api/users", async (req, res) => {
         res.send({ statuscode: 0 })
     }
 })
-// forgot password api
+// Forgot password API
 
-const transporter = nodemailer.createTransport({
+const mailTransporter = nodemailer.createTransport({
     host: "smtp.mailersend.net",
     port: 587,
     secure: false,
@@ -132,10 +132,46 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-let otpstore = {};
-let resetTokenStore = {};
+let otpStore = {};
+let resetSessionStore = {};
 const OTP_TTL_SECONDS = 5 * 60;
 const RESET_TOKEN_TTL_SECONDS = 10 * 60;
+
+const getCleanEmail = (email) => (email || '').trim().toLowerCase();
+
+const createOtp = () => Math.floor(100000 + Math.random() * 900000);
+
+const isExpired = (savedItem) => savedItem && savedItem.expiresAt <= Date.now();
+
+const saveOtpForEmail = (email, otp) => {
+    otpStore[email] = {
+        code: otp,
+        expiresAt: Date.now() + OTP_TTL_SECONDS * 1000
+    };
+
+    setTimeout(() => {
+        if (isExpired(otpStore[email])) {
+            delete otpStore[email];
+        }
+    }, OTP_TTL_SECONDS * 1000 + 1000);
+};
+
+const saveResetSessionForEmail = (email) => {
+    const resetToken = crypto.randomBytes(32).toString('hex');
+
+    resetSessionStore[email] = {
+        token: resetToken,
+        expiresAt: Date.now() + RESET_TOKEN_TTL_SECONDS * 1000
+    };
+
+    setTimeout(() => {
+        if (isExpired(resetSessionStore[email])) {
+            delete resetSessionStore[email];
+        }
+    }, RESET_TOKEN_TTL_SECONDS * 1000 + 1000);
+
+    return resetToken;
+};
 
 const sendOtpEmail = async ({ to, otp }) => {
     const fromEmail = process.env.MAIL_FROM || process.env.MAILERSEND_SMTP_USER;
@@ -182,20 +218,18 @@ const sendOtpEmail = async ({ to, otp }) => {
         }
     }
 
-    const mailOptions = {
+    await mailTransporter.sendMail({
         from: fromEmail,
         to,
         subject,
         text,
         html
-    };
-
-    await transporter.sendMail(mailOptions);
+    });
 };
 
 app.post('/api/forgot', async (req, res) => {
 
-    const email = (req.body.email || '').trim().toLowerCase();
+    const email = getCleanEmail(req.body.email);
 
     if (!email) {
         return res.send({
@@ -212,18 +246,8 @@ app.post('/api/forgot', async (req, res) => {
         });
     }
 
-    const otp = Math.floor(100000 + Math.random() * 900000);
-
-    otpstore[email] = {
-        code: otp,
-        expiresAt: Date.now() + OTP_TTL_SECONDS * 1000
-    };
-
-    setTimeout(() => {
-        if (otpstore[email] && otpstore[email].expiresAt <= Date.now()) {
-            delete otpstore[email];
-        }
-    }, OTP_TTL_SECONDS * 1000 + 1000);
+    const otp = createOtp();
+    saveOtpForEmail(email, otp);
 
     try {
         await sendOtpEmail({ to: email, otp })
@@ -250,39 +274,32 @@ app.post('/api/forgot', async (req, res) => {
 });
   
 app.post('/api/verify-otp', async (req, res) => {
-    const email = (req.body.email || '').trim().toLowerCase();
+    const email = getCleanEmail(req.body.email);
     const { otp } = req.body;
+
     if (!email || !otp) {
         return res.send({ statuscode: 2, message: 'Email and OTP are required' });
     }
 
-    const stored = otpstore[email];
-    if (stored && stored.expiresAt <= Date.now()) {
-        delete otpstore[email];
+    const savedOtp = otpStore[email];
+
+    if (isExpired(savedOtp)) {
+        delete otpStore[email];
         return res.send({ statuscode: 0, message: 'OTP expired' });
     }
 
-    if (stored && stored.code && stored.code.toString() === otp.toString()) {
-        // OTP verified, remove it so it can't be reused
-        delete otpstore[email];
-        const resetToken = crypto.randomBytes(32).toString('hex');
-        resetTokenStore[email] = {
-            token: resetToken,
-            expiresAt: Date.now() + RESET_TOKEN_TTL_SECONDS * 1000
-        };
-        setTimeout(() => {
-            if (resetTokenStore[email] && resetTokenStore[email].expiresAt <= Date.now()) {
-                delete resetTokenStore[email];
-            }
-        }, RESET_TOKEN_TTL_SECONDS * 1000 + 1000);
-        res.send({ statuscode: 1, message: 'OTP Verified Successfully', resetToken });
-    } else {
-        res.send({ statuscode: 0, message: 'Invalid OTP' });
+    if (!savedOtp || savedOtp.code.toString() !== otp.toString()) {
+        return res.send({ statuscode: 0, message: 'Invalid OTP' });
     }
+
+    delete otpStore[email];
+    const resetToken = saveResetSessionForEmail(email);
+
+    res.send({ statuscode: 1, message: 'OTP Verified Successfully', resetToken });
 });
 
-app.put("/api/resetpassword/:mail",async(req,res)=>{
-    const email = (req.params.mail || '').trim().toLowerCase();
+app.put("/api/resetpassword/:mail", async (req, res) => {
+    const email = getCleanEmail(req.params.mail);
     const { pass, cpass, resetToken } = req.body;
 
     if (!email || !pass || !cpass || !resetToken) {
@@ -297,25 +314,26 @@ app.put("/api/resetpassword/:mail",async(req,res)=>{
         return res.send({ statuscode: 3, message: "🚨 Password must contain Uppercase, Lowercase, Number & Special character" });
     }
 
-    const storedResetToken = resetTokenStore[email];
-    if (!storedResetToken || storedResetToken.token !== resetToken || storedResetToken.expiresAt <= Date.now()) {
-        delete resetTokenStore[email];
+    const savedResetSession = resetSessionStore[email];
+    if (!savedResetSession || savedResetSession.token !== resetToken || isExpired(savedResetSession)) {
+        delete resetSessionStore[email];
         return res.send({ statuscode: 0, message: "Reset session expired. Please request a new OTP." });
     }
 
-    const hash=bcrypt.hashSync(pass,10)
-    const result=await user.updateOne(emailQuery(email),{
-     $set:{
-        Password:hash,
-     }   
+    const hash = bcrypt.hashSync(pass, 10)
+    const result = await user.updateOne(emailQuery(email), {
+        $set: {
+            Password: hash,
+        }
     })
-  if(result.modifiedCount>0){
-    delete resetTokenStore[email];
-    res.send({statuscode:1, message: "Password updated successfully"})
-  }
-  else{
-    res.send({statuscode:0, message: "Password was not updated"})
-  }
+
+    if (result.modifiedCount > 0) {
+        delete resetSessionStore[email];
+        res.send({ statuscode: 1, message: "Password updated successfully" })
+    }
+    else {
+        res.send({ statuscode: 0, message: "Password was not updated" })
+    }
 })
 
 //make admin
