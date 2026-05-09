@@ -134,8 +134,11 @@ const mailTransporter = nodemailer.createTransport({
 
 let otpStore = {};
 let resetSessionStore = {};
+
+const getCleanEmail = (email) => (email || '').trim().toLowerCase();
+
 const createOtp = () => Math.floor(100000 + Math.random() * 900000);
-// saves otp for email
+
 const saveOtpForEmail = (email, otp) => {
     otpStore[email] = {
         code: otp
@@ -165,7 +168,7 @@ const sendOtpEmail = async (email, otp) => {
 };
 
 app.post('/api/forgot', async (req, res) => {
-    const email = req.body.email;
+    const email = getCleanEmail(req.body.email);
     if (!email) {
         return res.send({
             statuscode: 2,
