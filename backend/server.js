@@ -137,8 +137,6 @@ const mailTransporter = nodemailer.createTransport({
 
 let otpStore = {};
 
-const getCleanEmail = (email) => (email || '').trim().toLowerCase();
-
 const createOtp = () => Math.floor(100000 + Math.random() * 900000);
 
 const saveOtpForEmail = (email, otp) => {
@@ -147,12 +145,10 @@ const saveOtpForEmail = (email, otp) => {
     };
 };
 
-const getSenderEmail = () => {
-    return process.env.MAIL_FROM || process.env.MAILERSEND_FROM_EMAIL || process.env.MAILERSEND_SMTP_USER;
-};
+
 
 const createOtpEmail = (email, otp) => {
-    const senderEmail = getSenderEmail();
+    const senderEmail = process.env.MAILERSEND_SMTP_USER
 
     return {
         from: senderEmail,
@@ -163,46 +159,10 @@ const createOtpEmail = (email, otp) => {
     };
 };
 
-const sendOtpWithMailerSendApi = async (emailMessage) => {
-    const response = await fetch(MAILERSEND_EMAIL_API_URL, {
-        method: "POST",
-        headers: {
-            "Authorization": `Bearer ${process.env.MAILERSEND_API_KEY}`,
-            "Content-Type": "application/json",
-            "X-Requested-With": "XMLHttpRequest"
-        },
-        body: JSON.stringify({
-            from: {
-                email: emailMessage.from,
-                name: process.env.MAIL_FROM_NAME || "Elcto"
-            },
-            to: [
-                {
-                    email: emailMessage.to
-                }
-            ],
-            subject: emailMessage.subject,
-            text: emailMessage.text,
-            html: emailMessage.html
-        })
-    });
 
-    if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || `MailerSend API failed with status ${response.status}`);
-    }
-
-    return response;
-};
 
 const sendOtpEmail = async (email, otp) => {
     const emailMessage = createOtpEmail(email, otp);
-
-    // The API method is better for hosted apps because SMTP can timeout.
-    if (process.env.MAILERSEND_API_KEY) {
-        return sendOtpWithMailerSendApi(emailMessage);
-    }
-
     await mailTransporter.sendMail(emailMessage);
 };
 
@@ -224,7 +184,7 @@ const getEmailErrorMessage = (err) => {
 };
 
 app.post('/api/forgot', async (req, res) => {
-    const email = getCleanEmail(req.body.email);
+    const email = req.body.email;
     if (!email) {
         return res.send({
             statuscode: 2,
@@ -263,7 +223,7 @@ app.post('/api/forgot', async (req, res) => {
     }
 });  
 app.post('/api/verify-otp', async (req, res) => {
-    const email = getCleanEmail(req.body.email);
+    const email = req.body.email;
     const { otp } = req.body;
 
     if (!email || !otp) {
@@ -277,7 +237,7 @@ app.post('/api/verify-otp', async (req, res) => {
     res.send({ statuscode: 1, message: 'OTP Verified Successfully' });
 });
 app.put("/api/resetpassword/:mail", async (req, res) => {
-    const email = getCleanEmail(req.params.mail);
+    const email = req.params.mail;
     const { pass, cpass } = req.body;
 
     if (!email || !pass || !cpass) {
