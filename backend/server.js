@@ -166,22 +166,7 @@ const sendOtpEmail = async (email, otp) => {
     await mailTransporter.sendMail(emailMessage);
 };
 
-const isEmailServiceReady = () => {
-    const hasMailerSendApiKey = Boolean(process.env.MAILERSEND_API_KEY);
-    const hasSmtpLogin = Boolean(process.env.MAILERSEND_SMTP_USER && process.env.MAILERSEND_SMTP_PASS);
 
-    return hasMailerSendApiKey || hasSmtpLogin;
-};
-
-const getEmailErrorMessage = (err) => {
-    const isTimeout = err.code === "ETIMEDOUT" || /timeout/i.test(err.message || "");
-
-    if (isTimeout) {
-        return "Email service connection timed out. Please try again in a moment.";
-    }
-
-    return err.response || err.message || "Unable to send OTP right now";
-};
 
 app.post('/api/forgot', async (req, res) => {
     const email = req.body.email;
@@ -189,13 +174,6 @@ app.post('/api/forgot', async (req, res) => {
         return res.send({
             statuscode: 2,
             message: 'Email is Required'
-        });
-    }
-    if (!isEmailServiceReady()) {
-        console.error("MailerSend env vars are missing");
-        return res.send({
-            statuscode: 0,
-            message: "Email service is not configured"
         });
     }
     const otp = createOtp();
@@ -216,10 +194,6 @@ app.post('/api/forgot', async (req, res) => {
             response: err.response,
             message: err.message
         });
-        res.send({
-            statuscode: 0,
-            message: getEmailErrorMessage(err)
-        })
     }
 });  
 app.post('/api/verify-otp', async (req, res) => {
