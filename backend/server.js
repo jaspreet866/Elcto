@@ -6,6 +6,7 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary')
 const cloudinary = require('cloudinary').v2
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const crypto = require('crypto')
 const key = "$@*#5gf*yre@gutcf&@*#$234ju6"
 const dotenv = require("dotenv");
 const nodemailer = require('nodemailer');
@@ -13,9 +14,6 @@ dotenv.config();
 
 
 const app = express()
-
-const MAILERSEND_EMAIL_API_URL = "https://api.mailersend.com/v1/email";
-
 
 const corsfront={
     origin:["https://elcto-a5a8.onrender.com","https://elcto-self.vercel.app"],
@@ -120,7 +118,7 @@ app.get("/api/users", async (req, res) => {
 })
 // Forgot password API
 // This sends an OTP code to the user's email.
-// First it tries MailerSend API. If API key is not available, it uses SMTP.
+// It uses MailerSend SMTP credentials from environment variables.
 
 const mailTransporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || "smtp.mailersend.net",
@@ -135,17 +133,17 @@ const mailTransporter = nodemailer.createTransport({
     }
 });
 
-let otpStore = {};
+const otpStore = {};
+const OTP_EXPIRY_MS = 10 * 60 * 1000;
 
-const createOtp = () => Math.floor(100000 + Math.random() * 900000);
+const createOtp = () => crypto.randomInt(100000, 1000000).toString();
 
 const saveOtpForEmail = (email, otp) => {
     otpStore[email] = {
-        code: otp
+        code: otp,
+        expiresAt: Date.now() + OTP_EXPIRY_MS
     };
 };
-
-
 
 const createOtpEmail = (email, otp) => {
     const senderEmail = process.env.MAILERSEND_SMTP_USER
@@ -159,8 +157,6 @@ const createOtpEmail = (email, otp) => {
     };
 };
 
-
-
 const sendOtpEmail = async (email, otp) => {
     if (!process.env.MAILERSEND_SMTP_USER || !process.env.MAILERSEND_SMTP_PASS) {
         throw new Error("MailerSend SMTP credentials are not configured");
@@ -169,28 +165,22 @@ const sendOtpEmail = async (email, otp) => {
     await mailTransporter.sendMail(emailMessage);
 };
 
-
-
 app.post('/api/forgot', async (req, res) => {
     const email = (req.body.email || '').trim().toLowerCase();
     if (!email) {
-        return res.send({
-            statuscode: 2,
-            message: 'Email is Required'
+        return res.send({ statuscode: 2, message: 'Email is Required'
         });
     }
-    const otp = createOtp();
     try {
+        const otp = createOtp();
         await sendOtpEmail(email, otp)
         saveOtpForEmail(email, otp);
         console.log("email sent")
-        res.send({
-            statuscode: 1,
-            message: "OTP sent to your email"
+        return res.send({statuscode: 1,message: "OTP sent to your email"
         })
     }
     catch (err) {
-        console.error("MailerSend error:", {
+        console.error("Forgot password error:", {
             code: err.code,
             command: err.command,
             responseCode: err.responseCode,
@@ -205,20 +195,27 @@ app.post('/api/forgot', async (req, res) => {
 });  
 app.post('/api/verify-otp', async (req, res) => {
     const email = (req.body.email || '').trim().toLowerCase();
-    const { otp } = req.body;
+    const otp = (req.body.otp || '').toString().trim();
 
     if (!email || !otp) {
         return res.send({ statuscode: 2, message: 'Email and OTP are required' });
     }
     const savedOtp = otpStore[email];
-    if (!savedOtp || savedOtp.code.toString() !== otp.toString()) {
+    if (!savedOtp) {
+        return res.send({ statuscode: 0, message: 'Invalid OTP' });
+    }
+    if (Date.now() > savedOtp.expiresAt) {
+        delete otpStore[email];
+        return res.send({ statuscode: 0, message: 'OTP has expired' });
+    }
+    if (savedOtp.code !== otp) {
         return res.send({ statuscode: 0, message: 'Invalid OTP' });
     }
     delete otpStore[email];
-    res.send({ statuscode: 1, message: 'OTP Verified Successfully' });
+    return res.send({ statuscode: 1, message: 'OTP Verified Successfully' });
 });
 app.put("/api/resetpassword/:mail", async (req, res) => {
-    const email = req.params.mail;
+    const email = (req.params.mail || '').trim().toLowerCase();
     const { pass, cpass } = req.body;
 
     if (!email || !pass || !cpass) {
@@ -231,7 +228,7 @@ app.put("/api/resetpassword/:mail", async (req, res) => {
         return res.send({ statuscode: 3, message: "🚨 Password must contain Uppercase, Lowercase, Number & Special character" });
     }
     const hash = bcrypt.hashSync(pass, 10)
-    const result = await user.updateOne(emailQuery(email), {
+    const result = await user.updateOne({Email:req.params.mail}, {
         $set: {
             Password: hash,
         }
