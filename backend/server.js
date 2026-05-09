@@ -15,6 +15,8 @@ dotenv.config();
 
 const app = express()
 
+const MAILERSEND_EMAIL_API_URL = "https://api.mailersend.com/v1/email";
+
 
 const corsfront={
     origin:["https://elcto-a5a8.onrender.com","https://elcto-self.vercel.app"],
@@ -120,8 +122,8 @@ app.get("/api/users", async (req, res) => {
 // Forgot password API
 
 const mailTransporter = nodemailer.createTransport({
-    host: "smtp.mailersend.net",
-    port: 587,
+    host: process.env.SMTP_HOST || "smtp.mailersend.net",
+    port: Number(process.env.SMTP_PORT || 587),
     secure: false,
     connectionTimeout: 10000,
     greetingTimeout: 10000,
@@ -156,15 +158,48 @@ const saveResetSessionForEmail = (email) => {
 };
 
 const sendOtpEmail = async (email, otp) => {
-    const fromEmail = process.env.MAIL_FROM || process.env.MAILERSEND_SMTP_USER;
-
-    await mailTransporter.sendMail({
+    const fromEmail = process.env.MAIL_FROM || process.env.MAILERSEND_FROM_EMAIL || process.env.MAILERSEND_SMTP_USER;
+    const mail = {
         from: fromEmail,
         to: email,
         subject: 'Your OTP Code',
         text: `Your OTP code is ${otp}`,
         html: `<p>Your OTP code is <strong>${otp}</strong></p>`
-    });
+    };
+
+    if (process.env.MAILERSEND_API_KEY) {
+        const response = await fetch(MAILERSEND_EMAIL_API_URL, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${process.env.MAILERSEND_API_KEY}`,
+                "Content-Type": "application/json",
+                "X-Requested-With": "XMLHttpRequest"
+            },
+            body: JSON.stringify({
+                from: {
+                    email: fromEmail,
+                    name: process.env.MAIL_FROM_NAME || "Elcto"
+                },
+                to: [
+                    {
+                        email
+                    }
+                ],
+                subject: mail.subject,
+                text: mail.text,
+                html: mail.html
+            })
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(errorText || `MailerSend API failed with status ${response.status}`);
+        }
+
+        return response;
+    }
+
+    await mailTransporter.sendMail(mail);
 };
 
 app.post('/api/forgot', async (req, res) => {
@@ -175,17 +210,17 @@ app.post('/api/forgot', async (req, res) => {
             message: 'Email is Required'
         });
     }
-    if (!process.env.MAILERSEND_SMTP_USER || !process.env.MAILERSEND_SMTP_PASS) {
-        console.error("MailerSend SMTP env vars are missing");
+    if (!process.env.MAILERSEND_API_KEY && (!process.env.MAILERSEND_SMTP_USER || !process.env.MAILERSEND_SMTP_PASS)) {
+        console.error("MailerSend env vars are missing");
         return res.send({
             statuscode: 0,
             message: "Email service is not configured"
         });
     }
     const otp = createOtp();
-    saveOtpForEmail(email, otp);
     try {
         await sendOtpEmail(email, otp)
+        saveOtpForEmail(email, otp);
         console.log("email sent")
         res.send({
             statuscode: 1,
@@ -200,9 +235,10 @@ app.post('/api/forgot', async (req, res) => {
             response: err.response,
             message: err.message
         });
+        const isTimeout = err.code === "ETIMEDOUT" || /timeout/i.test(err.message || "");
         res.send({
             statuscode: 0,
-            message: err.name === 'AbortError' ? "Email request timeout" : err.response || err.message || "Unable to send OTP right now"
+            message: isTimeout ? "Email service connection timed out. Please try again in a moment." : err.response || err.message || "Unable to send OTP right now"
         })
     }
 });  
