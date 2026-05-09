@@ -162,6 +162,9 @@ const createOtpEmail = (email, otp) => {
 
 
 const sendOtpEmail = async (email, otp) => {
+    if (!process.env.MAILERSEND_SMTP_USER || !process.env.MAILERSEND_SMTP_PASS) {
+        throw new Error("MailerSend SMTP credentials are not configured");
+    }
     const emailMessage = createOtpEmail(email, otp);
     await mailTransporter.sendMail(emailMessage);
 };
@@ -169,7 +172,7 @@ const sendOtpEmail = async (email, otp) => {
 
 
 app.post('/api/forgot', async (req, res) => {
-    const email = req.body.email;
+    const email = (req.body.email || '').trim().toLowerCase();
     if (!email) {
         return res.send({
             statuscode: 2,
@@ -194,10 +197,14 @@ app.post('/api/forgot', async (req, res) => {
             response: err.response,
             message: err.message
         });
+        return res.status(500).send({
+            statuscode: 0,
+            message: "Unable to send OTP right now"
+        });
     }
 });  
 app.post('/api/verify-otp', async (req, res) => {
-    const email = req.body.email;
+    const email = (req.body.email || '').trim().toLowerCase();
     const { otp } = req.body;
 
     if (!email || !otp) {
