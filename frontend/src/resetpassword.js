@@ -14,10 +14,9 @@ export const ResetPassword=()=>{
 
     const reset=async(e)=>{
         e.preventDefault()
-        const resetToken = localStorage.getItem("resetToken")
         const result=await fetch(`https://elcto-1.onrender.com/api/resetpassword/${mail}`,{
             method:"put",
-            body:JSON.stringify({pass,cpass,resetToken}),
+            body:JSON.stringify({pass,cpass}),
             headers:{"Content-type":"application/json;charset=UTF-8"}
         })
         if(result){
@@ -25,7 +24,6 @@ export const ResetPassword=()=>{
             if(res.statuscode===1){
                 alert(res.message || "updated")
                 localStorage.removeItem("email")
-                localStorage.removeItem("resetToken")
             }
             else{
                 alert(res.message)

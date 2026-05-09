@@ -29,7 +29,6 @@ export const Verifyy=()=>{
         const res=await result.json()
         if(res.statuscode===1){
           alert("OTP Verified Successfully")
-            localStorage.setItem("resetToken", res.resetToken)
             navigate("/resetpassword")
         }
         else{
