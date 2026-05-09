@@ -125,7 +125,9 @@ const mailTransporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || "smtp.mailersend.net",
     port: Number(process.env.SMTP_PORT || 587),
     secure: false,
-
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
     auth: {
         user: process.env.MAILERSEND_SMTP_USER,
         pass: process.env.MAILERSEND_SMTP_PASS
@@ -133,192 +135,160 @@ const mailTransporter = nodemailer.createTransport({
 });
 
 let otpStore = {};
+let resetSessionStore = {};
 
+const getCleanEmail = (email) => (email || '').trim().toLowerCase();
 
-// Clean Email
-const getCleanEmail = (email) => {
-    return email.trim().toLowerCase();
+const createOtp = () => Math.floor(100000 + Math.random() * 900000);
+
+const saveOtpForEmail = (email, otp) => {
+    otpStore[email] = {
+        code: otp
+    };
 };
 
+const saveResetSessionForEmail = (email) => {
+    const resetToken = crypto.randomBytes(32).toString('hex');
 
-// Generate OTP
-const createOtp = () => {
-    return Math.floor(100000 + Math.random() * 900000);
-};
-
-
-// Save OTP
-const saveOtp = (email, otp) => {
-    otpStore[email] = otp;
-};
-
-
-// Send OTP Mail
-const sendOtpMail = async (email, otp) => {
-
-    const mailOptions = {
-        from: process.env.MAILERSEND_SMTP_USER,
-        to: email,
-        subject: "OTP Verification",
-        text: `Your OTP is ${otp}`,
-        html: `<h2>Your OTP is ${otp}</h2>`
+    resetSessionStore[email] = {
+        token: resetToken
     };
 
-    await mailTransporter.sendMail(mailOptions);
+    return resetToken;
 };
 
+const sendOtpEmail = async (email, otp) => {
+    const fromEmail = process.env.MAIL_FROM || process.env.MAILERSEND_FROM_EMAIL || process.env.MAILERSEND_SMTP_USER;
+    const mail = {
+        from: fromEmail,
+        to: email,
+        subject: 'Your OTP Code',
+        text: `Your OTP code is ${otp}`,
+        html: `<p>Your OTP code is <strong>${otp}</strong></p>`
+    };
 
+    if (process.env.MAILERSEND_API_KEY) {
+        const response = await fetch(MAILERSEND_EMAIL_API_URL, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${process.env.MAILERSEND_API_KEY}`,
+                "Content-Type": "application/json",
+                "X-Requested-With": "XMLHttpRequest"
+            },
+            body: JSON.stringify({
+                from: {
+                    email: fromEmail,
+                    name: process.env.MAIL_FROM_NAME || "Elcto"
+                },
+                to: [
+                    {
+                        email
+                    }
+                ],
+                subject: mail.subject,
+                text: mail.text,
+                html: mail.html
+            })
+        });
 
-// FORGOT PASSWORD
-app.post("/api/forgot", async (req, res) => {
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(errorText || `MailerSend API failed with status ${response.status}`);
+        }
 
+        return response;
+    }
+
+    await mailTransporter.sendMail(mail);
+};
+
+app.post('/api/forgot', async (req, res) => {
     const email = getCleanEmail(req.body.email);
-
     if (!email) {
-
         return res.send({
             statuscode: 2,
-            message: "Email Required"
+            message: 'Email is Required'
         });
     }
-
+    if (!process.env.MAILERSEND_API_KEY && (!process.env.MAILERSEND_SMTP_USER || !process.env.MAILERSEND_SMTP_PASS)) {
+        console.error("MailerSend env vars are missing");
+        return res.send({
+            statuscode: 0,
+            message: "Email service is not configured"
+        });
+    }
     const otp = createOtp();
-
     try {
-
-        await sendOtpMail(email, otp);
-
-        saveOtp(email, otp);
-
-        console.log("OTP Sent");
-
+        await sendOtpEmail(email, otp)
+        saveOtpForEmail(email, otp);
+        console.log("email sent")
         res.send({
             statuscode: 1,
-            message: "OTP Sent Successfully"
-        });
-
+            message: "OTP sent to your email"
+        })
     }
     catch (err) {
-
-        console.log(err);
-
+        console.error("MailerSend error:", {
+            code: err.code,
+            command: err.command,
+            responseCode: err.responseCode,
+            response: err.response,
+            message: err.message
+        });
+        const isTimeout = err.code === "ETIMEDOUT" || /timeout/i.test(err.message || "");
         res.send({
             statuscode: 0,
-            message: "Error Sending OTP"
-        });
+            message: isTimeout ? "Email service connection timed out. Please try again in a moment." : err.response || err.message || "Unable to send OTP right now"
+        })
     }
-});
-
-
-
-
-// VERIFY OTP
-app.post("/api/verify-otp", async (req, res) => {
-
+});  
+app.post('/api/verify-otp', async (req, res) => {
     const email = getCleanEmail(req.body.email);
-
     const { otp } = req.body;
 
     if (!email || !otp) {
-
-        return res.send({
-            statuscode: 2,
-            message: "Email and OTP Required"
-        });
+        return res.send({ statuscode: 2, message: 'Email and OTP are required' });
     }
-
-    if (!otpStore[email]) {
-
-        return res.send({
-            statuscode: 0,
-            message: "OTP Not Found"
-        });
+    const savedOtp = otpStore[email];
+    if (!savedOtp || savedOtp.code.toString() !== otp.toString()) {
+        return res.send({ statuscode: 0, message: 'Invalid OTP' });
     }
-
-    if (otpStore[email].toString() !== otp.toString()) {
-
-        return res.send({
-            statuscode: 0,
-            message: "Invalid OTP"
-        });
-    }
-
-    res.send({
-        statuscode: 1,
-        message: "OTP Verified Successfully"
-    });
+    delete otpStore[email];
+    const resetToken = saveResetSessionForEmail(email);
+    res.send({ statuscode: 1, message: 'OTP Verified Successfully', resetToken });
 });
-
-
-
-
-// RESET PASSWORD
 app.put("/api/resetpassword/:mail", async (req, res) => {
-
     const email = getCleanEmail(req.params.mail);
+    const { pass, cpass, resetToken } = req.body;
 
-    const { pass, cpass, otp } = req.body;
-
-    if (!email || !pass || !cpass || !otp) {
-
-        return res.send({
-            statuscode: 2,
-            message: "All Fields Required"
-        });
+    if (!email || !pass || !cpass || !resetToken) {
+        return res.send({ statuscode: 2, message: "Email, password, confirm password and reset token are required" });
     }
-
-    if (otpStore[email].toString() !== otp.toString()) {
-
-        return res.send({
-            statuscode: 0,
-            message: "Invalid OTP"
-        });
-    }
-
     if (pass !== cpass) {
-
-        return res.send({
-            statuscode: 3,
-            message: "Passwords Do Not Match"
-        });
+        return res.send({ statuscode: 4, message: "Password and confirm password do not match" });
     }
-
     if (!passwor.test(pass)) {
-
-        return res.send({
-            statuscode: 4,
-            message: "Weak Password"
-        });
+        return res.send({ statuscode: 3, message: "🚨 Password must contain Uppercase, Lowercase, Number & Special character" });
     }
-
-    const hash = bcrypt.hashSync(pass, 10);
-
-    const result = await user.updateOne(
-        emailQuery(email),
-        {
-            $set: {
-                Password: hash
-            }
+    const savedResetSession = resetSessionStore[email];
+    if (!savedResetSession || savedResetSession.token !== resetToken) {
+        delete resetSessionStore[email];
+        return res.send({ statuscode: 0, message: "Invalid reset session. Please request a new OTP." });
+    }
+    const hash = bcrypt.hashSync(pass, 10)
+    const result = await user.updateOne(emailQuery(email), {
+        $set: {
+            Password: hash,
         }
-    );
-
+    })
     if (result.modifiedCount > 0) {
-
-        delete otpStore[email];
-
-        res.send({
-            statuscode: 1,
-            message: "Password Updated Successfully"
-        });
+        delete resetSessionStore[email];
+        res.send({ statuscode: 1, message: "Password updated successfully" })
     }
     else {
-
-        res.send({
-            statuscode: 0,
-            message: "Password Not Updated"
-        });
+        res.send({ statuscode: 0, message: "Password was not updated" })
     }
-});
+})
 
 //make admin
 app.put("/api/makeadmin/:id", async (req, res) => {
