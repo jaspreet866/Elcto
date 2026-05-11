@@ -122,7 +122,6 @@ app.get("/api/users", async (req, res) => {
 
 const mailTransporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || "smtp.mailersend.net",
-    port: Number(process.env.SMTP_PORT || 587),
     secure: false,
     connectionTimeout: 10000,
     greetingTimeout: 10000,
