@@ -132,7 +132,7 @@ const mailTransporter = nodemailer.createTransport({
     }
 });
 
-const otpStore = {};
+var otpStore = {};
 const OTP_EXPIRY_MS = 10 * 60 * 1000;
 
 const createOtp = () => crypto.randomInt(100000, 1000000).toString();
