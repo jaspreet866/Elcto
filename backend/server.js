@@ -15,9 +15,9 @@ dotenv.config();
 
 const app = express()
 
-const corsfront={
-    origin:["https://elcto-a5a8.onrender.com","https://elcto-self.vercel.app"],
-    credentials:true
+const corsfront = {
+    origin: ["https://elcto-a5a8.onrender.com", "https://elcto-self.vercel.app"],
+    credentials: true
 }
 
 app.use(express.json())
@@ -27,7 +27,7 @@ const PORT = process.env.PORT || 9000;
 
 app.listen(PORT, () => {
     console.log(`Server is running on ${PORT}`)
-   
+
 })
 
 
@@ -64,7 +64,7 @@ app.post("/api/register", async (req, res) => {
     if (!passwor.test(req.body.pass)) {
         return res.send({ statuscode: 3, message: "🚨 Password must contain Uppercase, Lowercase, Number & Special character" })
     }
-   
+
     if (exist) {
         return res.send({ statuscode: 2, message: "Email is Already Used" })
     }
@@ -157,7 +157,7 @@ const createOtpEmail = (email, otp) => {
 };
 
 const sendOtpEmail = async (email, otp) => {
-    if (!process.env.MAILERSEND_SMTP_USER || !process.env.MAILERSEND_SMTP_PASS) {
+    if (process.env.MAILERSEND_API_KEY) {
         throw new Error("MailerSend SMTP credentials are not configured");
     }
     const emailMessage = createOtpEmail(email, otp);
@@ -167,7 +167,8 @@ const sendOtpEmail = async (email, otp) => {
 app.post('/api/forgot', async (req, res) => {
     const email = (req.body.email || '').trim().toLowerCase();
     if (!email) {
-        return res.send({ statuscode: 2, message: 'Email is Required'
+        return res.send({
+            statuscode: 2, message: 'Email is Required'
         });
     }
     try {
@@ -175,7 +176,8 @@ app.post('/api/forgot', async (req, res) => {
         await sendOtpEmail(email, otp)
         saveOtpForEmail(email, otp);
         console.log("email sent")
-        return res.send({statuscode: 1,message: "OTP sent to your email"
+        return res.send({
+            statuscode: 1, message: "OTP sent to your email"
         })
     }
     catch (err) {
@@ -191,7 +193,7 @@ app.post('/api/forgot', async (req, res) => {
             message: "Unable to send OTP right now"
         });
     }
-});  
+});
 app.post('/api/verify-otp', async (req, res) => {
     const email = (req.body.email || '').trim().toLowerCase();
     const otp = (req.body.otp || '').toString().trim();
@@ -227,7 +229,7 @@ app.put("/api/resetpassword/:mail", async (req, res) => {
         return res.send({ statuscode: 3, message: "🚨 Password must contain Uppercase, Lowercase, Number & Special character" });
     }
     const hash = bcrypt.hashSync(pass, 10)
-    const result = await user.updateOne({Email:req.params.mail}, {
+    const result = await user.updateOne({ Email: req.params.mail }, {
         $set: {
             Password: hash,
         }
@@ -283,7 +285,7 @@ const myStorage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: "electomart",
-        allowed_formats: ["jpg", "png", "jpeg", "webp","avif"]
+        allowed_formats: ["jpg", "png", "jpeg", "webp", "avif"]
     }
 })
 
@@ -640,9 +642,9 @@ app.post("/api/response", async (req, res) => {
     if (result) {
         const response = await result.save()
         if (response) {
-        // multer-storage-cloudinary exposes the uploaded file info on req.file
-        // use req.file.path (Cloudinary URL) when present
-        Img: req.file ? req.file.path : "no-image.png"
+            // multer-storage-cloudinary exposes the uploaded file info on req.file
+            // use req.file.path (Cloudinary URL) when present
+            Img: req.file ? req.file.path : "no-image.png"
         }
         else {
             res.send({ statuscode: 0 })
@@ -676,7 +678,7 @@ app.post("/api/cartdata/:proid", async (req, res) => {
             ProductId: proid,
             Name: req.body.name,
             Price: req.body.price,
-            Img: req.body.img ,
+            Img: req.body.img,
             Quantity: req.body.value,
             User: req.body.id
         })
@@ -939,83 +941,83 @@ app.use((err, req, res, next) => {
     res.status(500).send({ statuscode: 0, error: err.message || 'Internal Server Error' });
 });
 
-const vendor=new mongoose.Schema({
-    Name:String,
-    Email:String,
-    Phone:String,
-    Password:String,
-    Username:String,
-    Bank:String,
-    City:String,
-    State:String,
-    UserType:String,
-    Status:String,
+const vendor = new mongoose.Schema({
+    Name: String,
+    Email: String,
+    Phone: String,
+    Password: String,
+    Username: String,
+    Bank: String,
+    City: String,
+    State: String,
+    UserType: String,
+    Status: String,
 })
 
-const vendordata=mongoose.model("Vendor", vendor)
+const vendordata = mongoose.model("Vendor", vendor)
 
-app.post("/api/vendorregister",async(req,res)=>{
-    const hashedPassword=await bcrypt.hash(req.body.pass,10)
-    const result=new vendordata({
-        Name:req.body.name,
-        Email:req.body.email,
-        Phone:req.body.phn,
-        Password:hashedPassword,
-        Username:req.body.uname,
-        Bank:req.body.bank,
-        City:req.body.city,
-        State:req.body.state,
-        UserType:"Vendor",
-        Status:"Pending"
+app.post("/api/vendorregister", async (req, res) => {
+    const hashedPassword = await bcrypt.hash(req.body.pass, 10)
+    const result = new vendordata({
+        Name: req.body.name,
+        Email: req.body.email,
+        Phone: req.body.phn,
+        Password: hashedPassword,
+        Username: req.body.uname,
+        Bank: req.body.bank,
+        City: req.body.city,
+        State: req.body.state,
+        UserType: "Vendor",
+        Status: "Pending"
     })
-    const resp=await result.save()
-    if(resp){
-        res.send({statuscode:1})
+    const resp = await result.save()
+    if (resp) {
+        res.send({ statuscode: 1 })
     }
-    else{
-        res.send({statuscode:0})
+    else {
+        res.send({ statuscode: 0 })
     }
 })
 
-app.get("/api/vendordata",async(req,res)=>{
-    const result=await vendordata.find()
-    if(result){
+app.get("/api/vendordata", async (req, res) => {
+    const result = await vendordata.find()
+    if (result) {
         console.log(result)
-        res.send({statuscode:1,data:result})
+        res.send({ statuscode: 1, data: result })
     }
-    else{
-        res.send({statuscode:0})
+    else {
+        res.send({ statuscode: 0 })
     }
 })
 
-app.post("/api/vlog",async(req,res)=>{
-    const result=await vendordata.findOne({Email:req.body.email})
-    const respass2=result.Password
-    const passw2=bcrypt.compareSync(req.body.pass,respass2)
+app.post("/api/vlog", async (req, res) => {
+    const result = await vendordata.findOne({ Email: req.body.email })
+    const respass2 = result.Password
+    const passw2 = bcrypt.compareSync(req.body.pass, respass2)
     console.log("Entered Password:", req.body.pass)
-console.log("DB Password:", result.Password)
-console.log("Match:", passw2)
-console.log("Status:", result.Status)
-    if(result.Email===req.body.email && passw2===true && result.Status==="Accept"){
-        let vtoken=jwt.sign({id:result._id,usertype:result.UserType,mail:result.Email},key,{expiresIn:"1h"})
-        res.send({statuscode:1,data:result,token:vtoken})
+    console.log("DB Password:", result.Password)
+    console.log("Match:", passw2)
+    console.log("Status:", result.Status)
+    if (result.Email === req.body.email && passw2 === true && result.Status === "Accept") {
+        let vtoken = jwt.sign({ id: result._id, usertype: result.UserType, mail: result.Email }, key, { expiresIn: "1h" })
+        res.send({ statuscode: 1, data: result, token: vtoken })
     }
-    else{
-        res.send({statuscode:0})
+    else {
+        res.send({ statuscode: 0 })
     }
 })
 
-app.put("/api/approval/:id",async(req,res)=>{
-    const result=vendordata.updateOne({_id:req.params.id},{
-        $set:{
-            Status:req.body.status,
+app.put("/api/approval/:id", async (req, res) => {
+    const result = vendordata.updateOne({ _id: req.params.id }, {
+        $set: {
+            Status: req.body.status,
         }
     })
-  if((await result).modifiedCount==1){
-    res.send({statuscode:1})
-  }
-  else{
-    res.send({statuscode:0})
-  }
+    if ((await result).modifiedCount == 1) {
+        res.send({ statuscode: 1 })
+    }
+    else {
+        res.send({ statuscode: 0 })
+    }
 })
- 
+
