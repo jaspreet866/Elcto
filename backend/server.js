@@ -16,7 +16,7 @@ dotenv.config();
 const app = express()
 
 const corsfront = {
-    origin: ["https://elcto-a5a8.onrender.com", "https://elcto-self.vercel.app"],
+    origin: ["https://elcto-a5a8.onrender.com", "https://elcto-self.vercel.app","https://elctrostore-nine.vercel.app"],
     credentials: true
 }
 

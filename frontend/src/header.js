@@ -79,9 +79,9 @@ export const Header = () => {
         <>
 
 
-            <nav className="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+            <nav className="navbar navbar-expand-lg bg-white shadow-sm sticky-top ">
                 <div className="container">
-                    <div className="d-flex gap-4">
+                    <div className="d-flex gap-4 ">
                         <button
                             className="navbar-toggler  d-lg-none"
                             type="button"
