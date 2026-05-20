@@ -21,14 +21,7 @@ const CORS_ORIGINS = [
     "https://elctrostore-nine.vercel.app"
 ];
 
-
-
-const envAllowedOrigins = (CORS_ORIGINS || "")
-    .split(",")
-    .map((origin) => origin.trim())
-    .filter(Boolean);
-
-const allowedOrigins = [...new Set([...CORS_ORIGINS, ...envAllowedOrigins])];
+const allowedOrigins = CORS_ORIGINS;
 const allowedOriginPatterns = [
     /^https:\/\/[a-z0-9-]+\.vercel\.app$/,
     /^https:\/\/[a-z0-9-]+\.onrender\.com$/
