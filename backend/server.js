@@ -15,8 +15,41 @@ dotenv.config();
 
 const app = express()
 
+const CORS_ORIGINS = [
+    "https://elcto-a5a8.onrender.com",
+    "https://elcto-self.vercel.app",
+    "https://elctrostore-nine.vercel.app"
+];
+
+
+
+const envAllowedOrigins = (CORS_ORIGINS || "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+const allowedOrigins = [...new Set([...CORS_ORIGINS, ...envAllowedOrigins])];
+const allowedOriginPatterns = [
+    /^https:\/\/[a-z0-9-]+\.vercel\.app$/,
+    /^https:\/\/[a-z0-9-]+\.onrender\.com$/
+];
+
+const isAllowedOrigin = (origin) => {
+    if (!origin) {
+        return true;
+    }
+
+    return allowedOrigins.includes(origin) || allowedOriginPatterns.some((pattern) => pattern.test(origin));
+};
+
 const corsfront = {
-    origin: ["https://elcto-a5a8.onrender.com", "https://elcto-self.vercel.app","https://elctrostore-nine.vercel.app"],
+    origin: (origin, callback) => {
+        if (isAllowedOrigin(origin)) {
+            return callback(null, true);
+        }
+
+        return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
     credentials: true
 }
 
@@ -1020,4 +1053,3 @@ app.put("/api/approval/:id", async (req, res) => {
         res.send({ statuscode: 0 })
     }
 })
-
