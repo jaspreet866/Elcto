@@ -6,8 +6,8 @@ import { Context } from "./usecontext"
 
 export const Related = () => {
     const [d, setd] = useState([])
-     const [pricesort, setpricesort] = useState("")
-    const [brandSort, setbrandSort] = useState("")  
+    const [pricesort, setpricesort] = useState("")
+    const [brandSort, setbrandSort] = useState("")
     const [datta, setdatta] = useState([])
     const { id } = useContext(Context)
     const [pr] = useSearchParams()
@@ -15,11 +15,11 @@ export const Related = () => {
     const prr = pr.get("id")
 
     useEffect(() => {
-    if (prr) {
-        show(prr);
-        show2(prr);
-    }
-}, [prr]);
+        if (prr) {
+            show(prr);
+            show2(prr);
+        }
+    }, [prr]);
     const show = async (id) => {
         const result = await fetch(`https://elcto-1.onrender.com/api/related/${id}`, {
             method: "get"
@@ -50,7 +50,7 @@ export const Related = () => {
             }
         }
     }
-     setTimeout(() => {
+    setTimeout(() => {
         new window.Splide(".brandSlider", {
             perPage: 6,
             gap: 20,
@@ -128,20 +128,20 @@ export const Related = () => {
         }
 
     }
-     const products = [...d]
-.filter((p) => {
-    if (!brandSort) return true
-    return p.Brand === brandSort
-})
-.sort((a,b)=>{
-    if(pricesort==="low"){
-        return a.ProductPrice - b.ProductPrice
-    }
-    if(pricesort==="high"){
-        return b.ProductPrice - a.ProductPrice
-    }
-    return 0
-})
+    const products = [...d]
+        .filter((p) => {
+            if (!brandSort) return true
+            return p.Brand === brandSort
+        })
+        .sort((a, b) => {
+            if (pricesort === "low") {
+                return a.ProductPrice - b.ProductPrice
+            }
+            if (pricesort === "high") {
+                return b.ProductPrice - a.ProductPrice
+            }
+            return 0
+        })
 
     return (
         <>
@@ -171,194 +171,194 @@ export const Related = () => {
                 </div>
             </section>
             <section>
-  <div className="container mt-5">
+                <div className="container mt-5">
 
-    <h1 className="text-center">SHOP BY BRAND</h1>
+                    <h1 className="text-center">SHOP BY BRAND</h1>
 
-    <div className="splide brandSlider mt-4">
-      <div className="splide__track">
+                    <div className="splide brandSlider mt-4">
+                        <div className="splide__track">
 
-        <ul className="splide__list">
+                            <ul className="splide__list">
 
-          {datta.map((a, i) => (
-            <li className="splide__slide text-center" key={i}>
+                                {datta.map((a, i) => (
+                                    <li className="splide__slide text-center" key={i}>
 
-              <Link
-                className="text-decoration-none text-black d-block"
-                to={`/brand?id=${a._id}`}
-              >
+                                        <Link
+                                            className="text-decoration-none text-black d-block"
+                                            to={`/brand?id=${a._id}`}
+                                        >
 
-                <img
-                  src={`/uploads/${a.Img}`}
-                  className="object-fit-cover rounded mx-auto"
-                  style={{ width: "100px", height: "100px" }}
-                  alt=""
-                />
+                                            <img
+                                                src={`/uploads/${a.Img}`}
+                                                className="object-fit-cover rounded mx-auto"
+                                                style={{ width: "100px", height: "100px" }}
+                                                alt=""
+                                            />
 
-                <h6 className="mt-2">{a.BrandName}</h6>
+                                            <h6 className="mt-2">{a.BrandName}</h6>
 
-              </Link>
+                                        </Link>
 
-            </li>
-          ))}
+                                    </li>
+                                ))}
 
-        </ul>
+                            </ul>
 
-      </div>
-    </div>
+                        </div>
+                    </div>
 
-  </div>
-</section>
+                </div>
+            </section>
 
-   <div className="container mt-5">
+            <div className="container mt-5">
 
-<div className="d-flex justify-content-between align-items-center d-lg-block">
-   <div><h2 className="fw-bold text-start text-lg-center">Our Collection</h2></div>
-<div>
-<button
-className="btn  d-lg-none"
-data-bs-toggle="offcanvas"
-data-bs-target="#offcanvasRight"
-><i class="fa-duotone fa-solid fa-sliders"></i>
-Filters
-</button>
-</div>
-</div>
+                <div className="d-flex justify-content-between align-items-center d-lg-block">
+                    <div><h2 className="fw-bold text-start text-lg-center">Our Collection</h2></div>
+                    <div>
+                        <button
+                            className="btn  d-lg-none"
+                            data-bs-toggle="offcanvas"
+                            data-bs-target="#offcanvasRight"
+                        ><i class="fa-duotone fa-solid fa-sliders"></i>
+                            Filters
+                        </button>
+                    </div>
+                </div>
 
 
 
                 <div className="row mt-4 g-4 justify-content-center">
-                   <div className="col-lg-3 d-none d-md-block">
-                       <h2 className="text-center">Filters</h2>
-                       <select className="form-select  mt-5 " aria-label="Default select example" onChange={(e)=>setpricesort(e.target.value)}>
-                           <option value="">Select Price</option>
-                           <option value="low">Low to High</option>
-                           <option value="high">High to Low</option>
-                       </select>   
-                       <select className="form-select  mt-4 " aria-label="Default select example" onChange={(e)=>setbrandSort(e.target.value)}>
-                           <option value="">Select Brand</option>
-                           {datta.map((a) => (
-                               <option key={a._id} value={a._id}>{a.BrandName}</option>
-                           ))}
-                       </select>         
-                   </div>
-                   <div className="col">
-                    <div className="row">
-                             {products.map((b) => (
-                        <div key={b._id} className="col-lg-3 col-md-4 col-6 ">
+                    <div className="col-lg-3 d-none d-md-block">
+                        <h2 className="text-center">Filters</h2>
+                        <select className="form-select  mt-5 " aria-label="Default select example" onChange={(e) => setpricesort(e.target.value)}>
+                            <option value="">Select Price</option>
+                            <option value="low">Low to High</option>
+                            <option value="high">High to Low</option>
+                        </select>
+                        <select className="form-select  mt-4 " aria-label="Default select example" onChange={(e) => setbrandSort(e.target.value)}>
+                            <option value="">Select Brand</option>
+                            {datta.map((a) => (
+                                <option key={a._id} value={a._id}>{a.BrandName}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="col">
+                        <div className="row">
+                            {products.map((b) => (
+                                <div key={b._id} className="col-lg-3 col-md-4 col-6 ">
 
-                            <Link className="text-decoration-none text-black" to={`/detail?id=${b._id}&cid=${prr}`}>
+                                    <Link className="text-decoration-none text-black" to={`/detail?id=${b._id}&cid=${prr}`}>
 
-                                <div className="card border-0 shadow-sm text-center p-3 w-100">
-                                    <div className='cardicons justify-self-end'>
+                                        <div className="card border-0 shadow-sm text-center p-3 w-100">
+                                            <div className='cardicons justify-self-end'>
 
-                                        <p className='text-danger btn' onClick={() => { wish(id, b.ProductName, b.ProductPrice, b.Img, b._id) }}><i class="bi bi-heart-fill"></i>
-                                        </p>
-                                        <p className="btn" onClick={() => { cart(id, b.ProductName, b.ProductPrice, b.Img, b.Quantity, b._id) }}><i class="bi bi-cart"></i></p>
-                                        <p><i class="bi bi-eye"></i></p>
-                                    </div>
+                                                <p className='text-danger btn' onClick={() => { wish(id, b.ProductName, b.ProductPrice, b.Img, b._id) }}><i class="bi bi-heart-fill"></i>
+                                                </p>
+                                                <p className="btn" onClick={() => { cart(id, b.ProductName, b.ProductPrice, b.Img, b.Quantity, b._id) }}><i class="bi bi-cart"></i></p>
+                                                <p><i class="bi bi-eye"></i></p>
+                                            </div>
 
-                                    <div className="d-flex justify-content-center align-items-center mb-3" style={{ height: "150px" }}>
-                                        <img
-                                            src={`${b.Img}`}
-                                            alt={b.ProductName}
-                                            className="img-fluid"
-                                            style={{ maxHeight: "120px" }}
-                                        />
-                                    </div>
+                                            <div className="d-flex justify-content-center align-items-center mb-3" style={{ height: "150px" }}>
+                                                <img
+                                                    src={`${b.Img}`}
+                                                    alt={b.ProductName}
+                                                    className="img-fluid"
+                                                    style={{ maxHeight: "120px" }}
+                                                />
+                                            </div>
 
-                                    <div className="card-body p-0">
-                                        <h6 className="fw-semibold mb-2 product-title">{b.ProductName}</h6>
-                                        <div className="mb-2 text-warning">
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-half"></i>
-    <i className="bi bi-star"></i>
-    <span className="text-muted small ms-1">(4.3)</span>
-</div>
+                                            <div className="card-body p-0">
+                                                <h6 className="fw-semibold mb-2 product-title">{b.ProductName}</h6>
+                                                <div className="mb-2 text-warning">
+                                                    <i className="bi bi-star-fill"></i>
+                                                    <i className="bi bi-star-fill"></i>
+                                                    <i className="bi bi-star-fill"></i>
+                                                    <i className="bi bi-star-half"></i>
+                                                    <i className="bi bi-star"></i>
+                                                    <span className="text-muted small ms-1">(4.3)</span>
+                                                </div>
 
-                                       <p className="d-flex justify-content-center align-self-center text-center">
-                                        <span className=" ">
-                                            ₹{b.ProductPrice}
-                                        </span>
-                                        <span className=" text-success fw-bold ms-1 ">
-                                            ₹{b.SalePrice}
-                                        </span>
-                                        
+                                                <p className="d-flex justify-content-center align-self-center text-center">
+                                                    <span className=" ">
+                                                        ₹{b.ProductPrice}
+                                                    </span>
+                                                    <span className=" text-success fw-bold ms-1 ">
+                                                        ₹{b.SalePrice}
+                                                    </span>
 
-                                    </p>
 
-                                        <button className="btn btn-primary btn-sm w-100">
-                                            View Product
-                                        </button>
-                                    </div>
+                                                </p>
+
+                                                <button className="btn btn-primary btn-sm w-100">
+                                                    View Product
+                                                </button>
+                                            </div>
+
+                                        </div>
+
+                                    </Link>
 
                                 </div>
-
-                            </Link>
+                            ))}
 
                         </div>
-                    ))}
-                       
                     </div>
-                   </div>
                 </div>
             </div>
 
-        <div className="offcanvas offcanvas-start" id="offcanvasRight">
+            <div className="offcanvas offcanvas-start" id="offcanvasRight">
 
-<div className="offcanvas-header">
-<h5>Filters</h5>
-<button className="btn-close" data-bs-dismiss="offcanvas"></button>
-</div>
+                <div className="offcanvas-header">
+                    <h5>Filters</h5>
+                    <button className="btn-close" data-bs-dismiss="offcanvas"></button>
+                </div>
 
-<div className="offcanvas-body">
+                <div className="offcanvas-body">
 
-<h6 className="fw-bold">Price</h6>
+                    <h6 className="fw-bold">Price</h6>
 
-<ul className="list-group">
+                    <ul className="list-group">
 
-<li className="list-group-item border-0">
-<button
-className="btn w-100 text-start"
-data-bs-dismiss="offcanvas"
-onClick={()=>setpricesort("low")}
->
-⬇ Low to High
-</button>
-</li>
+                        <li className="list-group-item border-0">
+                            <button
+                                className="btn w-100 text-start"
+                                data-bs-dismiss="offcanvas"
+                                onClick={() => setpricesort("low")}
+                            >
+                                ⬇ Low to High
+                            </button>
+                        </li>
 
-<li className="list-group-item border-0">
-<button
-className="btn w-100 text-start"
-data-bs-dismiss="offcanvas"
-onClick={()=>setpricesort("high")}
->
-⬆ High to Low
-</button>
-</li>
+                        <li className="list-group-item border-0">
+                            <button
+                                className="btn w-100 text-start"
+                                data-bs-dismiss="offcanvas"
+                                onClick={() => setpricesort("high")}
+                            >
+                                ⬆ High to Low
+                            </button>
+                        </li>
 
-</ul>
-<h5 className="fw-bold mt-4">Brand</h5>
-<div className="">
-  <ul className="list-group mt-3 border-none list-unstyled text-start">
-    {datta.map((a) => (
-      <li
-        key={a._id}
-        className="ms-4 mt-3"
-      data-bs-dismiss="offcanvas"
-      onClick={() => setbrandSort(a._id)}
-    >
-      {a.BrandName}
-    </li>
-  ))}
-</ul>
-</div>  
-   
-</div>
+                    </ul>
+                    <h5 className="fw-bold mt-4">Brand</h5>
+                    <div className="">
+                        <ul className="list-group mt-3 border-none list-unstyled text-start">
+                            {datta.map((a) => (
+                                <li
+                                    key={a._id}
+                                    className="ms-4 mt-3"
+                                    data-bs-dismiss="offcanvas"
+                                    onClick={() => setbrandSort(a._id)}
+                                >
+                                    {a.BrandName}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
 
-</div>
+                </div>
+
+            </div>
 
 
         </>

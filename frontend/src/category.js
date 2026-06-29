@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react"
 import { Context } from "./usecontext"
 import { useNavigate } from "react-router-dom"
 
+const API_URL = process.env.REACT_APP_API_URL || "https://elcto-1.onrender.com"
 
 
 export const Category = () => {
@@ -23,7 +24,7 @@ export const Category = () => {
     const formdata = new FormData()
     formdata.append("name", name)
     formdata.append("pic", img)
-    const result = await fetch("http://localhost:8000/api/category", {
+    const result = await fetch(`${API_URL}/api/category`, {
       method: "post",
       body: formdata
     })
@@ -31,6 +32,7 @@ export const Category = () => {
       const res = await result.json()
       if (res.statuscode === 1) {
         alert("added")
+        show()
       }
       else {
         alert("not")
@@ -38,17 +40,18 @@ export const Category = () => {
     }
 
   }
-  const add2 = async () => {
+  const add2 = async (e) => {
+    e.preventDefault()
     const formdata2 = new FormData()
     formdata2.append("brandname", brandname)
     formdata2.append("pic", brandimg)
     formdata2.append("category", category)
-    const result = await fetch("https://elcto-1.onrender.com/api/brand", {
+    const result = await fetch(`${API_URL}/api/brand`, {
       method: "post",
       body: formdata2,
     })
     if (result.ok) {
-      const res = result.json()
+      const res = await result.json()
       if (res.statuscode === 1) {
         alert("added")
       }
@@ -58,7 +61,7 @@ export const Category = () => {
     }
   }
   const show = async () => {
-    const result = await fetch("https://elcto-1.onrender.com/api/getcategory", {
+    const result = await fetch(`${API_URL}/api/getcategory`, {
       method: "get"
     })
     if (result.ok) {
@@ -109,19 +112,19 @@ export const Category = () => {
 
             <div className="col mt-3">
               <h1>Add Category</h1>
-              <form>
+              <form onSubmit={add}>
                 <div>
                   <input type="text" className="form-control" onChange={(e) => setname(e.target.value)}></input>
                 </div>
                 <div>
                   <input type="file" className="form-control mt-3" onChange={(e) => setimg(e.target.files[0])}></input>
                 </div>
-                <button className="btn btn-primary mt-3" onClick={add}>Add Category</button>
+                <button type="submit" className="btn btn-primary mt-3">Add Category</button>
               </form>
             </div>
             <div className="col mt-3">
               <h1>Add Brand</h1>
-              <form>
+              <form onSubmit={add2}>
                 <div>
                   <input type="text" className="form-control" onChange={(e) => setbrandname(e.target.value)}></input>
                 </div>
@@ -129,14 +132,14 @@ export const Category = () => {
                   <option>Select Category</option>
                   {
                     d.map((a) =>
-                      <option value={a._id}>{a.Name}</option>
+                      <option key={a._id} value={a._id}>{a.Name}</option>
                     )
                   }
                 </select>
                 <div>
                   <input type="file" className="form-control mt-3" onChange={(e) => setbrandimg(e.target.files[0])}></input>
                 </div>
-                <button className="btn btn-primary mt-3" onClick={add2}>Add Brand</button>
+                <button type="submit" className="btn btn-primary mt-3">Add Brand</button>
               </form>
             </div>
           </div>

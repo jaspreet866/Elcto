@@ -18,7 +18,10 @@ const app = express()
 const CORS_ORIGINS = [
     "https://elcto-a5a8.onrender.com",
     "https://elcto-self.vercel.app",
-    "https://elctrostore-nine.vercel.app"
+    "https://elctrostore-nine.vercel.app",
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "http://localhost:5173"
 ];
 
 const allowedOrigins = CORS_ORIGINS;
@@ -324,18 +327,25 @@ const Category = new mongoose.Schema({
 const Cate = mongoose.model("category", Category)
 
 app.post("/api/category", upload.single("pic"), async (req, res) => {
-    const result = new Cate({
-        Name: req.body.name,
-        Img: pic
-    })
-    if (result) {
+    try {
+        if (!req.file || !req.file.path) {
+            return res.status(400).send({ statuscode: 0, message: "Category image is required" })
+        }
+
+        const result = new Cate({
+            Name: req.body.name,
+            Img: req.file.path
+        })
         const resp = await result.save()
         if (resp) {
-            res.send({ statuscode: 1 })
+            return res.send({ statuscode: 1 })
         }
-        else {
-            res.send({ statuscode: 0 })
-        }
+
+        return res.send({ statuscode: 0 })
+    }
+    catch (err) {
+        console.error("Error in /api/category", err)
+        return res.status(500).send({ statuscode: 0, message: err.message })
     }
 })
 
@@ -400,19 +410,26 @@ const brand = new mongoose.Schema({
 const br = mongoose.model("Brands", brand)
 
 app.post("/api/brand", upload.single("pic"), async (req, res) => {
-    const result = new br({
-        BrandName: req.body.brandname,
-        Category: req.body.category,
-        Img: req.file.path
-    })
-    if (result) {
+    try {
+        if (!req.file || !req.file.path) {
+            return res.status(400).send({ statuscode: 0, message: "Brand image is required" })
+        }
+
+        const result = new br({
+            BrandName: req.body.brandname,
+            Category: req.body.category,
+            Img: req.file.path
+        })
         const resp = await result.save()
         if (resp) {
-            res.send({ statuscode: 1 })
+            return res.send({ statuscode: 1 })
         }
-        else {
-            res.send({ statuscode: 0 })
-        }
+
+        return res.send({ statuscode: 0 })
+    }
+    catch (err) {
+        console.error("Error in /api/brand", err)
+        return res.status(500).send({ statuscode: 0, message: err.message })
     }
 })
 
