@@ -18,16 +18,14 @@ const app = express()
 const CORS_ORIGINS = [
     "https://elcto-a5a8.onrender.com",
     "https://elcto-self.vercel.app",
-    "https://elctrostore-nine.vercel.app",
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "http://localhost:5173"
+    
 ];
 
 const allowedOrigins = CORS_ORIGINS;
 const allowedOriginPatterns = [
     /^https:\/\/[a-z0-9-]+\.vercel\.app$/,
-    /^https:\/\/[a-z0-9-]+\.onrender\.com$/
+    /^https:\/\/[a-z0-9-]+\.onrender\.com$/,
+    /^http:\/\/localhost:\d+$/
 ];
 
 const isAllowedOrigin = (origin) => {
@@ -567,28 +565,7 @@ app.delete("/api/deletepro/:id", async (req, res) => {
     }
 })
 
-app.put("/api/updatepro/:id", upload.single("pic"), async (req, res) => {
-    const result = await pro.updateOne({ _id: req.params.id }, {
-        $set: {
-            Category: req.body.productt,
-            ProductName: req.body.name,
-            ProductPrice: req.body.price,
-            ProductDetail: req.body.detail,
-            OnSale: req.body.sale,
-            Date: new Date(),
-            SalePrice: req.body.saleprice,
-            Brand: req.body.brand,
-            Specifications: req.body.specifications,
-            Img: req.file.path
-        }
-    })
-    if (result.modifiedCount === 1) {
-        res.send({ statuscode: 1 })
-    }
-    else {
-        res.send({ statuscode: 0 })
-    }
-})
+
 
 app.get("/api/related/:id", async (req, res) => {
     const result = await pro.find({ Category: req.params.id })
@@ -685,9 +662,7 @@ app.post("/api/response", async (req, res) => {
     if (result) {
         const response = await result.save()
         if (response) {
-            // multer-storage-cloudinary exposes the uploaded file info on req.file
-            // use req.file.path (Cloudinary URL) when present
-            Img: req.file ? req.file.path : "no-image.png"
+            res.send({ statuscode: 1 })
         }
         else {
             res.send({ statuscode: 0 })
@@ -731,7 +706,7 @@ app.post("/api/cartdata/:proid", async (req, res) => {
                 res.send({ statuscode: 1 })
             }
             else {
-                req.send({ statuscode: 0 })
+                res.send({ statuscode: 0 })
             }
         }
     }
@@ -743,7 +718,7 @@ app.get("/api/getcartdata/:id", async (req, res) => {
         res.send({ statuscode: 1, data: result })
     }
     else {
-        res.send({ staruscode: 0 })
+        res.send({ statuscode: 0 })
     }
 })
 
