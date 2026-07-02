@@ -1,3 +1,4 @@
+import API_URL from "./config"
 import { useState } from "react"
 
 export const Vendor = () => {
@@ -14,7 +15,7 @@ export const Vendor = () => {
 const register=async(e)=>{
     e.preventDefault();
     const data={name,uname,email,phn,pass,bank,city,state}
-    const result = await fetch("https://elcto-1.onrender.com/api/vendorregister",{
+    const result = await fetch(`${API_URL}/api/vendorregister`,{
         method:"post",
         body:JSON.stringify(data),
         headers:{"Content-type":"application/json;charset=UTF-8"}

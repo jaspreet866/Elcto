@@ -1,3 +1,4 @@
+import API_URL from "./config"
 import { useContext, useEffect, useState } from "react"
 import { Context } from "./usecontext"
 import Swal from "sweetalert2"
@@ -21,7 +22,7 @@ export const Cart = () => {
     })
 
     const show = async () => {
-        const result = await fetch(`https://elcto-1.onrender.com/api/getcartdata/${id}`, {
+        const result = await fetch(`${API_URL}/api/getcartdata/${id}`, {
             method: "get"
         })
         if (result.ok) {
@@ -55,7 +56,7 @@ export const Cart = () => {
 
         if (confirm.isConfirmed) {
 
-            const result = await fetch(`https://elcto-1.onrender.com/api/remove/${id}`, {
+            const result = await fetch(`${API_URL}/api/remove/${id}`, {
                 method: "DELETE"
             });
 

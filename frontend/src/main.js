@@ -1,6 +1,6 @@
-
-import { useContext, useEffect, useState, } from 'react'
-import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
+import API_URL from "./config"
+import { useContext, useEffect, useMemo, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import banner2 from './images/banner2.png'
 import banner1 from './images/banner1.png'
 import banner3 from './images/banner3.png'
@@ -9,843 +9,451 @@ import Swal from 'sweetalert2'
 import AOS from "aos"
 import "aos/dist/aos.css"
 
+const API_BASE = `${API_URL}/api`
+
+const sections = [
+    { key: "latest", title: "Latest Products", eyebrow: "New arrivals", icon: "bi-stars" },
+    { key: "sale", title: "On Sale Products", eyebrow: "Limited-time deals", icon: "bi-lightning-charge-fill" },
+    { key: "mobile", title: "Mobile Collection", eyebrow: "Phones for every budget", icon: "bi-phone" },
+    { key: "laptop", title: "Laptop Collection", eyebrow: "Work, gaming and study", icon: "bi-laptop" },
+    { key: "airpod", title: "Audio Collection", eyebrow: "Wireless sound essentials", icon: "bi-earbuds" },
+    { key: "led", title: "LED Collection", eyebrow: "Home entertainment upgrades", icon: "bi-tv" },
+]
+
+const fetchJson = async (path) => {
+    const response = await fetch(`${API_BASE}${path}`)
+    if (!response.ok) throw new Error(`Request failed: ${path}`)
+    return response.json()
+}
+
+const formatPrice = (value) => {
+    const amount = Number(value || 0)
+    return new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+        maximumFractionDigits: 0,
+    }).format(amount)
+}
+
+const calculateDiscount = (original, sale) => {
+    const originalPrice = Number(original)
+    const salePrice = Number(sale)
+    if (!originalPrice || !salePrice || salePrice >= originalPrice) return 0
+    return Math.round(((originalPrice - salePrice) / originalPrice) * 100)
+}
+
+const Rating = () => (
+    <div className="product-rating" aria-label="Rated 4.3 out of 5">
+        <i className="bi bi-star-fill"></i>
+        <i className="bi bi-star-fill"></i>
+        <i className="bi bi-star-fill"></i>
+        <i className="bi bi-star-half"></i>
+        <i className="bi bi-star"></i>
+        <span>(4.3)</span>
+    </div>
+)
+
 export const Main = () => {
-    const [d, setd] = useState([])
-    const [spro, setspro] = useState([])
-    const [lpro, setlpro] = useState([])
-    const [br, setbr] = useState([])
-    const [idd, setidd] = useState()
-    const [laptop, setlaptop] = useState([])
-    const [mobile, setmobile] = useState([])
-    const [led, setled] = useState([])
-    const [airpod, setairpod] = useState([])
+    const [categories, setCategories] = useState([])
+    const [products, setProducts] = useState({
+        latest: [],
+        sale: [],
+        laptop: [],
+        mobile: [],
+        led: [],
+        airpod: [],
+    })
+    const [brands, setBrands] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [showTop, setShowTop] = useState(false)
     const { id } = useContext(Context)
-    const [discount, setdiscount] = useState("")
-    const [showTop, setShowTop] = useState(false);
-
-
-
     const navigate = useNavigate()
 
     useEffect(() => {
         AOS.init({
-            duration: 800,
-            easing: "ease-in-out",
+            duration: 650,
+            easing: "ease-out",
             once: true,
-            offset: 120
+            offset: 80,
         })
     }, [])
 
-    setTimeout(() => {
-        new window.Splide(".categorySlider", {
+    useEffect(() => {
+        let active = true
+
+        const loadStorefront = async () => {
+            try {
+                const [
+                    categoryRes,
+                    saleRes,
+                    latestRes,
+                    brandRes,
+                    laptopRes,
+                    mobileRes,
+                    ledRes,
+                    airpodRes,
+                ] = await Promise.all([
+                    fetchJson("/getcategory"),
+                    fetchJson("/saleproduct"),
+                    fetchJson("/latestproduct"),
+                    fetchJson("/showbrand"),
+                    fetchJson("/laptop"),
+                    fetchJson("/mobiles"),
+                    fetchJson("/leds"),
+                    fetchJson("/airpods"),
+                ])
+
+                if (!active) return
+
+                setCategories(categoryRes.statuscode === 1 ? categoryRes.data : [])
+                setBrands(brandRes.statuscode === 1 ? brandRes.data : [])
+                setProducts({
+                    latest: latestRes.statuscode === 1 ? latestRes.data : [],
+                    sale: saleRes.statuscode === 1 ? saleRes.data : [],
+                    laptop: laptopRes.statuscode === 1 ? laptopRes.data : [],
+                    mobile: mobileRes.statuscode === 1 ? mobileRes.data : [],
+                    led: ledRes.statuscode === 1 ? ledRes.data : [],
+                    airpod: airpodRes.statuscode === 1 ? airpodRes.data : [],
+                })
+            } catch (error) {
+                console.error("Storefront load failed:", error)
+                Swal.fire({
+                    icon: "error",
+                    title: "Store temporarily unavailable",
+                    text: "Please refresh in a moment.",
+                })
+            } finally {
+                if (active) setLoading(false)
+            }
+        }
+
+        loadStorefront()
+
+        return () => {
+            active = false
+        }
+    }, [])
+
+    useEffect(() => {
+        if (!categories.length || !window.Splide) return
+
+        const slider = new window.Splide(".categorySlider", {
             perPage: 6,
-            gap: 20,
+            gap: 18,
             autoplay: true,
+            interval: 2600,
             arrows: false,
             pagination: false,
             breakpoints: {
+                1200: { perPage: 5 },
                 992: { perPage: 4, arrows: true },
                 768: { perPage: 3, arrows: true },
                 576: { perPage: 2, arrows: true },
             },
-        }).mount();
-    }, 300);
+        })
+
+        slider.mount()
+        return () => slider.destroy()
+    }, [categories])
 
     useEffect(() => {
-  
-        show();
-        show2();
-        show3();
-        show4();
-        show5();
-        show6()
-        show7()
-        show8() 
-        
+        const handleScroll = () => setShowTop(window.scrollY > window.innerHeight * 0.2)
+        window.addEventListener("scroll", handleScroll)
+        handleScroll()
+
+        return () => window.removeEventListener("scroll", handleScroll)
     }, [])
 
-    useEffect(() => {
+    const productCount = useMemo(
+        () => Object.values(products).reduce((total, list) => total + list.length, 0),
+        [products]
+    )
 
-        const handleScroll = () => {
+    const requireLogin = () => {
+        Swal.fire({
+            icon: "warning",
+            title: "Please login first",
+            text: "Login to save items and checkout faster.",
+        })
+        navigate("/login")
+    }
 
-            setShowTop(window.scrollY > window.innerHeight * 0.2);
-        };
+    const wish = async (userId, name, price, img, productId, saleprice) => {
+        if (!userId) {
+            requireLogin()
+            return
+        }
 
-        window.addEventListener("scroll", handleScroll);
+        const data = { id: userId, name, price, img, prr: productId, saleprice }
+        const result = await fetch(`${API_BASE}/wishpost/${productId}`, {
+            method: "post",
+            body: JSON.stringify(data),
+            headers: { "Content-type": "application/json;charset=UTF-8" }
+        })
 
-        return () => window.removeEventListener("scroll", handleScroll);
+        if (!result.ok) return
+        const res = await result.json()
 
-    }, []);
-
-
-
-
-
-   const show = async () => {
-    try {
-        const result = await fetch("https://elcto-1.onrender.com/api/getcategory");
-
-        const res = await result.json();
+        if (res.statuscode === 2) {
+            Swal.fire({ icon: "info", title: "Already in Wishlist", text: res.message })
+            return
+        }
 
         if (res.statuscode === 1) {
-            setd(res.data);
-            setidd(res.data[0]?.Category);
-        } else {
-            alert("Error from API");
-        }
-    } catch (err) {
-        console.error("Fetch error:", err);
-    }
-};
-    const show2 = async () => {
-        const result = await fetch("https://elcto-1.onrender.com/api/saleproduct", {
-            method: "get"
-        })
-        if (result.ok) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-
-                setspro(res.data)
-            }
-            else {
-                alert("bbfb")
-            }
-        }
-    }
-    const show3 = async () => {
-        const result = await fetch("https://elcto-1.onrender.com/api/latestproduct", {
-            method: "get"
-        })
-        if (result.ok) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setlpro(res.data)
-            }
-            else {
-                alert("bbfb")
-            }
-        }
-    }
-    const show4 = async () => {
-        const result = await fetch(" https://elcto-1.onrender.com/api/showbrand", {
-            method: "get"
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setbr(res.data)
-            }
-            else {
-                alert("rere")
-            }
-        }
-    }
-    const show5 = async () => {
-        const result = await fetch(`https://elcto-1.onrender.com/api/laptop`, {
-            method: "get"
-        })
-        if (result.ok) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setlaptop(res.data)
-
-            }
-            else {
-                alert("not found")
-            }
-        }
-    }
-    const show6 = async () => {
-        const result = await fetch("https://elcto-1.onrender.com/api/mobiles", {
-            method: "get"
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setmobile(res.data)
-            }
-            else {
-                alert("sdfg")
-            }
-        }
-    }
-    const show7 = async () => {
-        const result = await fetch("https://elcto-1.onrender.com/api/leds", {
-            method: "get"
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setled(res.data)
-            }
-            else {
-                alert("dfg")
-            }
-        }
-    }
-    const show8 = async () => {
-        const result = await fetch("https://elcto-1.onrender.com/api/airpods", {
-            method: "get"
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setairpod(res.data)
-            }
-            else {
-                alert("d")
-            }
+            navigate(`/wish?id=${userId}`)
+            Swal.fire({ icon: "success", title: "Added to Wishlist" })
         }
     }
 
-    const wish = async (id, name, price, img, prr,saleprice) => {
-          if (!id) {
-        Swal.fire({
-            icon: "warning",
-            title: "Please Login First",
-            text: "Login to add items to cart"
-        })
-        navigate("/login")
-        return
-    }
+    const cart = async (userId, name, price, img, value = 1, productId) => {
+        if (!userId) {
+            requireLogin()
+            return
+        }
 
-        const data = { id, name, price, img, prr, saleprice }
-        const result = await fetch(`https://elcto-1.onrender.com/api/wishpost/${prr}`, {
+        const data = { id: userId, name, price, img, value }
+        const result = await fetch(`${API_BASE}/cartdata/${productId}`, {
             method: "post",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }
         })
-        if (result.ok) {
-            const res = await result.json();
 
-            if (res.statuscode === 2) {
-                Swal.fire({
-                    icon: "info",
-                    title: "❤️ Already in Wishlist",
-                    text: (res.message)
-                })
-            }
+        if (!result.ok) return
+        const res = await result.json()
 
-            else if (res.statuscode === 1) {
-                navigate(`/wish?id=${id}`);
-                Swal.fire({
-                    icon: "success",
-                    title: "❤️ Added in Wishlist",
-                })
-            }
+        if (res.statuscode === 2) {
+            Swal.fire({ icon: "info", title: "Already in Cart", text: res.message })
+            return
+        }
 
-            else {
-                alert("Something went wrong");
-            }
-
+        if (res.statuscode === 1) {
+            navigate(`/cart?id=${userId}`)
+            Swal.fire({ icon: "success", text: "Added to Cart" })
         }
     }
-    const cart = async (id, name, price, img, value = 1, prr) => {
-          if (!id) {
-        Swal.fire({
-            icon: "warning",
-            title: "Please Login First",
-            text: "Login to add items to cart"
-        })
-        navigate("/login")
-        return
-    }
 
-        const data = { id, name, price, img, value }
-        const result = await fetch(`https://elcto-1.onrender.com/api/cartdata/${prr}`, {
-            method: "post",
-            body: JSON.stringify(data),
-            headers: { "Content-type": "application/json;charset=UTF-8" }
-        })
-        if (result.ok) {
-            const res = await result.json()
-            if (res.statuscode === 2) {
-                Swal.fire({
-                    icon: "info",
-                    title: "🛒 Already in Cart",
-                    text: (res.message)
-                });
-
-            }
-            else if (res.statuscode === 1) {
-                navigate(`/cart?id=${id}`)
-                Swal.fire({
-                    icon: "success",
-                    text: "🛒 Added to Cart"
-                })
-            }
-            else {
-                alert("dfg")
-            }
-        }
-    }
     const gotop = () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        })
-    }
-    const calculateDiscount = (original, sale) => {
-        return Math.round(((original - sale) / original) * 100);
+        window.scrollTo({ top: 0, behavior: 'smooth' })
     }
 
+    const renderProductCard = (p, sectionKey) => {
+        const discount = calculateDiscount(p.ProductPrice, p.SalePrice)
+        const salePrice = p.SalePrice || p.ProductPrice
 
+        return (
+            <div key={`${sectionKey}-${p._id}`} className="col-xl-3 col-lg-4 col-sm-6 col-6">
+                <article className="product-card" data-aos="fade-up">
+                    {discount > 0 && (
+                        <span className="product-badge">{discount}% off</span>
+                    )}
+
+                    <div className="cardicons" aria-label="Product actions">
+                        <button type="button" title="Add to wishlist" onClick={() => wish(id, p.ProductName, p.ProductPrice, p.Img, p._id, p.SalePrice)}>
+                            <i className="bi bi-heart-fill"></i>
+                        </button>
+                        <button type="button" title="Add to cart" onClick={() => cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id)}>
+                            <i className="bi bi-cart"></i>
+                        </button>
+                        <Link title="View product" to={`/detail?id=${p._id}&cid=${p.Category}`}>
+                            <i className="bi bi-eye"></i>
+                        </Link>
+                    </div>
+
+                    <Link className="product-media" to={`/detail?id=${p._id}&cid=${p.Category}`}>
+                        <img src={p.Img} alt={p.ProductName} loading="lazy" />
+                    </Link>
+
+                    <div className="product-card-body">
+                        <p className="product-kicker">{p.Brand || "Electronics"}</p>
+                        <h3 className="product-title">{p.ProductName}</h3>
+                        <Rating />
+                        <div className="price-section">
+                            {discount > 0 && <span className="old-price">{formatPrice(p.ProductPrice)}</span>}
+                            <span className="new-price">{formatPrice(salePrice)}</span>
+                        </div>
+                    </div>
+
+                    <div className="product-actions">
+                        <Link to={`/detail?id=${p._id}&cid=${p.Category}`} className="btn btn-outline-dark btn-sm">
+                            View
+                        </Link>
+                        <button className="btn btn-danger btn-sm" onClick={() => cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id)}>
+                            Add to Cart
+                        </button>
+                    </div>
+                </article>
+            </div>
+        )
+    }
+
+    const renderSection = ({ key, title, eyebrow, icon }) => {
+        const list = products[key] || []
+
+        if (!loading && !list.length) return null
+
+        return (
+            <section className="store-section" data-aos="fade-up" key={key}>
+                <div className="container">
+                    <div className="section-heading">
+                        <div>
+                            <span className="section-eyebrow"><i className={`bi ${icon}`}></i>{eyebrow}</span>
+                            <h2>{title}</h2>
+                        </div>
+                        <Link to="/category" className="section-link">Explore all</Link>
+                    </div>
+
+                    <div className="row g-3 g-lg-4">
+                        {loading
+                            ? Array.from({ length: 4 }).map((_, index) => (
+                                <div className="col-xl-3 col-lg-4 col-sm-6 col-6" key={`${key}-skeleton-${index}`}>
+                                    <div className="product-card product-card-skeleton"></div>
+                                </div>
+                            ))
+                            : list.map((product) => renderProductCard(product, key))}
+                    </div>
+                </div>
+            </section>
+        )
+    }
 
     return (
         <>
-   <div className='container-fluid'>
-    <div id="carouselExample" className='carousel slide hero-carousel' data-bs-ride="carousel">
-        <div className='carousel-inner'>
-            <div className='carousel-item active'>
-                <img src={banner1} className="d-block w-100" alt="banner 1" />
-            </div>
-            <div className='carousel-item'>
-                <img src={banner2} className="d-block w-100" alt="banner 2" />
-            </div>
-            <div className='carousel-item'>
-                <img src={banner3} className="d-block w-100" alt="banner 3" />
-            </div>
-        </div>
-        <button className="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span className="visually-hidden">Previous</span>
-        </button>
-        <button className="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-            <span className="carousel-control-next-icon" aria-hidden="true"></span>
-            <span className="visually-hidden">Next</span>
-        </button>
-    </div>
-    </div>      
-            <div className="container mt-5" data-aos="zoom-in">
-                <h2 className="fw-bold text-center mb-4">Product Categories</h2>
-
-                <div className="splide categorySlider mt-4 ">
-                    <div className="splide__track">
-
-                        <ul className="splide__list">
-
-                            {d.map((a) => (
-                                <li className="splide__slide" key={a._id}>
-
-                                    <Link
-                                        className="text-decoration-none"
-                                        to={`/related?id=${a._id}`}
-                                    >
-                                        <div className="card border-0 text-center p-3 w-100 category-card">
-
-                                            <img
-                                                className="img-fluid mx-auto mb-2"
-                                                src={`/uploads/${a.Img}`}
-                                                alt={a.Name}
-                                                style={{ maxWidth: "120px" }}
-                                            />
-
-                                            <p className="fw-semibold text-dark mb-0">
-                                                {a.Name}
-                                            </p>
-
-                                        </div>
-                                    </Link>
-
-                                </li>
-                            ))}
-
-                        </ul>
-
-                    </div>
-                </div>
-
-            </div>
-            <div className="offcanvas offcanvas-end" tabIndex="-1" id="cartCanvas">
-
-                <div className="offcanvas-header">
-                    <h5>Your Cart</h5>
-                    <button type="button" className="btn-close" data-bs-dismiss="offcanvas"></button>
-                </div>
-
-                <div className="offcanvas-body">
-
-
-                    <button className="btn btn-dark w-50 mt-3">
-                        Checkout
-                    </button>
-
-                </div>
-
-            </div>
-            <section className="container py-4 mt-2" data-aos="fade-up">
-                <div className=" align-items-center  ">
-                    <h2 className="fw-bold">Latest Products</h2>
-                    <span className="text-muted small">New arrivals just for you</span>
-                </div>
-
-                <div className="row g-4 mt-2">
-                    {lpro.map((p) => (
-                        <div key={p._id} className="col-lg-3 col-md-4 col-sm-4 col-6">
-
-
-                            <div className="card w-100 border-0 card-sm- shadow-sm text-center p-3" data-aos="fade-up">
-                                <div className='cardicons justify-self-end'>
-
-                                    <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id, p.SalePrice) }}><i class="bi bi-heart-fill"></i>
-                                    </p>
-                                    <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}><i class="bi bi-cart"></i></p>
-                                    <p><i class="bi bi-eye"></i></p>
-                                </div>
-                                <div
-                                    className=" rounded d-flex justify-content-center align-items-center mb-3"
-                                    style={{ height: "150px" }}
-                                >
-                                    <img
-                                        src={`${p.Img}`}
-                                        alt={p.name}
-                                        className="img-fluid rounded"
-                                        style={{ height: "150px" }}
-                                    />
-                                </div>
-
-                                <div className="card-body p-0">
-                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title">{p.ProductName}</h6>
-                                    <div className="mb-2 text-warning">
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-half"></i>
-    <i className="bi bi-star"></i>
-    <span className="text-muted small ms-1">(4.3)</span>
-</div>
-
-                                   <p className="d-flex justify-content-center align-self-center text-center">
-                                        <span className=" ">
-                                            ₹{p.ProductPrice}
-                                        </span>
-                                        <span className=" text-success fw-bold ms-1 ">
-                                            ₹{p.SalePrice}
-                                        </span>
-                                        
-
-                                    </p>
-
-                                    <div className='d-flex flex-column flex-md-row gap-1'>
-                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100 ">
-                                            View Product
-                                        </Link>
-                                        <button className='btn btn-danger btn-sm w-100 ' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                        </div>
-                    ))}
-                </div>
-            </section>
-            <section className="container  py-4 mt-2" data-aos="fade-up">
-                <div className=" align-items-center mb-4 mt-2">
-                    <h2 className="fw-bold">🔥 On Sale Products</h2>
-
-                </div>
-
-                <div className="row g-4">
-
-                    {spro.map((p) => (
-                        <div key={p._id} className="col-lg-3 col-6 col-md-4 col-sm-6">
-                            <div className="card w-100 border-0 shadow-sm text-center p-3" data-aos="fade-up">
-                                <div className="position-absolute top-0 start-0 h6">
-                                    <span className="badge  bg-danger m-2">Off Upto:
-                                        {calculateDiscount(p.ProductPrice, p.SalePrice)}%
-                                    </span>
-                                </div>
-                                <div className='cardicons justify-self-end'>
-
-                                    <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id, p.SalePrice) }}><i class="bi bi-heart-fill"></i>
-                                    </p>
-                                    <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity) }}><i class="bi bi-cart"></i></p>
-                                    <p><i class="bi bi-eye"></i></p>
-                                </div>
-                                <div className=" rounded d-flex justify-content-center align-items-center mb-3" style={{ height: "150px" }}>
-                                    <img
-                                        src={`${p.Img}`}
-                                        alt={p.name}
-                                        className="img-fluid"
-                                        style={{ maxHeight: "120px" }}
-                                    />
-                                </div>
-
-                                <div className="card-body p-0">
-                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title">{p.ProductName}</h6>
-                                    <div className="mb-2 text-warning">
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-half"></i>
-    <i className="bi bi-star"></i>
-    <span className="text-muted small ms-1">(4.3)</span>
-</div>
-
-                                     <p className="d-flex justify-content-center align-self-center text-center">
-                                        <span className=" ">
-                                            ₹{p.ProductPrice}
-                                        </span>
-                                        <span className=" text-success fw-bold ms-1 ">
-                                            ₹{p.SalePrice}
-                                        </span>
-                                        
-
-                                    </p>
-                                    <div className='d-flex flex-column flex-md-row gap-1'>
-                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
-                                            View Product
-                                        </Link>
-                                        <button className='btn btn-danger btn-sm w-100 ' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    ))}
-                </div>
-            </section>
-            <section className="container  py-4 mt-2" data-aos="fade-up">
-                <div className=" align-items-center mb-4 ">
-                    <h2 className="fw-bold">🔥 Our Mobile Collection</h2>
-
-                </div>
-
-                <div className="row g-4">
-                    {mobile.map((p) => (
-                        <div key={p._id} className="col-lg-3 col-6 col-md-4 col-sm-6">
-
-                            <div className="card w-100 border-0 shadow-sm text-center p-3" data-aos="fade-up">
-                                <div className='cardicons justify-self-end'>
-
-                                    <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id, p.SalePrice) }}><i class="bi bi-heart-fill"></i>
-                                    </p>
-                                    <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}><i class="bi bi-cart"></i></p>
-                                    <p><i class="bi bi-eye"></i></p>
-                                </div>
-                                <div className=" rounded d-flex justify-content-center align-items-center mb-3" style={{ height: "150px" }}>
-                                    <img
-                                        src={`${p.Img}`}
-                                        alt={p.name}
-                                        className="img-fluid"
-                                        style={{ maxHeight: "120px" }}
-                                    />
-                                </div>
-
-                                <div className="card-body p-0">
-                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title">{p.ProductName}</h6>
-                                    <div className="mb-2 text-warning">
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-half"></i>
-    <i className="bi bi-star"></i>
-    <span className="text-muted small ms-1">(4.3)</span>
-</div>
-
-                                    <p className="d-flex justify-content-center align-self-center text-center">
-                                        <span className=" ">
-                                            ₹{p.ProductPrice}
-                                        </span>
-                                        <span className=" text-success fw-bold ms-1 ">
-                                            ₹{p.SalePrice}
-                                        </span>
-                                        
-
-                                    </p>
-                                    <div className='d-flex flex-column flex-md-row gap-1'>
-                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
-                                            View Product
-                                        </Link>
-                                        <button className='btn btn-danger btn-sm w-100 ' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    ))}
-                </div>
-            </section>
-            <section className="container py-4 mt-2" data-aos="fade-up">
-                <div className=" align-items-center mb-4 ">
-                    <h2 className="fw-bold">🔥 Our Laptop Collection</h2>
-
-                </div>
-
-                <div className="row g-4">
-                    {laptop.map((p) => (
-                        <div key={p._id} className="col-lg-3 col-6 col-md-4 col-sm-6">
-
-                            <div className="card w-100 border-0 shadow-sm text-center p-3" data-aos="fade-up">
-                                <div className='cardicons justify-self-end'>
-
-                                    <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id, p.SalePrice) }}><i class="bi bi-heart-fill"></i>
-                                    </p>
-                                    <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}><i class="bi bi-cart"></i></p>
-                                    <p><i class="bi bi-eye"></i></p>
-                                </div>
-                                <div className=" rounded d-flex justify-content-center align-items-center mb-3" style={{ height: "150px" }}>
-                                    <img
-                                        src={`${p.Img}`}
-                                        alt={p.name}
-                                        className="img-fluid"
-                                        style={{ maxHeight: "120px" }}
-                                    />
-                                </div>
-
-                                <div className="card-body p-0">
-                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title">{p.ProductName}</h6>
-                                    <div className="mb-2 text-warning">
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-half"></i>
-    <i className="bi bi-star"></i>
-    <span className="text-muted small ms-1">(4.3)</span>
-</div>
-   <p className="d-flex justify-content-center align-self-center text-center">
-                                        <span className=" ">
-                                            ₹{p.ProductPrice}
-                                        </span>
-                                        <span className=" text-success fw-bold ms-1 ">
-                                            ₹{p.SalePrice}
-                                        </span>
-                                        
-
-                                    </p>
-                                    <div className='d-flex flex-column flex-md-row gap-1'>
-                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
-                                            View Product
-                                        </Link>
-                                        <button className='btn btn-danger btn-sm w-100 ' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    ))}
-                </div>
-            </section>
-            <section className="container  py-4 mt-2" data-aos="fade-up">
-                <div className=" align-items-center mb-4 ">
-                    <h2 className="fw-bold">🔥 Our Airpods Collection</h2>
-
-                </div>
-
-                <div className="row g-4">
-                    {airpod.map((p) => (
-                        <div key={p._id} className="col-lg-3 col-6 col-md-4 col-sm-6">
-
-                            <div className="card w-100 border-0 shadow-sm text-center p-3" data-aos="fade-up">
-                                <div className='cardicons justify-self-end'>
-
-                                    <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id, p.SalePrice) }}><i class="bi bi-heart-fill"></i>
-                                    </p>
-                                    <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}><i class="bi bi-cart"></i></p>
-                                    <p><i class="bi bi-eye"></i></p>
-                                </div>
-                                <div className=" rounded d-flex justify-content-center align-items-center mb-3" style={{ height: "150px" }}>
-                                    <img
-                                        src={`${p.Img}`}
-                                        alt={p.name}
-                                        className="img-fluid"
-                                        style={{ maxHeight: "120px" }}
-                                    />
-                                </div>
-
-                                <div className="card-body p-0">
-                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title">{p.ProductName}</h6>
-                                    <div className="mb-2 text-warning">
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-half"></i>
-    <i className="bi bi-star"></i>
-    <span className="text-muted small ms-1">(4.3)</span>
-</div>
-
-                                    <p className="d-flex justify-content-center align-self-center text-center">
-                                        <span className=" ">
-                                            ₹{p.ProductPrice}
-                                        </span>
-                                        <span className=" text-success fw-bold ms-1 ">
-                                            ₹{p.SalePrice}
-                                        </span>
-                                        
-
-                                    </p>
-                                    <div className='d-flex flex-column flex-md-row gap-1'>
-                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
-                                            View Product
-                                        </Link>
-                                        <button className='btn btn-danger btn-sm w-100 ' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    ))}
-                </div>
-            </section>
-            <section className="container  py-4 mt-2" data-aos="fade-up" >
-                <div className=" align-items-center mb-4 ">
-                    <h2 className="fw-bold">🔥 Our Led Collection</h2>
-
-                </div>
-
-                <div className="row g-4">
-                    {led.map((p) => (
-                        <div key={p._id} className="col-lg-3 col-6 col-md-4 col-sm-6">
-
-                            <div className="card w-100 border-0 shadow-sm text-center p-3" data-aos="fade-up">
-                                <div className='cardicons justify-self-end'>
-
-                                    <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id, p.SalePrice) }}><i class="bi bi-heart-fill"></i>
-                                    </p>
-                                    <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}><i class="bi bi-cart"></i></p>
-                                    <p><i class="bi bi-eye"></i></p>
-                                </div>
-                                <div className=" rounded d-flex justify-content-center align-items-center mb-3" style={{ height: "150px" }}>
-                                    <img
-                                        src={`${p.Img}`}
-                                        alt={p.name}
-                                        className="img-fluid"
-                                        style={{ maxHeight: "120px" }}
-                                    />
-                                </div>
-
-                                <div className="card-body p-0">
-                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title">{p.ProductName}</h6>
-                                    <div className="mb-2 text-warning">
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-fill"></i>
-    <i className="bi bi-star-half"></i>
-    <i className="bi bi-star"></i>
-    <span className="text-muted small ms-1">(4.3)</span>
-</div>
-
-                                   <p className="d-flex justify-content-center align-self-center text-center">
-                                        <span className=" ">
-                                            ₹{p.ProductPrice}
-                                        </span>
-                                        <span className=" text-success fw-bold ms-1 ">
-                                            ₹{p.SalePrice}
-                                        </span>
-                                        
-
-                                    </p>
-                                    <div className='d-flex flex-column flex-md-row gap-1'>
-                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
-                                            View Product
-                                        </Link>
-                                        <button className='btn btn-danger btn-sm w-100 ' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    ))}
-                </div>
-            </section>
-            <section className="container mt-2 py-4" data-aos="fade-up">
-                <h2 className="fw-bold text-center mb-4">Why Choose Us</h2>
-                <div className="row g-4 py-5">
-                    <div className="col-md-3 col-6 text-center">
-                        <i className="bi bi-truck fs-1 text-primary"></i>
-                        <h6 className="mt-2">Free Shipping</h6>
-                        <small className="text-muted">On orders above ₹999</small>
-                    </div>
-                    <div className="col-md-3 col-6 text-center">
-                        <i className="bi bi-shield-check fs-1 text-success"></i>
-                        <h6 className="mt-2">Secure Payment</h6>
-                        <small className="text-muted">100% secure transactions</small>
-                    </div>
-                    <div className="col-md-3 col-6 text-center">
-                        <i className="bi bi-arrow-repeat fs-1 text-warning"></i>
-                        <h6 className="mt-2">Easy Returns</h6>
-                        <small className="text-muted">7 days return policy</small>
-                    </div>
-                    <div className="col-md-3 col-6 text-center">
-                        <i className="bi bi-headset fs-1 text-info"></i>
-                        <h6 className="mt-2">24/7 Support</h6>
-                        <small className="text-muted">Dedicated customer support</small>
-                    </div>
-                </div>
-            </section>
-            <section className="bg-light py-5 mt-5" data-aos="fade-up">
+            <section className="hero-wrap">
                 <div className="container">
-                    <h2 className="fw-bold text-center mb-4">What Our Customers Say</h2>
-                    <div className="row">
-                        <div className="col-md-4 mb-3">
-                            <div className="card w-100 h-100 border-0 shadow-sm">
-                                <div className="card-body text-center">
-                                    <i className="bi bi-star-fill text-warning"></i>
-                                    <i className="bi bi-star-fill text-warning"></i>
-                                    <i className="bi bi-star-fill text-warning"></i>
-                                    <i className="bi bi-star-fill text-warning"></i>
-                                    <i className="bi bi-star-fill text-warning"></i>
-                                    <p className="mt-3">"Amazing products and fast delivery!"</p>
-                                    <h6 className="fw-bold">- John Doe</h6>
+                    <div id="carouselExample" className="carousel slide hero-carousel" data-bs-ride="carousel">
+                        <div className="carousel-inner">
+                            {[banner1, banner2, banner3].map((banner, index) => (
+                                <div className={`carousel-item ${index === 0 ? "active" : ""}`} key={banner}>
+                                    <img src={banner} className="d-block w-100" alt={`ElectoMart offer ${index + 1}`} />
                                 </div>
-                            </div>
-                        </div>
-                        <div className="col-md-4 mb-3">
-    <div className="card w-100 h-100 border-0 shadow-sm">
-        <div className="card-body text-center">
-            <i className="bi bi-star-fill text-warning"></i>
-            <i className="bi bi-star-fill text-warning"></i>
-            <i className="bi bi-star-fill text-warning"></i>
-            <i className="bi bi-star-fill text-warning"></i>
-            <i className="bi bi-star-half text-warning"></i>
-            <p className="mt-3">"Great quality and excellent customer support."</p>
-            <h6 className="fw-bold">- Sarah Williams</h6>
-        </div>
-    </div>
-</div>
-
-<div className="col-md-4 mb-3">
-    <div className="card w-100 h-100 border-0 shadow-sm">
-        <div className="card-body text-center">
-            <i className="bi bi-star-fill text-warning"></i>
-            <i className="bi bi-star-fill text-warning"></i>
-            <i className="bi bi-star-fill text-warning"></i>
-            <i className="bi bi-star-fill text-warning"></i>
-            <i className="bi bi-star-fill text-warning"></i>
-            <p className="mt-3">"Very satisfied with my purchase. Highly recommended!"</p>
-            <h6 className="fw-bold">- Michael Brown</h6>
-        </div>
-    </div>
-</div>
-                    </div>
-                </div>
-            </section>
-            <section>
-                <div className="container mt-3" >
-                    <h2>Trusted By</h2>
-
-                    <div className="marquee py-5">
-                        <div className="marquee-content gap-5">
-                            {br.concat(br).map((a, index) => (
-                                <img key={index} className='rounded-4 object-fit-cover' src={`/uploads/${a.Img}`} height="100px" alt="brand" />
                             ))}
                         </div>
+                        <button className="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span className="visually-hidden">Previous</span>
+                        </button>
+                        <button className="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span className="visually-hidden">Next</span>
+                        </button>
                     </div>
 
-
+                    <div className="hero-stats" aria-label="Store highlights">
+                        <div><strong>{productCount || "500+"}</strong><span>Curated products</span></div>
+                        <div><strong>7 day</strong><span>Easy returns</span></div>
+                        <div><strong>24/7</strong><span>Support desk</span></div>
+                    </div>
                 </div>
             </section>
+
+            <section className="category-section" data-aos="zoom-in">
+                <div className="container">
+                    <div className="section-heading centered">
+                        <div>
+                            <span className="section-eyebrow"><i className="bi bi-grid-3x3-gap-fill"></i>Shop by department</span>
+                            <h2>Product Categories</h2>
+                        </div>
+                    </div>
+
+                    <div className="splide categorySlider">
+                        <div className="splide__track">
+                            <ul className="splide__list">
+                                {categories.map((category) => (
+                                    <li className="splide__slide" key={category._id}>
+                                        <Link className="category-card" to={`/related?id=${category._id}`}>
+                                            <span className="category-image">
+                                                <img src={`/uploads/${category.Img}`} alt={category.Name} loading="lazy" />
+                                            </span>
+                                            <span>{category.Name}</span>
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {sections.map(renderSection)}
+
+            <section className="trust-section" data-aos="fade-up">
+                <div className="container">
+                    <div className="trust-grid">
+                        <div>
+                            <i className="bi bi-truck"></i>
+                            <h3>Free Shipping</h3>
+                            <p>On orders above ₹999</p>
+                        </div>
+                        <div>
+                            <i className="bi bi-shield-check"></i>
+                            <h3>Secure Payment</h3>
+                            <p>Encrypted checkout flow</p>
+                        </div>
+                        <div>
+                            <i className="bi bi-arrow-repeat"></i>
+                            <h3>Easy Returns</h3>
+                            <p>7 day replacement support</p>
+                        </div>
+                        <div>
+                            <i className="bi bi-headset"></i>
+                            <h3>24/7 Support</h3>
+                            <p>Help when you need it</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section className="testimonial-section" data-aos="fade-up">
+                <div className="container">
+                    <div className="section-heading centered">
+                        <div>
+                            <span className="section-eyebrow"><i className="bi bi-chat-heart"></i>Customer voices</span>
+                            <h2>What Our Customers Say</h2>
+                        </div>
+                    </div>
+                    <div className="row g-4">
+                        {[
+                            ["Amazing products and fast delivery!", "John Doe"],
+                            ["Great quality and excellent customer support.", "Sarah Williams"],
+                            ["Very satisfied with my purchase. Highly recommended!", "Michael Brown"],
+                        ].map(([review, name]) => (
+                            <div className="col-md-4" key={name}>
+                                <article className="testimonial-card">
+                                    <Rating />
+                                    <p>"{review}"</p>
+                                    <h3>{name}</h3>
+                                </article>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {!!brands.length && (
+                <section className="brand-section">
+                    <div className="container">
+                        <div className="section-heading centered">
+                            <div>
+                                <span className="section-eyebrow"><i className="bi bi-patch-check"></i>Trusted ecosystem</span>
+                                <h2>Trusted By</h2>
+                            </div>
+                        </div>
+                        <div className="marquee">
+                            <div className="marquee-content">
+                                {brands.concat(brands).map((brand, index) => (
+                                    <img key={`${brand._id}-${index}`} src={`/uploads/${brand.Img}`} alt={brand.Name || "Brand"} loading="lazy" />
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            )}
 
             {showTop && (
-                <div id='goTopBtn' 
-                    onClick={gotop}
-                  >
-
-                    <i className="bi bi-arrow-up-circle-fill"></i>
-
-                </div>
+                <button id="goTopBtn" type="button" onClick={gotop} aria-label="Back to top">
+                    <i className="bi bi-arrow-up"></i>
+                </button>
             )}
         </>
     )
-};
+}

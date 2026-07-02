@@ -1,3 +1,4 @@
+import API_URL from "./config"
 import e from "cors"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -9,7 +10,7 @@ export const VendorLogin = () => {
 
     const login=async(e)=>{
         e.preventDefault()
-        const result=await fetch("https://elcto-1.onrender.com/api/vlog",{
+        const result=await fetch(`${API_URL}/api/vlog`,{
             method:"post",
             body:JSON.stringify({email,pass}),
             headers:{"Content-type":"application/json;charset=UTF-8"}

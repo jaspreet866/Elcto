@@ -1,3 +1,4 @@
+import API_URL from "./config"
 import { useContext, useEffect, useState } from "react"
 import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { Rating } from 'react-simple-star-rating'
@@ -34,7 +35,7 @@ const [activeTab, setActiveTab] = useState("specifications");
     }, [prr])
 
     const show = async () => {
-        const result = await fetch(`https://elcto-1.onrender.com/api/detail/${prr}`, {
+        const result = await fetch(`${API_URL}/api/detail/${prr}`, {
             method: "get"
         })
         if (result.ok) {
@@ -56,7 +57,7 @@ const [activeTab, setActiveTab] = useState("specifications");
     }
     const goto = async () => {
         const data = { value, img, name, price, id, prr }
-        const result = await fetch(`https://elcto-1.onrender.com/api/cartdata/${prr}`, {
+        const result = await fetch(`${API_URL}/api/cartdata/${prr}`, {
             method: "post",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }
@@ -85,7 +86,7 @@ const [activeTab, setActiveTab] = useState("specifications");
     }
 
     const show2 = async () => {
-        const result = await fetch(`https://elcto-1.onrender.com/api/relatedtwo/${catidd}`, {
+        const result = await fetch(`${API_URL}/api/relatedtwo/${catidd}`, {
             method: "get"
         })
         if (result.ok) {
@@ -101,7 +102,7 @@ const [activeTab, setActiveTab] = useState("specifications");
 
     const wish = async () => {
         const data = { img, name, price, id, }
-        const result = await fetch(`https://elcto-1.onrender.com/api/wishpost/${prr}`, {
+        const result = await fetch(`${API_URL}/api/wishpost/${prr}`, {
             method: "post",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }
@@ -134,7 +135,7 @@ const [activeTab, setActiveTab] = useState("specifications");
     }
     const wish2 = async (id, name, price, img, prr) => {
         const data = { id, name, price, img }
-        const result = await fetch(`https://elcto-1.onrender.com/api/wishpost/${prr}`, {
+        const result = await fetch(`${API_URL}/api/wishpost/${prr}`, {
             method: "post",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }
@@ -164,7 +165,7 @@ const [activeTab, setActiveTab] = useState("specifications");
     }
     const cart = async (id, name, price, img, value = 1, prr) => {
         const data = { id, name, price, img, value }
-        const result = await fetch(`https://elcto-1.onrender.com/api/cartdata/${prr}`, {
+        const result = await fetch(`${API_URL}/api/cartdata/${prr}`, {
             method: "post",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }
@@ -198,7 +199,7 @@ const [activeTab, setActiveTab] = useState("specifications");
     const send = async (e) => {
         e.preventDefault()
         const data = { username, mail, prr, rating, msg }
-        const result = await fetch("https://elcto-1.onrender.com/api/reviews", {
+        const result = await fetch(`${API_URL}/api/reviews`, {
             method: "post",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }
@@ -222,7 +223,7 @@ const [activeTab, setActiveTab] = useState("specifications");
         }
     }
     const showreview = async () => {
-        const result = await fetch(`https://elcto-1.onrender.com/api/getreview/${prr}`, {
+        const result = await fetch(`${API_URL}/api/getreview/${prr}`, {
             method: "get"
         })
         if (result) {

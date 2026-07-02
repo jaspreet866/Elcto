@@ -1,3 +1,4 @@
+import API_URL from "./config"
 import { Link, useNavigate } from "react-router-dom"
 import { useContext, useState, useEffect ,useRef} from "react"
 import Swal from "sweetalert2";
@@ -14,6 +15,20 @@ export const Header = () => {
     const searchRef = useRef(null);
     const [search,setsearch] = useState("")
     const navigate = useNavigate()
+    const [categories, setCategories] = useState([])
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            const result = await fetch(`${API_URL}/api/getcategory`)
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1) {
+                    setCategories(res.data)
+                }
+            }
+        }
+        fetchCategories()
+    }, [])
     useEffect(() => {
         const token = localStorage.getItem("data")
         if (token) {
@@ -29,7 +44,7 @@ export const Header = () => {
     },[search])
 
     const handleSearch = async () => {
-        const result = await fetch(`https://elcto-1.onrender.com/api/getproduct`, {
+        const result = await fetch(`${API_URL}/api/getproduct`, {
             method: "get"
         })
         if (result.ok) {
@@ -146,12 +161,12 @@ export const Header = () => {
                                 >
                                     Products
                                 </Link>
-                                <ul className="dropdown-menu shadow-sm">
-                                    <Link className="text-decoration-none" to={`/related?id=6970dd16300a757a6dcdb928`}><li><a className="dropdown-item">LED</a></li></Link>
-                                    <Link className="text-decoration-none" to={`/related?id=6970dd60300a757a6dcdb92e`}><li><a className="dropdown-item">Laptops</a></li></Link>
-                                    <Link className="text-decoration-none" to={`/related?id=6970dd2d300a757a6dcdb92a`}><li><a className="dropdown-item">Mobiles</a></li></Link>
-                                    <Link className="text-decoration-none" to={`/related?id=69849f299a77c6ecd3c2839b`}><li><a className="dropdown-item">Airpods</a></li></Link>
-                                    <Link className="text-decoration-none" to={`/related?id=69849fa89a77c6ecd3c283af`}><li><a className="dropdown-item">Cameras</a></li></Link>
+                                 <ul className="dropdown-menu shadow-sm">
+                                    {categories.map((cat) => (
+                                        <Link key={cat._id} className="text-decoration-none" to={`/related?id=${cat._id}`}>
+                                            <li><a className="dropdown-item">{cat.Name}</a></li>
+                                        </Link>
+                                    ))}
                                 </ul>
                             </li>
 
@@ -255,12 +270,12 @@ export const Header = () => {
                                 <i className="bi bi-chevron-down"></i>
                             </a>
                             <div className="collapse text-start" id="productsCollapse">
-                                <div className="ps-4 py-2" data-bs-dismiss="offcanvas">
-                                   <Link className="text-decoration-none text-black" to={`/related?id=6970dd16300a757a6dcdb928`}><li><a className="dropdown-item">LED</a></li></Link>
-                                    <Link className="text-decoration-none text-black" to={`/related?id=6970dd60300a757a6dcdb92e`}><li><a className="dropdown-item">Laptops</a></li></Link>
-                                    <Link className="text-decoration-none text-black" to={`/related?id=6970dd2d300a757a6dcdb92a`}><li><a className="dropdown-item">Mobiles</a></li></Link>
-                                    <Link className="text-decoration-none text-black" to={`/related?id=69849f299a77c6ecd3c2839b`}><li><a className="dropdown-item">Airpods</a></li></Link>
-                                    <Link className="text-decoration-none text-black" to={`/related?id=69849fa89a77c6ecd3c283af`}><li><a className="dropdown-item">Cameras</a></li></Link>
+                                 <div className="ps-4 py-2" data-bs-dismiss="offcanvas">
+                                    {categories.map((cat) => (
+                                        <Link key={cat._id} className="text-decoration-none text-black" to={`/related?id=${cat._id}`}>
+                                            <li><a className="dropdown-item">{cat.Name}</a></li>
+                                        </Link>
+                                    ))}
                                 </div>
                             </div>
                         </li>

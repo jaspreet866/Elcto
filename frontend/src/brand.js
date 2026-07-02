@@ -1,3 +1,4 @@
+import API_URL from "./config"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { useSearchParams } from "react-router-dom"
@@ -14,7 +15,7 @@ export const Brand = () => {
   }, [])
 
   const show = async () => {
-    const result = await fetch(`https://elcto-1.onrender.com/api/brand/${prr}`, {
+    const result = await fetch(`${API_URL}/api/brand/${prr}`, {
       method: "get"
     })
     if (result.ok) {

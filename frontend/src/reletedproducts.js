@@ -1,3 +1,4 @@
+import API_URL from "./config"
 import { useState, useEffect, useContext } from "react"
 import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import Swal from "sweetalert2"
@@ -21,7 +22,7 @@ export const Related = () => {
         }
     }, [prr]);
     const show = async (id) => {
-        const result = await fetch(`https://elcto-1.onrender.com/api/related/${id}`, {
+        const result = await fetch(`${API_URL}/api/related/${id}`, {
             method: "get"
         })
         if (result.ok) {
@@ -37,7 +38,7 @@ export const Related = () => {
     }
 
     const show2 = async () => {
-        const result = await fetch(`https://elcto-1.onrender.com/api/getbrand/${prr}`, {
+        const result = await fetch(`${API_URL}/api/getbrand/${prr}`, {
             method: "get"
         })
         if (result) {
@@ -67,7 +68,7 @@ export const Related = () => {
     const wish = async (id, name, price, img, prr) => {
         if (!prr || !id) return;
         const data = { id, name, price, img }
-        const result = await fetch(`https://elcto-1.onrender.com/api/wishpost/${prr}`, {
+        const result = await fetch(`${API_URL}/api/wishpost/${prr}`, {
             method: "post",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }
@@ -100,7 +101,7 @@ export const Related = () => {
     const cart = async (id, name, price, img, value = 1, prr) => {
         if (!prr || !id) return;
         const data = { id, name, price, img, value }
-        const result = await fetch(`https://elcto-1.onrender.com/api/cartdata/${prr}`, {
+        const result = await fetch(`${API_URL}/api/cartdata/${prr}`, {
             method: "post",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }
