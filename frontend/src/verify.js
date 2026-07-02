@@ -1,4 +1,3 @@
-import API_URL from "./config"
 
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +20,7 @@ export const Verifyy=()=>{
    const verify=async(e)=>{
     e.preventDefault();
     const data={email,otp}
-    const result=await fetch(`${API_URL}/api/verify-otp`,{
+    const result=await fetch("https://elcto-1.onrender.com/api/verify-otp",{
         method:"post",
         body:JSON.stringify(data),
         headers:{"Content-type":"application/json;charset=UTF-8"}

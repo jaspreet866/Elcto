@@ -1,4 +1,3 @@
-import API_URL from "./config"
 import { useContext, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { Context } from "./usecontext"
@@ -12,7 +11,7 @@ export const Order = () => {
     }, [id])
 
     const show = async () => {
-        const result = await fetch(`${API_URL}/api/myorder/${id}`, {
+        const result = await fetch(`https://elcto-1.onrender.com/api/myorder/${id}`, {
             method: "get"
         })
         if (result) {

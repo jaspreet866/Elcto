@@ -1,4 +1,3 @@
-import API_URL from "./config"
 import { useState } from "react"
 import img1 from "./images/img_01.jpg"
 import img2 from "./images/contact.jpg"
@@ -12,7 +11,7 @@ export const Contact = () => {
 
     const send = async () => {
         const data = { name, mail, phn, type, msg }
-        const result = await fetch(`${API_URL}/api/response`, {
+        const result = await fetch("https://elcto-1.onrender.com/api/response", {
             method: "post",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }

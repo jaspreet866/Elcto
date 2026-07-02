@@ -1,4 +1,3 @@
-import API_URL from "./config"
 import { Link } from "react-router-dom"
 import img1 from "./images/ChatGPT Image Feb 11, 2026, 07_41_57 PM.png"
 import logo from "./images/WhatsApp Image 2026-02-12 at 11.08.16 AM.png"
@@ -51,7 +50,7 @@ export const About = () => {
     }, [])
 
     const show = async () => {
-        const result = await fetch(`${API_URL}/api/showbrand`)
+        const result = await fetch("https://elcto-1.onrender.com/api/showbrand")
 
         if (result.ok) {
             const res = await result.json()

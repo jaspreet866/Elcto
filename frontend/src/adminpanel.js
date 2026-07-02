@@ -1,4 +1,3 @@
-import API_URL from "./config"
 import { useContext, useEffect, useState } from "react"
 
 import { Chart as ChartJs, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, PointElement, LineElement } from "chart.js"
@@ -45,7 +44,7 @@ export const Dashboard = () => {
     });
 
     useEffect(() => {
-        fetch(`${API_URL}/api/sales/monthly`)
+        fetch("https://elcto-1.onrender.com/api/sales/monthly")
             .then(res => res.json())
             .then(data => {
                 setMonthlyData({
@@ -73,7 +72,7 @@ show6()
     }, [])
 
     const show = async () => {
-        const result = await fetch(`${API_URL}/api/users`, {
+        const result = await fetch("https://elcto-1.onrender.com/api/users", {
             method: "get"
         })
         if (result) {
@@ -90,7 +89,7 @@ show6()
         }
     }
     const show2 = async () => {
-        const result = await fetch(`${API_URL}/api/getcategory`, {
+        const result = await fetch("https://elcto-1.onrender.com/api/getcategory", {
             method: "get"
         })
         if (result) {
@@ -104,7 +103,7 @@ show6()
         }
     }
     const show3 = async () => {
-        const result = await fetch(`${API_URL}/api/getproduct`, {
+        const result = await fetch("https://elcto-1.onrender.com/api/getproduct", {
             method: "get"
         })
         if (result) {
@@ -118,7 +117,7 @@ show6()
         }
     }
     const show4 = async () => {
-        const result = await fetch(`${API_URL}/api/showbrand`, {
+        const result = await fetch("https://elcto-1.onrender.com/api/showbrand", {
             method: "get"
         })
         if (result) {
@@ -181,7 +180,7 @@ show6()
     };
 
     const show5 = async () => {
-        const result = await fetch(`${API_URL}/api/orderdata`, {
+        const result = await fetch("https://elcto-1.onrender.com/api/orderdata", {
             method: "get"
         })
         if (result) {
@@ -205,7 +204,7 @@ show6()
     }
 
       const show6=async()=>{
-        const result=await fetch(`${API_URL}/api/vendordata`,{
+        const result=await fetch("https://elcto-1.onrender.com/api/vendordata",{
             method:"get"
         })
         if(result){
@@ -221,7 +220,7 @@ show6()
     }
 
     const approval=async(id)=>{
-        const result=await fetch(`${API_URL}/api/approval/${id}`,{
+        const result=await fetch(`https://elcto-1.onrender.com/api/approval/${id}`,{
             method:"put",
             headers:{
                 "Content-Type":"application/json"

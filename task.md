@@ -1,7 +1,0 @@
-- `[x]` Apply critical backend bug fixes in `backend/server.js`
-- `[x]` Set up API URL centralization
-  - `[x]` Create `frontend/src/config.js`
-  - `[x]` Run refactoring script to replace hardcoded production URLs with `API_URL`
-- `[x]` Update `frontend/src/category.js` (add validations, Swal alerts, clean routing)
-- `[x]` Redesign the frontend globally via `frontend/public/style.css` (premium UI tokens, glassmorphism, animations)
-- `[x]` Verify frontend builds and compiles successfully

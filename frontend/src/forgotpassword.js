@@ -1,4 +1,3 @@
-import API_URL from "./config"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 export const ForgetPass=()=>{
@@ -9,7 +8,7 @@ const navigate=useNavigate()
 const sendlink=async(e)=>{
     e.preventDefault()
    
-    const result=await fetch(`${API_URL}/api/forgot`,{
+    const result=await fetch("https://elcto-1.onrender.com/api/forgot",{
         method:"post",
         body:JSON.stringify({email}),
         headers:{"Content-type":"application/json;charset=UTF-8"}

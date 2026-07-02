@@ -15,34 +15,21 @@ function App() {
 
 
   useEffect(() => {
-    const token = localStorage.getItem("data")
-
-    if (!token) {
-      setutype("")
-      setid("")
-      setmail("")
-      return
+    const info = JSON.parse(localStorage.getItem("data"))
+    if (info) {
+      const parts = info.split(".")
+      if (parts.length === 3) {
+        const payload = parts[1]
+        const enc = payload.replace(/-/g, '+').replace(/_/g, '/')
+        const str = atob(enc)
+        const decode = JSON.parse(str)
+        setutype(decode.usertype)
+        setid(decode.id)
+        setmail(decode.mail)
+        console.log("mail is", mail)
+      }
     }
-
-    try {
-      const parts = JSON.parse(token).split(".")
-      if (parts.length !== 3) return
-
-      const payload = parts[1]
-      const enc = payload.replace(/-/g, '+').replace(/_/g, '/')
-      const str = atob(enc)
-      const decode = JSON.parse(str)
-
-      setutype(decode.usertype || "")
-      setid(decode.id || "")
-      setmail(decode.mail || "")
-    } catch (error) {
-      localStorage.removeItem("data")
-      setutype("")
-      setid("")
-      setmail("")
-    }
-  }, [])
+  })
 
   return (
     <div className="App">

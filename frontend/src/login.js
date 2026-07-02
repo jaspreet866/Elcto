@@ -1,4 +1,3 @@
-import API_URL from "./config"
 import { useContext, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import Swal from "sweetalert2"
@@ -16,7 +15,7 @@ export const Login = () => {
     const login = async (e) => {
         e.preventDefault()
         const data = { email, pass }
-        const result = await fetch(`${API_URL}/api/login`, {
+        const result = await fetch("https://elcto-1.onrender.com/api/login", {
             method: "post",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }

@@ -1,4 +1,3 @@
-import API_URL from "./config"
 import { useContext, useEffect, useState } from "react"
 import { Context } from "./usecontext"
 import { useNavigate } from "react-router-dom"
@@ -18,7 +17,7 @@ export const Admin = () => {
     }, [])
 
     const show = async () => {
-        const result = await fetch(`${API_URL}/api/users`, {
+        const result = await fetch("https://elcto-1.onrender.com/api/users", {
             method: "get"
         })
         if (result.ok) {
@@ -34,7 +33,7 @@ export const Admin = () => {
     const admin = async (id) => {
 
         const data = { ad }
-        const result = await fetch(`${API_URL}/api/makeadmin/${id}`, {
+        const result = await fetch(`https://elcto-1.onrender.com/api/makeadmin/${id}`, {
             method: "put",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }
@@ -52,7 +51,7 @@ export const Admin = () => {
     }
     const changeStatus = async (id) => {
         const data = { status }
-        const result = await fetch(`${API_URL}/api/changestatus/${id}`, {
+        const result = await fetch(`https://elcto-1.onrender.com/api/changestatus/${id}`, {
             method: "put",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }

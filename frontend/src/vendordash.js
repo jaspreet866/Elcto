@@ -1,4 +1,3 @@
-import API_URL from "./config"
 
 import { useState, useEffect, useContext } from "react"
 import { Context } from "./usecontext"
@@ -13,7 +12,7 @@ export const VendorDashboard = () => {
     },[id])
 
     const show=async()=>{
-        const result=await fetch(`${API_URL}/api/vendorproduct/${id}`,{
+        const result=await fetch(`https://elcto-1.onrender.com/api/vendorproduct/${id}`,{
             method:"get"
         })
         if(result.ok){

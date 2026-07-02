@@ -1,4 +1,3 @@
-import API_URL from "./config"
 import { useContext, useEffect, useState } from "react"
 import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import Swal from "sweetalert2"
@@ -18,7 +17,7 @@ export const Wish = () => {
 
     const show = async (e) => {
 
-        const result = await fetch(`${API_URL}/api/getwish/${id}`, {
+        const result = await fetch(`https://elcto-1.onrender.com/api/getwish/${id}`, {
             method: "get"
         })
         if (result.ok) {
@@ -34,7 +33,7 @@ export const Wish = () => {
 
     const cart = async (id, name, price, img, value = 1, prr) => {
         const data = { id, name, price, img, value, prr }
-        const result = await fetch(`${API_URL}/api/cartdata/${prr}`, {
+        const result = await fetch(`https://elcto-1.onrender.com/api/cartdata/${prr}`, {
             method: "post",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }
@@ -59,7 +58,7 @@ export const Wish = () => {
 
         if (confirm.isConfirmed) {
 
-            const result = await fetch(`${API_URL}/api/deletewish/${id}`, {
+            const result = await fetch(`https://elcto-1.onrender.com/api/deletewish/${id}`, {
                 method: "DELETE"
             });
 

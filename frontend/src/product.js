@@ -1,4 +1,3 @@
-import API_URL from "./config"
 
 import { useContext, useEffect, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
@@ -51,7 +50,7 @@ export const Product = () => {
         formData.append("Specifications", specifications);
 
 
-        const result = await fetch(`${API_URL}/api/product`, {
+        const result = await fetch("https://elcto-1.onrender.com/api/product", {
             method: "post",
             body: formData
         })
@@ -72,7 +71,7 @@ export const Product = () => {
     const show = async (e) => {
        
        
-        const result = await fetch(`${API_URL}/api/getcategory`, {
+        const result = await fetch("https://elcto-1.onrender.com/api/getcategory", {
             method: "get"
         })
         if (result) {
@@ -84,7 +83,7 @@ export const Product = () => {
         }
     }
     const show2 = async () => {
-        const result = await fetch(`${API_URL}/api/getbrand2/${id}`, {
+        const result = await fetch(`https://elcto-1.onrender.com/api/getbrand2/${id}`, {
             method: "get"
         })
         if (result) {
@@ -100,7 +99,7 @@ export const Product = () => {
     }
     const show3 = async () => {
 
-        const result = await fetch(`${API_URL}/api/getproduct`, {
+        const result = await fetch("https://elcto-1.onrender.com/api/getproduct", {
             method: "get"
         })
         if (result.ok) {
@@ -127,7 +126,7 @@ export const Product = () => {
 
         if (confirm.isConfirmed) {
 
-            const result = await fetch(`${API_URL}/api/deletepro/${id}`, {
+            const result = await fetch(`https://elcto-1.onrender.com/api/deletepro/${id}`, {
                 method: "DELETE"
             });
 
@@ -179,7 +178,7 @@ export const Product = () => {
         formData2.append("pic", img)
     }
 
-    const result = await fetch(`${API_URL}/api/updatepro/${idd}`, {
+    const result = await fetch(`https://elcto-1.onrender.com/api/updatepro/${idd}`, {
         method: "PUT",
         body: formData2
     })

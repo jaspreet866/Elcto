@@ -1,4 +1,3 @@
-import API_URL from "./config"
 import { useEffect, useState } from "react"
 
 export const ResetPassword=()=>{
@@ -15,7 +14,7 @@ export const ResetPassword=()=>{
 
     const reset=async(e)=>{
         e.preventDefault()
-        const result=await fetch(`${API_URL}/api/resetpassword/${mail}`,{
+        const result=await fetch(`https://elcto-1.onrender.com/api/resetpassword/${mail}`,{
             method:"put",
             body:JSON.stringify({pass,cpass}),
             headers:{"Content-type":"application/json;charset=UTF-8"}
