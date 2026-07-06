@@ -1,5 +1,4 @@
-import { useContext, useEffect, useState } from "react"
-import { Context } from "./usecontext"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import Swal from "sweetalert2"
 import { useLocation, useSearchParams } from "react-router-dom"
 
@@ -18,43 +17,16 @@ export const Check = () => {
     const location = useLocation()
     const orderno = Math.floor(Math.random() * 1000)
     const [payment, setpayment] = useState("")
+    const [agree, setagree] = useState(false)
+    const [saving, setsaving] = useState(false)
     const { totalprice } = location.state || {};
     const [idd] = useSearchParams()
     const id = idd.get("id")
+    const orderTotal = useMemo(() => {
+        return totalprice || d.reduce((acc, item) => acc + (item.Quantity * item.Price), 0)
+    }, [d, totalprice])
 
-    useEffect(() => {
-        show()
-    }, [id])
-
-    const save = async () => {
-        const items = d.map(item => ({
-            ProductName: item.Name,
-            Quantity: item.Quantity,
-            Price: item.Price,
-            Img:item.Img
-        }))
-        const data = { fname, lname, phn, email, country, state, city, postal, address, id, payment, orderno, totalprice, data: items }
-        const result = await fetch("https://elcto-1.onrender.com/api/checkout", {
-            method: "post",
-            body: JSON.stringify(data),
-            headers: { "Content-type": "application/json;charset=UTF-8" }
-        })
-        if (result.ok) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-              Swal.fire({
-                icon:"success",
-                title:"Thanks You ",
-                text:"Visit Again"
-              })
-            }
-            else {
-                alert("not")
-            }
-        }
-    }
-
-    const show = async () => {
+    const show = useCallback(async () => {
         const result = await fetch(`https://elcto-1.onrender.com/api/getcartdata/${id}`, {
             method: "get"
         })
@@ -67,7 +39,42 @@ export const Check = () => {
                 alert("nothing in cart")
             }
         }
+    }, [id])
+
+    useEffect(() => {
+        show()
+    }, [show])
+
+    const save = async () => {
+        const items = d.map(item => ({
+            ProductName: item.Name,
+            Quantity: item.Quantity,
+            Price: item.Price,
+            Img: item.Img
+        }))
+        const data = { fname, lname, phn, email, country, state, city, postal, address, id, payment, orderno, totalprice: orderTotal, data: items }
+        const result = await fetch("https://elcto-1.onrender.com/api/checkout", {
+            method: "post",
+            body: JSON.stringify(data),
+            headers: { "Content-type": "application/json;charset=UTF-8" }
+        })
+        if (result.ok) {
+            const res = await result.json()
+            if (res.statuscode === 1) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Thank You",
+                    text: "Visit Again"
+                })
+                return true
+            }
+            else {
+                Swal.fire("Error", "Order could not be placed", "error")
+            }
+        }
+        return false
     }
+
     const deletecart = async () => {
         const result = await fetch(`https://elcto-1.onrender.com/api/removecartdata/${id}`, {
             method: "delete"
@@ -81,6 +88,32 @@ export const Check = () => {
                 alert("not")
             }
         }
+    }
+
+    const handleCheckout = async (e) => {
+        e.preventDefault()
+
+        if (!d.length) {
+            Swal.fire("Cart is empty", "Please add products before checkout.", "info")
+            return
+        }
+
+        if (!payment) {
+            Swal.fire("Select payment", "Please choose a payment option.", "info")
+            return
+        }
+
+        if (!agree) {
+            Swal.fire("Terms required", "Please accept the terms & conditions.", "info")
+            return
+        }
+
+        setsaving(true)
+        const saved = await save()
+        if (saved) {
+            await deletecart()
+        }
+        setsaving(false)
     }
 
 
@@ -111,23 +144,24 @@ export const Check = () => {
                     </div>
                 </div>
             </section>
-            <div className="container">
-                <div className="row">
-                    <div className="col mt-5" >
-                        <div className="card shadow-sm w-100 text-center">
-                            <div className="card-body">
-                                <h3 className="card-title mb-3">Your Order Details</h3>
+            <section className="checkout-page">
+                <div className="container">
+                    <div className="row g-4 align-items-start">
+                        <div className="col-12 col-lg-5 order-lg-2">
+                            <div className="card checkout-card checkout-summary-card">
+                                <div className="card-body p-4">
+                                    <h3 className="card-title mb-4">Your Order Details</h3>
 
-                                <table className="table align-middle mb-0 ">
+                                    <div className="table-responsive">
+                                        <table className="table align-middle mb-0 checkout-table">
                                     <tbody>
                                         {d.map((a) => (
                                             <tr key={a._id}>
-                                                <td style={{ width: "50px" }}>
+                                                <td className="checkout-product-img-cell">
                                                     <img
                                                         src={`${a.Img}`}
                                                         alt={a.Name}
-                                                        className="img-fluid rounded"
-                                                        style={{ height: "40px", width: "40px", objectFit: "cover" }}
+                                                        className="checkout-product-img"
                                                     />
                                                 </td>
 
@@ -136,7 +170,7 @@ export const Check = () => {
                                                     <small className="text-muted">Qty: {a.Quantity}</small>
                                                 </td>
 
-                                                <td className="text-end fw-semibold">
+                                                <td className="text-end fw-semibold checkout-price">
                                                     ₹{a.Price * a.Quantity}
                                                 </td>
                                             </tr>
@@ -144,46 +178,68 @@ export const Check = () => {
                                         ))}
                                     </tbody>
 
-                                </table>
-                                <h3 className="mt-3">Total:{totalprice}</h3>
-                                {payment}
+                                        </table>
+                                    </div>
+
+                                    <div className="checkout-total-row">
+                                        <span>Total</span>
+                                        <strong>₹{orderTotal}</strong>
+                                    </div>
+                                    {payment && <p className="checkout-payment-note mb-0">Payment: {payment}</p>}
+                                </div>
                             </div>
                         </div>
-                    </div>
- <div className="col col-12 col-lg-7 mt-5">
-                        <form>
-                            <div className="d-flex gap-3 mb-2">
-                                <input className="form-control w-50" placeholder="First Name" onChange={(e) => setfname(e.target.value)}></input>
-                                <input className="form-control w-50" placeholder="Last Name" onChange={(e) => setlname(e.target.value)}></input>
-                            </div>
-                            <div className="d-flex gap-3 mb-2">
-                                <input className="form-control w-50" placeholder="Phone No." onChange={(e) => setphn(e.target.value)}></input>
-                                <input className="form-control w-50" placeholder="E-Mail" onChange={(e) => setemail(e.target.value)}></input>
-                            </div>
-                            <select className="form-select mb-2" onChange={(e) => setcountry(e.target.value)}>
-                                <option>Selct Country</option>
-                                <option>India</option>
-                                <option>Australia</option>
-                                <option>Cananda</option>
-                                <option>U.S.</option>
-                                <option>Japan</option>
-                                <option>China</option>
+                        <div className="col-12 col-lg-7 order-lg-1">
+                            <form className="checkout-form" onSubmit={handleCheckout}>
+                                <div className="card checkout-card">
+                                    <div className="card-body p-4">
+                                        <h3 className="card-title mb-4">Billing Details</h3>
 
-                            </select>
+                                        <div className="row g-3">
+                                            <div className="col-12 col-md-6">
+                                                <input className="form-control" placeholder="First Name" required onChange={(e) => setfname(e.target.value)} />
+                                            </div>
+                                            <div className="col-12 col-md-6">
+                                                <input className="form-control" placeholder="Last Name" required onChange={(e) => setlname(e.target.value)} />
+                                            </div>
+                                            <div className="col-12 col-md-6">
+                                                <input className="form-control" placeholder="Phone No." required onChange={(e) => setphn(e.target.value)} />
+                                            </div>
+                                            <div className="col-12 col-md-6">
+                                                <input className="form-control" type="email" placeholder="E-Mail" required onChange={(e) => setemail(e.target.value)} />
+                                            </div>
+                                            <div className="col-12">
+                                                <select className="form-select" defaultValue="" required onChange={(e) => setcountry(e.target.value)}>
+                                                    <option value="" disabled>Select Country</option>
+                                                    <option>India</option>
+                                                    <option>Australia</option>
+                                                    <option>Canada</option>
+                                                    <option>U.S.</option>
+                                                    <option>Japan</option>
+                                                    <option>China</option>
+                                                </select>
+                                            </div>
+                                            <div className="col-12 col-md-6">
+                                                <input className="form-control" placeholder="State" required onChange={(e) => setstate(e.target.value)} />
+                                            </div>
+                                            <div className="col-12 col-md-6">
+                                                <input className="form-control" placeholder="City" required onChange={(e) => setcity(e.target.value)} />
+                                            </div>
+                                            <div className="col-12 col-md-5">
+                                                <input className="form-control" placeholder="Pin Code" required onChange={(e) => setpostal(e.target.value)} />
+                                            </div>
+                                            <div className="col-12 col-md-7">
+                                                <input className="form-control" placeholder="Address" required onChange={(e) => setaddress(e.target.value)} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                            <div className="d-flex gap-3 mb-2">
-                                <input className="form-control w-50" placeholder="State" onChange={(e) => setstate(e.target.value)}></input>
-                                <input className="form-control w-50" placeholder="City" onChange={(e) => setcity(e.target.value)}></input>
-                            </div>
-                            <div className="d-flex gap-3 mb-2">
-                                <input className="form-control w-50" placeholder="Pin Code" onChange={(e) => setpostal(e.target.value)}></input>
-                                <input className="form-control w-50" placeholder="Address" onChange={(e) => setaddress(e.target.value)}></input>
-                            </div>
-                        </form>
-                        <div className="card p-4 w-100">
-                            <h5 className="mb-3">Choose Payment Option</h5>
+                                <div className="card checkout-card mt-4">
+                                    <div className="card-body p-4">
+                                        <h5 className="mb-3">Choose Payment Option</h5>
 
-                            <div className="accordion" id="payment-method-box">
+                                        <div className="accordion checkout-payment-box" id="payment-method-box">
                                 <div className="accordion-item">
                                     <h2 className="accordion-header">
                                         <label className="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#credit-card-payment">
@@ -246,33 +302,30 @@ export const Check = () => {
                                     </div>
                                 </div>
 
-                            </div>
+                                        </div>
 
-                            <p className="text-muted small mt-3">
-                                Your personal data will be used to process your order and support your
-                                experience on this website.
-                            </p>
+                                        <p className="text-muted small mt-3">
+                                            Your personal data will be used to process your order and support your
+                                            experience on this website.
+                                        </p>
 
-                            <div className="form-check mt-2">
-                                <input className="form-check-input" type="checkbox" id="agree" />
-                                <label className="form-check-label" htmlFor="agree">
-                                    I agree to the <span className="text-primary">terms & conditions</span>
-                                </label>
-                            </div>
+                                        <div className="form-check mt-2">
+                                            <input className="form-check-input" type="checkbox" id="agree" checked={agree} onChange={(e) => setagree(e.target.checked)} />
+                                            <label className="form-check-label" htmlFor="agree">
+                                                I agree to the <span className="text-primary">terms & conditions</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button className="btn btn-primary btn-lg checkout-submit-btn mt-4" type="submit" disabled={saving}>
+                                    {saving ? "Placing Order..." : "Checkout"}
+                                </button>
+                            </form>
                         </div>
-
-                        <button
-                            className="btn btn-primary btn-lg mt-3"
-                            onClick={async () => {
-                                await save()
-                                await deletecart()
-                            }}
-                        >
-                            Checkout
-                        </button>
                     </div>
                 </div>
-            </div>
+            </section>
         </>
     )
 }
