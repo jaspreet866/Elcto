@@ -751,22 +751,26 @@ section h2.fw-bold,
 
 .cardicons p,
 .cardicons .btn {
-  width: 36px;
-  height: 36px;
-  display: inline-grid;
-  place-items: center;
-  margin: 0;
-  padding: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(229, 231, 235, 0.9);
-  box-shadow: 0 8px 20px rgba(17, 24, 39, 0.12);
+  width: 44px !important;
+  height: 44px !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(229, 231, 235, 0.9) !important;
+  box-shadow: 0 8px 20px rgba(17, 24, 39, 0.12) !important;
+  color: #111827 !important;
+  font-size: 18px !important;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease !important;
 }
 
 .cardicons p:hover,
 .cardicons .btn:hover {
-  background: #fff1f2;
-  color: var(--accent);
+  background: #fff1f2 !important;
+  color: var(--accent) !important;
+  transform: scale(1.08) !important;
 }
 
 .badge.bg-danger {
@@ -1191,15 +1195,7 @@ footer .fa-brands:hover {
   }
 
   .cardicons {
-    opacity: 1;
-    pointer-events: auto;
-    transform: none;
-  }
-
-  .cardicons p,
-  .cardicons .btn {
-    width: 32px;
-    height: 32px;
+    display: none !important;
   }
 
   .product-title {
