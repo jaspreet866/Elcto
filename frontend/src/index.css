@@ -716,10 +716,10 @@ section h2.fw-bold,
   transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
 }
 
-.row > [class*="col"] > .card,
+/* .row > [class*="col"] > .card,
 .row > [class*="col"] > a > .card {
   min-height: 100%;
-}
+} */
 
 .card:hover {
   transform: translateY(-7px);
