@@ -22,6 +22,7 @@ export const Main = () => {
     const { id } = useContext(Context)
     const [discount, setdiscount] = useState("")
     const [showTop, setShowTop] = useState(false);
+    const [scrollProgress, setScrollProgress] = useState(0);
 
 
 
@@ -67,13 +68,19 @@ export const Main = () => {
     useEffect(() => {
 
         const handleScroll = () => {
-
             setShowTop(window.scrollY > window.innerHeight * 0.2);
+            const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+            setScrollProgress(scrollableHeight > 0 ? (window.scrollY / scrollableHeight) * 100 : 0);
         };
 
+        handleScroll();
         window.addEventListener("scroll", handleScroll);
+        window.addEventListener("resize", handleScroll);
 
-        return () => window.removeEventListener("scroll", handleScroll);
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+            window.removeEventListener("resize", handleScroll);
+        };
 
     }, []);
 
@@ -838,13 +845,17 @@ export const Main = () => {
             </section>
 
             {showTop && (
-                <div id='goTopBtn' 
+                <button
+                    id='goTopBtn'
+                    type="button"
                     onClick={gotop}
-                  >
-
-                    <i className="bi bi-arrow-up-circle-fill"></i>
-
-                </div>
+                    style={{ "--scroll-progress": `${Math.min(scrollProgress, 100) * 3.6}deg` }}
+                    aria-label="Go to top"
+                >
+                    <span className="go-top-icon" aria-hidden="true">
+                        <i className="bi bi-arrow-up"></i>
+                    </span>
+                </button>
             )}
         </>
     )

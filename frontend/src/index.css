@@ -981,17 +981,86 @@ section h2.fw-bold,
 }
 
 #goTopBtn {
-  width: 52px;
-  height: 52px;
+  width: 58px;
+  height: 58px;
   right: 22px;
+
   bottom: 24px;
   display: grid;
   place-items: center;
-  color: var(--brand);
-  background: #fff;
+  position: fixed;
+  isolation: isolate;
+  padding: 4px;
+  border: 0;
   border-radius: 50%;
-  box-shadow: var(--shadow-md);
-  font-size: 34px;
+  cursor: pointer;
+  color: #fff;
+  background: conic-gradient(from -90deg, #60a5fa, var(--brand) var(--scroll-progress, 0deg), #dbe5f4 0);
+  box-shadow: 0 12px 28px rgba(15, 98, 254, 0.26), 0 4px 10px rgba(15, 23, 42, 0.12);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+#goTopBtn::after {
+  content: "Back to top";
+  position: absolute;
+  right: calc(100% + 12px);
+  padding: 7px 10px;
+  border-radius: 8px;
+  color: #fff;
+  background: #111827;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.18);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(5px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+#goTopBtn .go-top-icon {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(15, 98, 254, 0.14);
+  color: var(--brand);
+  background: linear-gradient(145deg, #ffffff 0%, #f3f7ff 100%);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.9), inset 0 -4px 8px rgba(15, 98, 254, 0.06);
+  font-size: 23px;
+  transition: transform 0.25s ease;
+}
+
+#goTopBtn:hover {
+  animation: none;
+  transform: translateY(-5px) scale(1.04);
+  box-shadow: 0 18px 34px rgba(15, 98, 254, 0.34), 0 6px 12px rgba(15, 23, 42, 0.14);
+}
+
+#goTopBtn:hover::after,
+#goTopBtn:focus-visible::after {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+#goTopBtn:hover .go-top-icon {
+  transform: translateY(-1px);
+}
+
+#goTopBtn:focus-visible {
+  outline: 3px solid rgba(15, 98, 254, 0.35);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #goTopBtn,
+  #goTopBtn::after,
+  #goTopBtn .go-top-icon {
+    transition: none;
+  }
 }
 
 .marquee {
