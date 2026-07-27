@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.673118da.css",
-    "main.js": "/static/js/main.2209ae50.js",
+    "main.css": "/static/css/main.a397ef02.css",
+    "main.js": "/static/js/main.61ad22dd.js",
     "static/js/453.97071b25.chunk.js": "/static/js/453.97071b25.chunk.js",
     "static/media/ChatGPT Image Feb 11, 2026, 07_41_57 PM.png": "/static/media/ChatGPT Image Feb 11, 2026, 07_41_57 PM.a0e3b04f6bed4d604d21.png",
     "static/media/banner1.png": "/static/media/banner1.69e0f13f8888a0be7dcd.png",
@@ -11,12 +11,12 @@
     "static/media/WhatsApp Image 2026-02-12 at 11.08.16 AM.png": "/static/media/WhatsApp Image 2026-02-12 at 11.08.16 AM.a963aab809a29cfdd1d9.png",
     "static/media/contact.jpg": "/static/media/contact.ed1bd307da3d33473ff9.jpg",
     "index.html": "/index.html",
-    "main.673118da.css.map": "/static/css/main.673118da.css.map",
-    "main.2209ae50.js.map": "/static/js/main.2209ae50.js.map",
+    "main.a397ef02.css.map": "/static/css/main.a397ef02.css.map",
+    "main.61ad22dd.js.map": "/static/js/main.61ad22dd.js.map",
     "453.97071b25.chunk.js.map": "/static/js/453.97071b25.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.673118da.css",
-    "static/js/main.2209ae50.js"
+    "static/css/main.a397ef02.css",
+    "static/js/main.61ad22dd.js"
   ]
 }

@@ -79,55 +79,88 @@ export const Header = () => {
         <>
 
 
-            <nav className="navbar navbar-expand-lg bg-white shadow-sm sticky-top ">
+            <nav className="navbar navbar-expand-lg sticky-glass-nav py-2">
                 <div className="container">
-                    <div className="d-flex gap-4 ">
+                    <div className="d-flex align-items-center gap-3">
                         <button
-                            className="navbar-toggler  d-lg-none"
+                            className="navbar-toggler d-lg-none border-0 shadow-none"
                             type="button"
                             data-bs-toggle="offcanvas"
                             data-bs-target="#mobileOffcanvas"
                             aria-controls="mobileOffcanvas"
                             aria-label="Toggle navigation"
                         >
-                            <span className="navbar-toggler-icon "></span>
+                            <span className="navbar-toggler-icon"></span>
                         </button>
                         <Link to="/" className="navbar-brand fw-bold fs-4">
-                            <img src={logo} alt="logo" style={{ height: "40px" }} className="navbar-logo" />
-
+                            <img src={logo} alt="logo" style={{ height: "42px" }} className="navbar-logo" />
                         </Link>
-
                     </div>
 
- <div className="search-box d-none d-lg-block">
-  <input
-    className="ms-3 form-control rounded-pill"
-    type="text"
-    placeholder="Search..."
-    onChange={(e) => {setsearch(e.target.value)}}
-  />
-    
-   {search.length > 0 && (
-    <ul className="search-result">
-      {filteredProducts.map((a) => (
-        <Link key={a._id} to={`/detail?id=${a._id}&cid=${a.Category}`} className="text-decoration-none text-dark"   onClick={() => setsearch("")}>
-          <li>{a.ProductName}</li>
-        </Link>
-      ))}
-    </ul>
-  )}
-</div>
-
+                    <div className="search-box d-none d-lg-block search-input-wrapper flex-grow-1 max-w-md mx-4" style={{ maxWidth: "380px" }}>
+                        <div className="input-group">
+                            <span className="input-group-text bg-light border-0 rounded-start-pill ps-3 text-muted">
+                                <i className="bi bi-search"></i>
+                            </span>
+                            <input
+                                className="form-control bg-light border-0 rounded-end-pill py-2 shadow-none"
+                                type="text"
+                                value={search}
+                                placeholder="Search products, brands..."
+                                onChange={(e) => { setsearch(e.target.value) }}
+                            />
+                        </div>
+                        {search.trim().length > 0 && (
+                            <div className="live-search-dropdown shadow-lg">
+                                {filteredProducts.length > 0 ? (
+                                    filteredProducts.slice(0, 6).map((a) => {
+                                        const rawImg = a.Img || a.ProductImage || a.pic;
+                                        const imgSrc = rawImg
+                                            ? (rawImg.startsWith('http') || rawImg.startsWith('/') || rawImg.startsWith('data:'))
+                                                ? rawImg
+                                                : `/uploads/${rawImg}`
+                                            : null;
+                                        
+                                        return (
+                                            <Link
+                                                key={a._id}
+                                                to={`/detail?id=${a._id}&cid=${a.Category}`}
+                                                className="search-item-row"
+                                                onClick={() => setsearch("")}
+                                            >
+                                                {imgSrc ? (
+                                                    <img
+                                                        src={imgSrc}
+                                                        alt={a.ProductName}
+                                                        className="search-item-thumb"
+                                                    />
+                                                ) : (
+                                                    <div className="search-item-thumb d-flex align-items-center justify-content-center bg-light text-muted">
+                                                        <i className="bi bi-image"></i>
+                                                    </div>
+                                                )}
+                                                <div className="search-item-info">
+                                                    <p className="search-item-name">{a.ProductName}</p>
+                                                   
+                                                </div>
+                                            </Link>
+                                        );
+                                    })
+                                ) : (
+                                    <div className="p-3 text-center text-muted small">
+                                        <i className="bi bi-search me-1"></i> No matching products found
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
 
                     <div className="collapse navbar-collapse d-none d-lg-block" id="navbarSupportedContent">
-
-
-                        <ul className="navbar-nav ms-auto mb-2 mb-lg-0 gap-lg-2">
-
+                        <ul className="navbar-nav ms-auto mb-2 mb-lg-0 gap-lg-1 align-items-center">
                             <li className="nav-item">
                                <Link to="/" className="nav-link active fw-semibold">
                                     Home
-                                </Link >
+                                </Link>
                             </li>
 
                             <li className="nav-item">
@@ -135,7 +168,6 @@ export const Header = () => {
                                     About
                                 </Link>
                             </li>
-
 
                              <li className="nav-item dropdown">
                                 <Link
@@ -146,15 +178,14 @@ export const Header = () => {
                                 >
                                     Products
                                 </Link>
-                                <ul className="dropdown-menu shadow-sm">
-                                    <Link className="text-decoration-none" to={`/related?id=6970dd16300a757a6dcdb928`}><li><a className="dropdown-item">LED</a></li></Link>
-                                    <Link className="text-decoration-none" to={`/related?id=6970dd60300a757a6dcdb92e`}><li><a className="dropdown-item">Laptops</a></li></Link>
-                                    <Link className="text-decoration-none" to={`/related?id=6970dd2d300a757a6dcdb92a`}><li><a className="dropdown-item">Mobiles</a></li></Link>
-                                    <Link className="text-decoration-none" to={`/related?id=69849f299a77c6ecd3c2839b`}><li><a className="dropdown-item">Airpods</a></li></Link>
-                                    <Link className="text-decoration-none" to={`/related?id=69849fa89a77c6ecd3c283af`}><li><a className="dropdown-item">Cameras</a></li></Link>
+                                <ul className="dropdown-menu shadow-lg border-0 rounded-4 p-2">
+                                    <Link className="text-decoration-none" to={`/related?id=6970dd16300a757a6dcdb928`}><li><span className="dropdown-item rounded-3">LED TVs</span></li></Link>
+                                    <Link className="text-decoration-none" to={`/related?id=6970dd60300a757a6dcdb92e`}><li><span className="dropdown-item rounded-3">Laptops</span></li></Link>
+                                    <Link className="text-decoration-none" to={`/related?id=6970dd2d300a757a6dcdb92a`}><li><span className="dropdown-item rounded-3">Mobiles</span></li></Link>
+                                    <Link className="text-decoration-none" to={`/related?id=69849f299a77c6ecd3c2839b`}><li><span className="dropdown-item rounded-3">Airpods</span></li></Link>
+                                    <Link className="text-decoration-none" to={`/related?id=69849fa89a77c6ecd3c283af`}><li><span className="dropdown-item rounded-3">Cameras</span></li></Link>
                                 </ul>
                             </li>
-
 
                             <li className="nav-item dropdown">
                                 <a
@@ -165,12 +196,12 @@ export const Header = () => {
                                 >
                                     Features
                                 </a>
-                                <ul className="dropdown-menu shadow-sm">
-                                  <Link className="text-decoration-none" to="/about"><li><a className="dropdown-item">About Us</a></li></Link>
-                                    <Link className="text-decoration-none" to="/contact"><li><a className="dropdown-item">Contact Us</a></li></Link>
-                                    <Link className="text-decoration-none" to="/myorder"><li><a className="dropdown-item">Order</a></li></Link>
-                                    <Link className="text-decoration-none" to="/vendor"><li><a className="dropdown-item">Become Vendor</a></li></Link>
-                                    <Link className="text-decoration-none" to="/vlogin"><li><a className="dropdown-item">Vendor Login</a></li></Link>
+                                <ul className="dropdown-menu shadow-lg border-0 rounded-4 p-2">
+                                  <Link className="text-decoration-none" to="/about"><li><span className="dropdown-item rounded-3">About Us</span></li></Link>
+                                    <Link className="text-decoration-none" to="/contact"><li><span className="dropdown-item rounded-3">Contact Us</span></li></Link>
+                                    <Link className="text-decoration-none" to="/myorder"><li><span className="dropdown-item rounded-3">My Orders</span></li></Link>
+                                    <Link className="text-decoration-none" to="/vendor"><li><span className="dropdown-item rounded-3">Become Vendor</span></li></Link>
+                                    <Link className="text-decoration-none" to="/vlogin"><li><span className="dropdown-item rounded-3">Vendor Portal</span></li></Link>
                                 </ul>
                             </li>
 
@@ -184,34 +215,34 @@ export const Header = () => {
                                 >
                                     Account
                                 </a>
-                                <ul className="dropdown-menu dropdown-menu-end shadow-sm">
-                                    <li>
+                                <ul className="dropdown-menu shadow-lg border-0 rounded-4 p-2">
+                                    <li className="dropdown-item">
                                         {flag ? <>
-                                            <p onClick={logout} className=" text-center dropdown-item justify-content-center align-content-center">
+                                            <p onClick={logout} className="text-danger m-0 text-center fw-semibold style-pointer">
                                                 Logout
                                             </p></>
                                             : <>
-                                                <Link className=" text-decoration-none text-black text-center ms-4" to="/login">Log IN</Link><br></br>
-                                                <Link className="text-decoration-none text-black text-center ms-4" to="/register">SignUp</Link>
+                                                <Link className="dropdown-item text-center rounded-3 mb-1" to="/login">Log In</Link>
+                                                <Link className="dropdown-item text-center rounded-3 fw-semibold text-primary" to="/register">Sign Up</Link>
                                             </>}
                                     </li>
                                 </ul>
                             </li>
                         </ul>
-                      {
-                        flag ? 
-                            <div className="ms-5 d-flex align-items-center justify-content-center">
-                            <button className="fs-4 btn" onClick={() => cart()} ><i className="bi bi-cart-fill"></i></button>
-                            <div className="fs-4 btn"><i className="bi bi-heart-fill" onClick={() => wish()}></i></div>
-                            <button className="btn bg-black text-white log-out ms-3 rounded-pill" onClick={logout}>Logout</button>
+
+                        <div className="ms-lg-4 d-flex align-items-center gap-2">
+                            <button className="btn btn-light p-2 position-relative shadow-sm" onClick={() => cart()} title="Cart">
+                                <i className="bi bi-bag-fill fs-5 text-dark"></i>
+                            </button>
+                            <button className="btn btn-light  p-2 position-relative shadow-sm" onClick={() => wish()} title="Wishlist">
+                                <i className="bi bi-heart-fill fs-5 text-danger"></i>
+                            </button>
+                            {flag ? (
+                                <button className="btn btn-outline-danger btn-sm rounded-pill px-3 ms-2 fw-semibold" onClick={logout}>Logout</button>
+                            ) : (
+                                <button className="btn btn-primary btn-sm rounded-pill px-4 ms-2 fw-semibold shadow-sm" onClick={() => { navigate("/login") }}>Sign In</button>
+                            )}
                         </div>
-                        :<div className="ms-5 d-flex align-items-center justify-content-center">
-                            <button className="fs-4 btn" onClick={() => cart()} ><i className="bi bi-cart-fill"></i></button>
-                            <div className="fs-4 btn"><i className="bi bi-heart-fill" onClick={() => wish()}></i></div>
-                               <button className="btn bg-black text-white log-out  ms-3 rounded-pill" onClick={()=>{navigate("/login")}}>LogIn</button>
-                        </div>
-                      }
-                                            
                     </div>
                 </div>
             </nav>
