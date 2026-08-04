@@ -1,5 +1,5 @@
 
-import { useContext, useEffect, useState, } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import banner2 from './images/banner2.png'
 import banner1 from './images/banner1.png'
@@ -8,6 +8,8 @@ import { Context } from './usecontext'
 import Swal from 'sweetalert2'
 import AOS from "aos"
 import "aos/dist/aos.css"
+import Splide from '@splidejs/splide'
+import '@splidejs/splide/css'
 
 export const Main = () => {
     const [d, setd] = useState([])
@@ -24,8 +26,6 @@ export const Main = () => {
     const [showTop, setShowTop] = useState(false);
     const [scrollProgress, setScrollProgress] = useState(0);
 
-
-
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -37,20 +37,33 @@ export const Main = () => {
         })
     }, [])
 
-    setTimeout(() => {
-        new window.Splide(".categorySlider", {
-            perPage: 6,
-            gap: 20,
-            autoplay: true,
-            arrows: false,
-            pagination: false,
-            breakpoints: {
-                992: { perPage: 4, arrows: true },
-                768: { perPage: 3, arrows: true },
-                576: { perPage: 2, arrows: true },
-            },
-        }).mount();
-    }, 300);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            const el = document.querySelector(".categorySlider");
+            const SplideConstructor = Splide || window.Splide?.Splide || window.Splide;
+            if (typeof SplideConstructor === "function" && el) {
+                try {
+                    new SplideConstructor(el, {
+                        perPage: 6,
+                        gap: 20,
+                        autoplay: true,
+                        arrows: false,
+                        pagination: false,
+                        breakpoints: {
+                            992: { perPage: 4, arrows: true },
+                            768: { perPage: 3, arrows: true },
+                            576: { perPage: 2, arrows: true },
+                        },
+                    }).mount();
+                } catch (e) {
+                    console.warn("Splide initialization warning:", e);
+                }
+            }
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [d]);
+
 
     useEffect(() => {
   

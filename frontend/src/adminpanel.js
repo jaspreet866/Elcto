@@ -1,10 +1,20 @@
-import { useContext, useEffect, useState } from "react"
-
-import { Chart as ChartJs, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, PointElement, LineElement } from "chart.js"
-import { Bar, Pie, Line } from 'react-chartjs-2'
+import { useContext, useEffect, useState } from "react";
+import {
+    Chart as ChartJs,
+    ArcElement,
+    Tooltip,
+    Legend,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    PointElement,
+    LineElement
+} from "chart.js";
+import { Bar, Pie, Line } from 'react-chartjs-2';
 import { Context } from "./usecontext";
 import { useNavigate } from "react-router-dom";
-
+import Swal from "sweetalert2";
 
 ChartJs.register(
     CategoryScale,
@@ -16,491 +26,845 @@ ChartJs.register(
     Tooltip,
     Legend,
     Title
-
 );
 
 export const Dashboard = () => {
+    // Context & Routing
+    const { utype } = useContext(Context);
+    const navigate = useNavigate();
 
-    const [d, setd] = useState([])
-    const [order, setorderdata] = useState([])
-    const [users, setuser] = useState("")
-    const [length, setlength] = useState("")
-    const [totalorder, settotalorder] = useState("")
-    const [brand, setbrand] = useState("")
-    const [prolength, setprolength] = useState("")
-    const [totaladmin, setadmin] = useState(0)
-    const [ondelivery, setondelivery] = useState(0)
-    const [bycredit, setcredit] = useState(0)
-    const [saledata, setsaledata] = useState(0)
-    const [total, settotal] = useState("")
-     const [vdata,setvdata]=useState([])
-    const [status,setstatus]=useState("")
-    const {utype}=useContext(Context)
-    const navigate=useNavigate()
+    // Data States
+    const [usersList, setUsersList] = useState([]);
+    const [ordersList, setOrdersList] = useState([]);
+    const [vendorsList, setVendorsList] = useState([]);
+    const [categoryCount, setCategoryCount] = useState(0);
+    const [productCount, setProductCount] = useState(0);
+    const [brandCount, setBrandCount] = useState(0);
+
+    // Chart Data Counts
+    const [totalUsersCount, setTotalUsersCount] = useState(0);
+    const [adminUsersCount, setAdminUsersCount] = useState(0);
+    const [codOrdersCount, setCodOrdersCount] = useState(0);
+    const [cardOrdersCount, setCardOrdersCount] = useState(0);
 
     const [monthlyData, setMonthlyData] = useState({
         labels: [],
         datasets: []
     });
 
+    // Selected options for role/status change per user/vendor
+    const [selectedRole, setSelectedRole] = useState({});
+    const [selectedStatus, setSelectedStatus] = useState({});
+    const [selectedVendorStatus, setSelectedVendorStatus] = useState({});
+
+    // Search and Filter States
+    const [orderSearch, setOrderSearch] = useState("");
+    const [orderPaymentFilter, setOrderPaymentFilter] = useState("all");
+
+    const [userSearch, setUserSearch] = useState("");
+    const [userTypeFilter, setUserTypeFilter] = useState("all");
+    const [userStatusFilter, setUserStatusFilter] = useState("all");
+
+    const [vendorSearch, setVendorSearch] = useState("");
+    const [vendorStatusFilter, setVendorStatusFilter] = useState("all");
+
+    // Pagination States (Items per page = 5)
+    const itemsPerPage = 5;
+    const [orderPage, setOrderPage] = useState(1);
+    const [userPage, setUserPage] = useState(1);
+    const [vendorPage, setVendorPage] = useState(1);
+
+    // -------------------------------------------------------------
+    // 1. Fetching Data From API Backend
+    // -------------------------------------------------------------
+
     useEffect(() => {
-        fetch("https://elcto-1.onrender.com/api/sales/monthly")
-            .then(res => res.json())
-            .then(data => {
+        loadMonthlySales();
+        loadUsers();
+        loadCategories();
+        loadProducts();
+        loadBrands();
+        loadOrders();
+        loadVendors();
+    }, []);
+
+    const loadMonthlySales = async () => {
+        try {
+            const res = await fetch("https://elcto-1.onrender.com/api/sales/monthly");
+            const data = await res.json();
+            if (data && data.labels) {
                 setMonthlyData({
                     labels: data.labels,
                     datasets: [
                         {
-                            label: "Monthly Sales",
+                            label: "Monthly Sales (₹)",
                             data: data.values,
-                            borderColor: "green",
-                            tension: 0.1
+                            borderColor: "#0d6efd",
+                            backgroundColor: "rgba(13, 110, 253, 0.1)",
+                            fill: true,
+                            tension: 0.3
                         }
                     ]
                 });
-            });
-    }, []);
-
-
-    useEffect(() => {
-        show();
-        show2();
-        show3();
-        show4();
-        show5()
-show6()
-    }, [])
-
-    const show = async () => {
-        const result = await fetch("https://elcto-1.onrender.com/api/users", {
-            method: "get"
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setd(res.data)
-                setuser(res.data.length)
-                const admin = res.data.filter((a) => a.UserType === "admin")
-                setadmin(admin.length)
             }
-            else {
-                alert("error")
-            }
+        } catch (err) {
+            console.log("Error loading monthly sales", err);
         }
-    }
-    const show2 = async () => {
-        const result = await fetch("https://elcto-1.onrender.com/api/getcategory", {
-            method: "get"
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setlength(res.data.length)
-            }
-            else {
-                alert("sfdf")
-            }
-        }
-    }
-    const show3 = async () => {
-        const result = await fetch("https://elcto-1.onrender.com/api/getproduct", {
-            method: "get"
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setprolength(res.data.length)
-            }
-            else {
-                alert("error")
-            }
-        }
-    }
-    const show4 = async () => {
-        const result = await fetch("https://elcto-1.onrender.com/api/showbrand", {
-            method: "get"
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setbrand(res.data.length)
-            }
-            else {
-                alert("error")
-            }
-        }
-    }
-
-
-
-    const bardata = {
-        labels: ["UserData"],
-        datasets: [
-            {
-                label: "Users",
-                data: [users],
-                backgroundColor:
-
-                    "rgba(13,110,253,0.7)"
-                ,
-                barThickness: 50
-            },
-            {
-                label: "Admin",
-                data: [totaladmin],
-                backgroundColor: "red",
-                barThickness: 50
-            }
-        ]
-    }
-    const piedata = {
-        labels: ["Orders", "Cash On Delivery", "By Card"],
-        datasets: [
-            {
-                label: "TotalOrder",
-                data: [totalorder, ondelivery, bycredit],
-                backgroundColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(54, 162, 235)',
-                    'rgb(255, 205, 86)'
-                ],
-            }
-        ]
-    }
-
-    const options = {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            x: {
-                categoryPercentage: 0.6,
-                barPercentage: 0.5,
-            },
-        },
     };
 
-    const show5 = async () => {
-        const result = await fetch("https://elcto-1.onrender.com/api/orderdata", {
-            method: "get"
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setorderdata(res.data)
-                settotalorder(res.data.length)
-                const bycash = res.data.filter((a) => a.Payment === "Cash on Delivery")
-                const bycard = res.data.filter((a) => a.Payment === "Credit Card")
-                const sale = res.data.filter((a) => a.Date === "xfdg")
-                setsaledata(sale)
-                setondelivery(bycash.length)
-                setcredit(bycard.length)
-
-
+    const loadUsers = async () => {
+        try {
+            const res = await fetch("https://elcto-1.onrender.com/api/users");
+            const result = await res.json();
+            if (result.statuscode === 1) {
+                setUsersList(result.data);
+                setTotalUsersCount(result.data.length);
+                const admins = result.data.filter((u) => u.UserType === "admin");
+                setAdminUsersCount(admins.length);
             }
-            else {
-                alert("df")
+        } catch (err) {
+            console.log("Error loading users", err);
+        }
+    };
+
+    const loadCategories = async () => {
+        try {
+            const res = await fetch("https://elcto-1.onrender.com/api/getcategory");
+            const result = await res.json();
+            if (result.statuscode === 1) {
+                setCategoryCount(result.data.length);
+            }
+        } catch (err) {
+            console.log("Error loading categories", err);
+        }
+    };
+
+    const loadProducts = async () => {
+        try {
+            const res = await fetch("https://elcto-1.onrender.com/api/getproduct");
+            const result = await res.json();
+            if (result.statuscode === 1) {
+                setProductCount(result.data.length);
+            }
+        } catch (err) {
+            console.log("Error loading products", err);
+        }
+    };
+
+    const loadBrands = async () => {
+        try {
+            const res = await fetch("https://elcto-1.onrender.com/api/showbrand");
+            const result = await res.json();
+            if (result.statuscode === 1) {
+                setBrandCount(result.data.length);
+            }
+        } catch (err) {
+            console.log("Error loading brands", err);
+        }
+    };
+
+    const loadOrders = async () => {
+        try {
+            const res = await fetch("https://elcto-1.onrender.com/api/orderdata");
+            const result = await res.json();
+            if (result.statuscode === 1) {
+                setOrdersList(result.data);
+                const cashOrders = result.data.filter((o) => o.Payment === "Cash on Delivery");
+                const cardOrders = result.data.filter((o) => o.Payment === "Credit Card");
+                setCodOrdersCount(cashOrders.length);
+                setCardOrdersCount(cardOrders.length);
+            }
+        } catch (err) {
+            console.log("Error loading orders", err);
+        }
+    };
+
+    const loadVendors = async () => {
+        try {
+            const res = await fetch("https://elcto-1.onrender.com/api/vendordata");
+            const result = await res.json();
+            if (result.statuscode === 1) {
+                setVendorsList(result.data);
+            }
+        } catch (err) {
+            console.log("Error loading vendors", err);
+        }
+    };
+
+    // -------------------------------------------------------------
+    // 2. Action Functions (Change User Role, Status, Vendor Status)
+    // -------------------------------------------------------------
+
+    const changeUserRole = async (userId) => {
+        const role = selectedRole[userId];
+        if (!role) {
+            Swal.fire("Select Role", "Please select a role from dropdown first", "info");
+            return;
+        }
+
+        const confirm = await Swal.fire({
+            title: "Change Role?",
+            text: `Are you sure you want to set role to ${role}?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, Change"
+        });
+
+        if (confirm.isConfirmed) {
+            try {
+                const res = await fetch(`https://elcto-1.onrender.com/api/makeadmin/${userId}`, {
+                    method: "put",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ ad: role })
+                });
+                const data = await res.json();
+                if (data.statuscode === 1) {
+                    Swal.fire("Success", "User role changed successfully!", "success");
+                    loadUsers();
+                } else {
+                    Swal.fire("Error", "Could not change user role", "error");
+                }
+            } catch (err) {
+                Swal.fire("Error", "Server error while changing role", "error");
             }
         }
-    }
+    };
 
-      const show6=async()=>{
-        const result=await fetch("https://elcto-1.onrender.com/api/vendordata",{
-            method:"get"
-        })
-        if(result){
-            const res=await result.json()
-            if(res.statuscode===1){
-                setvdata(res.data)
-                console.log(res.data)
-            }
-            else{
-                alert("dfedg")
+    const changeUserStatus = async (userId) => {
+        const status = selectedStatus[userId];
+        if (!status) {
+            Swal.fire("Select Status", "Please select a status from dropdown first", "info");
+            return;
+        }
+
+        const confirm = await Swal.fire({
+            title: "Change Status?",
+            text: `Are you sure you want to set status to ${status}?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, Change"
+        });
+
+        if (confirm.isConfirmed) {
+            try {
+                const res = await fetch(`https://elcto-1.onrender.com/api/changestatus/${userId}`, {
+                    method: "put",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ status: status })
+                });
+                const data = await res.json();
+                if (data.statuscode === 1) {
+                    Swal.fire("Success", "User status changed successfully!", "success");
+                    loadUsers();
+                } else {
+                    Swal.fire("Error", "Could not change user status", "error");
+                }
+            } catch (err) {
+                Swal.fire("Error", "Server error while changing status", "error");
             }
         }
-    }
+    };
 
-    const approval=async(id)=>{
-        const result=await fetch(`https://elcto-1.onrender.com/api/approval/${id}`,{
-            method:"put",
-            headers:{
-                "Content-Type":"application/json"
+    const changeVendorStatus = async (vendorId) => {
+        const status = selectedVendorStatus[vendorId];
+        if (!status) {
+            Swal.fire("Select Status", "Please select vendor approval status first", "info");
+            return;
+        }
+
+        const confirm = await Swal.fire({
+            title: "Update Vendor?",
+            text: `Set vendor status to ${status}?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, Update"
+        });
+
+        if (confirm.isConfirmed) {
+            try {
+                const res = await fetch(`https://elcto-1.onrender.com/api/approval/${vendorId}`, {
+                    method: "put",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ status: status })
+                });
+                const data = await res.json();
+                if (data.statuscode === 1) {
+                    Swal.fire("Success", "Vendor status updated!", "success");
+                    loadVendors();
+                } else {
+                    Swal.fire("Error", "Could not update vendor status", "error");
+                }
+            } catch (err) {
+                Swal.fire("Error", "Server error updating vendor", "error");
+            }
+        }
+    };
+
+    // -------------------------------------------------------------
+    // 3. Search, Filter, and Simple Pagination Logic
+    // -------------------------------------------------------------
+
+    // Filter Orders
+    const filteredOrders = ordersList.filter((item) => {
+        const matchSearch = (item.OrderNo && String(item.OrderNo).toLowerCase().includes(orderSearch.toLowerCase())) ||
+            (item.FirstName && item.FirstName.toLowerCase().includes(orderSearch.toLowerCase())) ||
+            (item.LastName && item.LastName.toLowerCase().includes(orderSearch.toLowerCase()));
+        const matchPayment = orderPaymentFilter === "all" || item.Payment === orderPaymentFilter;
+        return matchSearch && matchPayment;
+    });
+
+    // Orders Pagination math
+    const totalOrderPages = Math.ceil(filteredOrders.length / itemsPerPage) || 1;
+    const paginatedOrders = filteredOrders.slice((orderPage - 1) * itemsPerPage, orderPage * itemsPerPage);
+
+    // Filter Users
+    const filteredUsers = usersList.filter((item) => {
+        const matchSearch = (item.FirstName && item.FirstName.toLowerCase().includes(userSearch.toLowerCase())) ||
+            (item.LastName && item.LastName.toLowerCase().includes(userSearch.toLowerCase())) ||
+            (item.Email && item.Email.toLowerCase().includes(userSearch.toLowerCase()));
+        const matchType = userTypeFilter === "all" || item.UserType === userTypeFilter;
+        const matchStatus = userStatusFilter === "all" || item.Status === userStatusFilter;
+        return matchSearch && matchType && matchStatus;
+    });
+
+    // Users Pagination math
+    const totalUserPages = Math.ceil(filteredUsers.length / itemsPerPage) || 1;
+    const paginatedUsers = filteredUsers.slice((userPage - 1) * itemsPerPage, userPage * itemsPerPage);
+
+    // Filter Vendors
+    const filteredVendors = vendorsList.filter((item) => {
+        const matchSearch = (item.Name && item.Name.toLowerCase().includes(vendorSearch.toLowerCase())) ||
+            (item.Email && item.Email.toLowerCase().includes(vendorSearch.toLowerCase())) ||
+            (item.Phone && item.Phone.toLowerCase().includes(vendorSearch.toLowerCase()));
+        const matchStatus = vendorStatusFilter === "all" || item.Status === vendorStatusFilter;
+        return matchSearch && matchStatus;
+    });
+
+    // Vendors Pagination math
+    const totalVendorPages = Math.ceil(filteredVendors.length / itemsPerPage) || 1;
+    const paginatedVendors = filteredVendors.slice((vendorPage - 1) * itemsPerPage, vendorPage * itemsPerPage);
+
+    // Chart Configuration
+    const barChartData = {
+        labels: ["Users Statistics"],
+        datasets: [
+            {
+                label: "Regular Users",
+                data: [totalUsersCount],
+                backgroundColor: "#0d6efd",
+                barThickness: 45
             },
-            body:JSON.stringify({
-                status
-            })
-        })
-        if(result){
-            const res=await result.json()
-            if(res.statuscode===1){
-                alert("approved")
+            {
+                label: "Admins",
+                data: [adminUsersCount],
+                backgroundColor: "#dc3545",
+                barThickness: 45
             }
-            else{
-                alert("noy")
-            }
-        }
-    }
+        ]
+    };
 
+    const pieChartData = {
+        labels: ["Total Orders", "Cash On Delivery", "Credit Card"],
+        datasets: [
+            {
+                label: "Orders Summary",
+                data: [ordersList.length, codOrdersCount, cardOrdersCount],
+                backgroundColor: ["#0d6efd", "#198754", "#ffc107"]
+            }
+        ]
+    };
+
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false
+    };
 
     return (
-      <>
-      {
-        utype==="admin"?  <>
-            <div className="container-fluid">
-                <div className="row">
-
-
-                    <div className="col-lg-3 col-md-4 bg-light min-vh-100 p-4 sticky-top">
-                        <h4 className="fw-bold mb-4">Dashboard</h4>
-                        <ul className="nav flex-column gap-3 ">
-                            <li className="nav-item">
-                                <a href="#orders" className="nav-link text-dark fw-semibold">
-                                    📦 Orders
-                                </a>
-                            </li>
-                            <li className="nav-item">
-                                <a href="#users" className="nav-link text-dark fw-semibold">
-                                    👤 Users
-                                </a>
-                            </li>
-                            <li className="nav-item">
-                                <a href="#products" className="nav-link text-dark fw-semibold">
-                                    🛒 Products
-                                </a>
-                            </li>
-                            <li className="nav-item">
-                                <a href="#categories" className="nav-link text-dark fw-semibold">
-                                    🗂 Categories
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-
-                    <div className="col-lg-9 col-md-8 p-4">
-
-
-                        <div className="row g-3 mb-4" id="categories">
-                            <div className="col-md-3">
-                                <div className="card w-100 shadow-sm bg-primary text-white">
-                                    <div className="card-body">
-                                        <h6>  🗂  Categories</h6>
-                                        <h4>{length}</h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="col-md-3">
-                                <div className="card w-100 shadow-sm bg-success text-white">
-                                    <div className="card-body">
-                                        <h6>  🛒  Products</h6>
-                                        <h4>{prolength}</h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="col-md-3">
-                                <div className="card w-100 shadow-sm bg-warning text-white">
-                                    <div className="card-body">
-                                        <h6> 👤 Users</h6>
-                                        <h4>{users}</h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="col-md-3">
-                                <div className="card w-100 shadow-sm bg-dark text-white">
-                                    <div className="card-body">
-                                        <h6>Brands</h6>
-                                        <h4>{brand}</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-md-3">
-                                <div className="card w-100 shadow-sm bg-dark text-white">
-                                    <div className="card-body">
-                                        <h6>Orders</h6>
-                                        <h4>{totalorder}</h4>
+        <>
+            {utype === "admin" ? (
+                <div className="container-fluid py-4">
+                    <div className="row g-4">
+                        {/* Sidebar Navigation */}
+                        <div className="col-lg-3 col-md-4">
+                            <div className="card shadow-sm border-0 sticky-top" style={{ top: "80px" }}>
+                                <div className="card-body p-3">
+                                    <h4 className="fw-bold mb-3 text-primary">Admin Panel</h4>
+                                    <div className="list-group list-group-flush">
+                                        <a href="#stats" className="list-group-item list-group-item-action border-0 fw-semibold">
+                                            📊 Overview & Statistics
+                                        </a>
+                                        <a href="#orders" className="list-group-item list-group-item-action border-0 fw-semibold">
+                                            📦 Orders List ({ordersList.length})
+                                        </a>
+                                        <a href="#users" className="list-group-item list-group-item-action border-0 fw-semibold">
+                                            👤 Users List ({usersList.length})
+                                        </a>
+                                        <a href="#vendors" className="list-group-item list-group-item-action border-0 fw-semibold">
+                                            🏪 Vendors List ({vendorsList.length})
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="d-flex gap-3 ">
 
-                            <div className="" style={{ width: "50%", height: "500px" }}>
-                                <h1>Users</h1>
-                                <Bar data={bardata} options={options} />
-                            </div>
-                            <div className="" style={{ width: "50%", height: "500px" }}>
-                                <h1>Orders</h1>
-                                <Pie data={piedata} options={options} />
-                            </div>
-                        </div>
-                        <div className="border" style={{ marginTop: "100px" }}>
-                            <h1 className="mt-2">Sales</h1>
-                            <div className="mt-3">
-                                <Line data={monthlyData} />
-                            </div>
-                        </div>
-                        <div className="card w-100 shadow-sm border-top-2 mt-5" id="orders">
-                            <div className="card-header bg-white d-flex justify-content-between align-items-center">
-                                <h5 className="mb-0 fw-bold">Order</h5>
-                                <span className="badge bg-primary">Orders:{totalorder}</span>
-                            </div>
-
-                            <div className="accordion" id="ordersAccordion">
-
-                                {order.map((order, i) => (
-
-                                    <div className="accordion-item mb-3 shadow-sm" key={order._id}>                            
-                                        <h2 className="accordion-header">
-                                            <button
-                                                className={`accordion-button `}
-                                                type="button"
-                                                data-bs-toggle="collapse"
-                                                data-bs-target={`#order${order._id}`}
-                                            >
-                                                <div className="w-100 d-flex justify-content-between pe-3">
-                                                    <span>Order #{order.OrderNo}</span>
-                                                    <strong>{order.FirstName}</strong>
-                                                </div>
-
-                                            </button>
-                                        </h2>                                
-                                        <div
-                                            id={`order${order._id}`}
-                                            className={`accordion-collapse collapse `}
-                                            data-bs-parent="#ordersAccordion"
-                                        >
-                                            <div className="accordion-body">
-
-                                                <p><strong>Name:</strong> {order.FirstName} {order.LastName}</p>
-                                                <p><strong>Payment:</strong> {order.Payment}</p>
-                                                <hr />                                            
-                                                {order.Order.map((item, idx) => (
-                                                    <div key={idx} className="d-flex align-items-center gap-3 mb-2">
-                                                        <img
-                                                            src={`${item.Img}`}
-                                                            width="50"
-                                                            height="50"
-                                                            className="rounded"
-                                                        />
-                                                        <div className="flex-grow-1">
-                                                            <div>{item.ProductName}</div>
-                                                            <small>
-                                                                Qty: {item.Quantity} × ₹{item.Price}
-                                                            </small>
-                                                        </div>
-                                                        <strong>₹{item.Quantity * item.Price}</strong>
-
-                                                    </div>
-
-                                                ))}
-
-                                            </div>
+                        {/* Right Main Content */}
+                        <div className="col-lg-9 col-md-8">
+                            {/* Summary Stat Cards */}
+                            <div className="row g-3 mb-4" id="stats">
+                                <div className="col-md-3 col-sm-6">
+                                    <div className="card text-white bg-primary shadow-sm border-0">
+                                        <div className="card-body">
+                                            <h6>Categories</h6>
+                                            <h3>{categoryCount}</h3>
                                         </div>
+                                    </div>
+                                </div>
+                                <div className="col-md-3 col-sm-6">
+                                    <div className="card text-white bg-success shadow-sm border-0">
+                                        <div className="card-body">
+                                            <h6>Products</h6>
+                                            <h3>{productCount}</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-md-3 col-sm-6">
+                                    <div className="card text-white bg-warning shadow-sm border-0">
+                                        <div className="card-body">
+                                            <h6>Users</h6>
+                                            <h3>{totalUsersCount}</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-md-3 col-sm-6">
+                                    <div className="card text-white bg-dark shadow-sm border-0">
+                                        <div className="card-body">
+                                            <h6>Brands</h6>
+                                            <h3>{brandCount}</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
+                            {/* Charts Section */}
+                            <div className="row g-4 mb-4">
+                                <div className="col-md-6">
+                                    <div className="card shadow-sm border-0 p-3">
+                                        <h5 className="fw-bold">User Distribution</h5>
+                                        <div style={{ height: "300px" }}>
+                                            <Bar data={barChartData} options={chartOptions} />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-md-6">
+                                    <div className="card shadow-sm border-0 p-3">
+                                        <h5 className="fw-bold">Orders Breakdown</h5>
+                                        <div style={{ height: "300px" }}>
+                                            <Pie data={pieChartData} options={chartOptions} />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Sales Trend Chart */}
+                            <div className="card shadow-sm border-0 p-3 mb-5">
+                                <h5 className="fw-bold mb-3">Monthly Sales</h5>
+                                <div style={{ height: "300px" }}>
+                                    <Line data={monthlyData} options={chartOptions} />
+                                </div>
+                            </div>
+
+                            {/* ======================================================== */}
+                            {/* SECTION 1: ORDERS LIST WITH PAGINATION & SEARCH           */}
+                            {/* ======================================================== */}
+                            <div className="card shadow-sm border-0 mb-5" id="orders">
+                                <div className="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                                    <h5 className="fw-bold mb-0">Customer Orders</h5>
+                                    <span className="badge bg-primary">Total Orders: {filteredOrders.length}</span>
+                                </div>
+
+                                <div className="card-body">
+                                    {/* Search & Filter Bar */}
+                                    <div className="row g-2 mb-3">
+                                        <div className="col-md-7">
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="Search by order number or name..."
+                                                value={orderSearch}
+                                                onChange={(e) => {
+                                                    setOrderSearch(e.target.value);
+                                                    setOrderPage(1);
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="col-md-5">
+                                            <select
+                                                className="form-select"
+                                                value={orderPaymentFilter}
+                                                onChange={(e) => {
+                                                    setOrderPaymentFilter(e.target.value);
+                                                    setOrderPage(1);
+                                                }}
+                                            >
+                                                <option value="all">All Payment Methods</option>
+                                                <option value="Cash on Delivery">Cash on Delivery</option>
+                                                <option value="Credit Card">Credit Card</option>
+                                            </select>
+                                        </div>
                                     </div>
 
-                                ))}
+                                    {/* Orders Accordion */}
+                                    {paginatedOrders.length > 0 ? (
+                                        <div className="accordion" id="ordersAccordion">
+                                            {paginatedOrders.map((ord) => (
+                                                <div className="accordion-item mb-2 border rounded" key={ord._id}>
+                                                    <h2 className="accordion-header">
+                                                        <button
+                                                            className="accordion-button collapsed bg-white"
+                                                            type="button"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target={`#order${ord._id}`}
+                                                        >
+                                                            <div className="w-100 d-flex justify-content-between pe-3">
+                                                                <span><strong>Order #{ord.OrderNo || ord._id.slice(-6)}</strong></span>
+                                                                <span>Customer: {ord.FirstName} {ord.LastName}</span>
+                                                                <span className="badge bg-secondary">{ord.Payment}</span>
+                                                            </div>
+                                                        </button>
+                                                    </h2>
+                                                    <div id={`order${ord._id}`} className="accordion-collapse collapse" data-bs-parent="#ordersAccordion">
+                                                        <div className="accordion-body">
+                                                            <p><strong>Customer Name:</strong> {ord.FirstName} {ord.LastName}</p>
+                                                            <p><strong>Payment Method:</strong> {ord.Payment}</p>
+                                                            <hr />
+                                                            <h6>Order Items:</h6>
+                                                            {ord.Order && ord.Order.map((item, idx) => (
+                                                                <div key={idx} className="d-flex align-items-center justify-content-between mb-2 p-2 border-bottom">
+                                                                    <div className="d-flex align-items-center gap-3">
+                                                                        <img src={item.Img} alt={item.ProductName} width="45" height="45" className="rounded" />
+                                                                        <div>
+                                                                            <div>{item.ProductName}</div>
+                                                                            <small className="text-muted">Quantity: {item.Quantity} × ₹{item.Price}</small>
+                                                                        </div>
+                                                                    </div>
+                                                                    <strong>₹{item.Quantity * item.Price}</strong>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <p className="text-muted text-center py-3">No orders found.</p>
+                                    )}
 
+                                    {/* Simple Orders Pagination */}
+                                    <div className="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                                        <small className="text-muted">
+                                            Page {orderPage} of {totalOrderPages} ({filteredOrders.length} orders total)
+                                        </small>
+                                        <div className="btn-group">
+                                            <button
+                                                className="btn btn-outline-primary btn-sm"
+                                                disabled={orderPage === 1}
+                                                onClick={() => setOrderPage(orderPage - 1)}
+                                            >
+                                                Previous
+                                            </button>
+                                            <button
+                                                className="btn btn-outline-primary btn-sm"
+                                                disabled={orderPage >= totalOrderPages}
+                                                onClick={() => setOrderPage(orderPage + 1)}
+                                            >
+                                                Next
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
-                        </div>
-                        <div className="card w-100 shadow-sm border-top mt-5" id="users">
-                            <div className="card-header bg-white d-flex justify-content-between align-items-center">
-                                <h5 className="mb-0 fw-bold">Users List</h5>
-                                <span className="badge bg-primary">Total: {users}</span>
-                            </div>
+                            {/* ======================================================== */}
+                            {/* SECTION 2: USERS LIST WITH PAGINATION & SEARCH            */}
+                            {/* ======================================================== */}
+                            <div className="card shadow-sm border-0 mb-5" id="users">
+                                <div className="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                                    <h5 className="fw-bold mb-0">Registered Users List</h5>
+                                    <span className="badge bg-warning text-dark">Total Users: {filteredUsers.length}</span>
+                                </div>
 
-                            <div className="table-responsive">
-                                <table className="table table-hover align-middle mb-0">
-                                    <thead className="table-light">
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Status</th>
-                                            <th>User Type</th>
-                                        </tr>
-                                    </thead>
+                                <div className="card-body">
+                                    {/* User Search and Filters */}
+                                    <div className="row g-2 mb-3">
+                                        <div className="col-md-6">
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="Search user by name or email..."
+                                                value={userSearch}
+                                                onChange={(e) => {
+                                                    setUserSearch(e.target.value);
+                                                    setUserPage(1);
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="col-md-3">
+                                            <select
+                                                className="form-select"
+                                                value={userTypeFilter}
+                                                onChange={(e) => {
+                                                    setUserTypeFilter(e.target.value);
+                                                    setUserPage(1);
+                                                }}
+                                            >
+                                                <option value="all">All User Types</option>
+                                                <option value="admin">Admin</option>
+                                                <option value="user">User</option>
+                                            </select>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <select
+                                                className="form-select"
+                                                value={userStatusFilter}
+                                                onChange={(e) => {
+                                                    setUserStatusFilter(e.target.value);
+                                                    setUserPage(1);
+                                                }}
+                                            >
+                                                <option value="all">All Statuses</option>
+                                                <option value="Active">Active</option>
+                                                <option value="Inactive">Inactive</option>
+                                            </select>
+                                        </div>
+                                    </div>
 
-                                    <tbody>
-                                        {d.map((a) => (
-                                            <tr key={a._id}>
-                                                <td className="text-muted small">{a._id}</td>
-                                                <td className="fw-semibold">
-                                                    {a.FirstName} {a.LastName}
-                                                </td>
-                                                <td>{a.Email}</td>
-                                                <td> {a.Status === "Active" ? <span className="badge bg-success">{a.Status}</span> : <span className="badge bg-danger">Inactive</span>}</td>
-                                                <td>
-                                                    <span className="badge bg-secondary">
-                                                        {a.UserType}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                           <div className="card w-100 shadow-sm border-top mt-5" >
-                            <div className="card-header bg-white d-flex justify-content-between align-items-center">
-                                <h4>Vendor List</h4>
-                            </div>
-                            <div className="table-responsive">
-                                <table className="table table-hover align-middle mb-0">
-                                    <thead className="table-light">
-                                       <tr>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Status</th>
-                                        <th>Phone</th>
-                                       </tr>
-                                    </thead>
-                                    <tbody>
-                                        {
-                                            vdata.map((a)=>(
-                                                <>
+                                    {/* Users Table */}
+                                    <div className="table-responsive">
+                                        <table className="table table-hover align-middle">
+                                            <thead className="table-light">
                                                 <tr>
-                                                    <td>{a._id}</td>
-                                                    <td>{a.Name} </td>
-                                                    <td>{a.Email}</td>
-                                                   <div className="d-flex gap-3">
-                                                    <div> <td>{a.Status}</td>
-                                                    </div>
-                                                    <div>
-                                                        <select onChange={(e)=>setstatus(e.target.value)}>
-                                                            <option>Select</option>
-                                                        <option>Accept </option>
-                                                        <option>Pending</option>
-                                                        </select></div>
-                                                    </div>
-                                                    <td>{a.Phone}</td>
+                                                    <th>Name</th>
+                                                    <th>Email</th>
+                                                    <th>Status</th>
+                                                    <th>Role</th>
+                                                    <th>Change Role</th>
+                                                    <th>Change Status</th>
                                                 </tr>
-                                                  <button className="m-3" onClick={()=>approval(a._id)}>Approve</button>
-                                                  </>
-                                            ))
-                                            
-                                        }
-                                        
-                                    </tbody>
-                                  
-                                </table>
+                                            </thead>
+                                            <tbody>
+                                                {paginatedUsers.length > 0 ? (
+                                                    paginatedUsers.map((u) => (
+                                                        <tr key={u._id}>
+                                                            <td className="fw-semibold">{u.FirstName} {u.LastName}</td>
+                                                            <td>{u.Email}</td>
+                                                            <td>
+                                                                {u.Status === "Active" ? (
+                                                                    <span className="badge bg-success">Active</span>
+                                                                ) : (
+                                                                    <span className="badge bg-danger">Inactive</span>
+                                                                )}
+                                                            </td>
+                                                            <td>
+                                                                <span className="badge bg-secondary">{u.UserType}</span>
+                                                            </td>
+                                                            <td>
+                                                                <div className="d-flex gap-1">
+                                                                    <select
+                                                                        className="form-select form-select-sm"
+                                                                        onChange={(e) => setSelectedRole({ ...selectedRole, [u._id]: e.target.value })}
+                                                                    >
+                                                                        <option value="">Select</option>
+                                                                        <option value="admin">Admin</option>
+                                                                        <option value="user">User</option>
+                                                                    </select>
+                                                                    <button
+                                                                        className="btn btn-sm btn-primary"
+                                                                        onClick={() => changeUserRole(u._id)}
+                                                                    >
+                                                                        Update
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div className="d-flex gap-1">
+                                                                    <select
+                                                                        className="form-select form-select-sm"
+                                                                        onChange={(e) => setSelectedStatus({ ...selectedStatus, [u._id]: e.target.value })}
+                                                                    >
+                                                                        <option value="">Select</option>
+                                                                        <option value="Active">Active</option>
+                                                                        <option value="Inactive">Inactive</option>
+                                                                    </select>
+                                                                    <button
+                                                                        className="btn btn-sm btn-success"
+                                                                        onClick={() => changeUserStatus(u._id)}
+                                                                    >
+                                                                        Update
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    ))
+                                                ) : (
+                                                    <tr>
+                                                        <td colSpan="6" className="text-center py-3 text-muted">No users found.</td>
+                                                    </tr>
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    {/* Simple Users Pagination */}
+                                    <div className="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                                        <small className="text-muted">
+                                            Page {userPage} of {totalUserPages} ({filteredUsers.length} users total)
+                                        </small>
+                                        <div className="btn-group">
+                                            <button
+                                                className="btn btn-outline-primary btn-sm"
+                                                disabled={userPage === 1}
+                                                onClick={() => setUserPage(userPage - 1)}
+                                            >
+                                                Previous
+                                            </button>
+                                            <button
+                                                className="btn btn-outline-primary btn-sm"
+                                                disabled={userPage >= totalUserPages}
+                                                onClick={() => setUserPage(userPage + 1)}
+                                            >
+                                                Next
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* ======================================================== */}
+                            {/* SECTION 3: VENDORS LIST WITH PAGINATION & SEARCH         */}
+                            {/* ======================================================== */}
+                            <div className="card shadow-sm border-0 mb-5" id="vendors">
+                                <div className="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                                    <h5 className="fw-bold mb-0">Vendor List</h5>
+                                    <span className="badge bg-success">Total Vendors: {filteredVendors.length}</span>
+                                </div>
+
+                                <div className="card-body">
+                                    {/* Vendor Search and Filter */}
+                                    <div className="row g-2 mb-3">
+                                        <div className="col-md-8">
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="Search vendor by name, email or phone..."
+                                                value={vendorSearch}
+                                                onChange={(e) => {
+                                                    setVendorSearch(e.target.value);
+                                                    setVendorPage(1);
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="col-md-4">
+                                            <select
+                                                className="form-select"
+                                                value={vendorStatusFilter}
+                                                onChange={(e) => {
+                                                    setVendorStatusFilter(e.target.value);
+                                                    setVendorPage(1);
+                                                }}
+                                            >
+                                                <option value="all">All Vendor Statuses</option>
+                                                <option value="Pending">Pending</option>
+                                                <option value="Accept">Accept</option>
+                                                <option value="Reject">Reject</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    {/* Vendor Table */}
+                                    <div className="table-responsive">
+                                        <table className="table table-hover align-middle">
+                                            <thead className="table-light">
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Email</th>
+                                                    <th>Phone</th>
+                                                    <th>Status</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {paginatedVendors.length > 0 ? (
+                                                    paginatedVendors.map((v) => (
+                                                        <tr key={v._id}>
+                                                            <td className="fw-semibold">{v.Name}</td>
+                                                            <td>{v.Email}</td>
+                                                            <td>{v.Phone || "N/A"}</td>
+                                                            <td>
+                                                                <span className={`badge ${v.Status === 'Accept' ? 'bg-success' : v.Status === 'Pending' ? 'bg-warning text-dark' : 'bg-secondary'}`}>
+                                                                    {v.Status || 'Pending'}
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <div className="d-flex gap-2">
+                                                                    <select
+                                                                        className="form-select form-select-sm"
+                                                                        onChange={(e) => setSelectedVendorStatus({ ...selectedVendorStatus, [v._id]: e.target.value })}
+                                                                    >
+                                                                        <option value="">Select</option>
+                                                                        <option value="Accept">Accept</option>
+                                                                        <option value="Pending">Pending</option>
+                                                                        <option value="Reject">Reject</option>
+                                                                    </select>
+                                                                    <button
+                                                                        className="btn btn-sm btn-primary"
+                                                                        onClick={() => changeVendorStatus(v._id)}
+                                                                    >
+                                                                        Approve
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    ))
+                                                ) : (
+                                                    <tr>
+                                                        <td colSpan="5" className="text-center py-3 text-muted">No vendors found.</td>
+                                                    </tr>
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    {/* Simple Vendors Pagination */}
+                                    <div className="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                                        <small className="text-muted">
+                                            Page {vendorPage} of {totalVendorPages} ({filteredVendors.length} vendors total)
+                                        </small>
+                                        <div className="btn-group">
+                                            <button
+                                                className="btn btn-outline-primary btn-sm"
+                                                disabled={vendorPage === 1}
+                                                onClick={() => setVendorPage(vendorPage - 1)}
+                                            >
+                                                Previous
+                                            </button>
+                                            <button
+                                                className="btn btn-outline-primary btn-sm"
+                                                disabled={vendorPage >= totalVendorPages}
+                                                onClick={() => setVendorPage(vendorPage + 1)}
+                                            >
+                                                Next
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                         </div>
-
-
-
                     </div>
                 </div>
-            </div>
-
-        </>:navigate("/")
-      }
-      </>
-    )
-}
+            ) : (
+                navigate("/")
+            )}
+        </>
+    );
+};

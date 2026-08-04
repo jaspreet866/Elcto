@@ -2,7 +2,8 @@ import { useState, useEffect, useContext } from "react"
 import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import Swal from "sweetalert2"
 import { Context } from "./usecontext"
-
+import Splide from '@splidejs/splide'
+import '@splidejs/splide/css'
 
 export const Related = () => {
     const [d, setd] = useState([])
@@ -20,6 +21,34 @@ export const Related = () => {
             show2(prr);
         }
     }, [prr]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            const el = document.querySelector(".brandSlider");
+            const SplideConstructor = Splide || window.Splide?.Splide || window.Splide;
+            if (typeof SplideConstructor === "function" && el) {
+                try {
+                    new SplideConstructor(el, {
+                        perPage: 6,
+                        gap: 20,
+                        autoplay: true,
+                        arrows: false,
+                        pagination: false,
+                        breakpoints: {
+                            992: { perPage: 4, arrows: true },
+                            768: { perPage: 3, arrows: true },
+                            576: { perPage: 2, arrows: true },
+                        },
+                    }).mount();
+                } catch (e) {
+                    console.warn("Splide initialization warning:", e);
+                }
+            }
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [datta]);
+
     const show = async (id) => {
         const result = await fetch(`https://elcto-1.onrender.com/api/related/${id}`, {
             method: "get"
@@ -50,20 +79,7 @@ export const Related = () => {
             }
         }
     }
-    setTimeout(() => {
-        new window.Splide(".brandSlider", {
-            perPage: 6,
-            gap: 20,
-            autoplay: true,
-            arrows: false,
-            pagination: false,
-            breakpoints: {
-                992: { perPage: 4, arrows: true },
-                768: { perPage: 3, arrows: true },
-                576: { perPage: 2, arrows: true },
-            },
-        }).mount();
-    }, 300);
+
     const wish = async (id, name, price, img, prr) => {
         if (!prr || !id) return;
         const data = { id, name, price, img }
