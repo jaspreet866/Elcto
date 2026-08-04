@@ -70,7 +70,7 @@ export const AdminHeader = () => {
 
                             <li className="nav-item">
                                 <Link className="nav-link fw-semibold" to="/dashboard">
-                                    Home
+                                    Dashboard
                                 </Link>
                             </li>
 
