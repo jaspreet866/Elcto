@@ -1,111 +1,88 @@
 import { useState } from "react"
+import { Link } from "react-router-dom"
 
 export const Vendor = () => {
+    const [name, setname] = useState("")
+    const [uname, setuname] = useState("")
+    const [email, setemail] = useState("")
+    const [pass, setpass] = useState("")
+    const [bank, setbank] = useState("")
+    const [phn, setphn] = useState("")
+    const [city, setcity] = useState("")
+    const [state, setstate] = useState("")
+    const [submitting, setSubmitting] = useState(false)
+    const [message, setMessage] = useState("")
 
-    const [name,setname]=useState("")
-    const[uname,setuname]=useState("")
-    const[email,setemail]=useState("")
-    const[pass,setpass]=useState("")
-    const[bank,setbank]=useState("")
-    const[phn,setphn]=useState()
-    const[city,setcity]=useState("")
-    const [state,setstate]=useState("")
-
-const register=async(e)=>{
-    e.preventDefault();
-    const data={name,uname,email,phn,pass,bank,city,state}
-    const result = await fetch("https://elcto-1.onrender.com/api/vendorregister",{
-        method:"post",
-        body:JSON.stringify(data),
-        headers:{"Content-type":"application/json;charset=UTF-8"}
-    })
-    if(result.ok){
-        const res=await result.json()
-        if(res.statuscode===1){
-            alert("okk")
-        }
-        else{
-           alert("fdfe")
+    const register = async (e) => {
+        e.preventDefault()
+        setSubmitting(true)
+        setMessage("")
+        const data = { name, uname, email, phn, pass, bank, city, state }
+        try {
+            const result = await fetch("https://elcto-1.onrender.com/api/vendorregister", {
+                method: "post",
+                body: JSON.stringify(data),
+                headers: { "Content-type": "application/json;charset=UTF-8" }
+            })
+            const res = result.ok ? await result.json() : null
+            setMessage(res?.statuscode === 1 ? "Application received — we’ll be in touch shortly." : "We couldn’t submit your application. Please try again.")
+        } catch {
+            setMessage("We couldn’t submit your application. Please try again.")
+        } finally {
+            setSubmitting(false)
         }
     }
-}
 
     return (
-        <>
-            <h1 className="mt-5">Vendor</h1>
-            <p className="lead">Apply to become a vendor and start selling your products.</p>
-            <form onSubmit={register}>
-               <div className="container">
-               <div className="row py-5">
-                 <div className="col col-lg-6">
-                    <div className="d-flex gap-3 justify-content-between">
-                 <div className="mb-3 w-100">
-                    <label htmlFor="name" className="form-label">Name</label>
-                    <input type="text" className="form-control rounded-pill" id="name" onChange={(e) => setname(e.target.value)} />
+        <main className="vendor-page">
+            <section className="vendor-hero">
+                <div className="vendor-shell vendor-hero-content">
+                    <span className="vendor-eyebrow"><i className="bi bi-shop-window"></i> Elcto Partner Network</span>
+                    <h1>Build your business with a storefront that works for you.</h1>
+                    <p>Reach more customers, manage products simply, and grow with confidence.</p>
+                    <div className="vendor-trust-row">
+                        <span><i className="bi bi-check2-circle"></i> Simple onboarding</span>
+                        <span><i className="bi bi-shield-check"></i> Secure payments</span>
+                        <span><i className="bi bi-graph-up-arrow"></i> Built to grow</span>
+                    </div>
                 </div>
-                  <div className="mb-3 w-100">
-                    <label htmlFor="email" className="form-label">Username</label>
-                    <input type="text" className="form-control rounded-pill " id="uname" onChange={(e) => setuname(e.target.value)} />
-                </div>
-               </div>
-                    <div className="d-flex gap-3 justify-content-between">
-                <div className="mb-3 w-100">
-                    <label htmlFor="email" className="form-label">Email</label>
-                    <input type="email" className="form-control rounded-pill"  id="email" onChange={(e) => setemail(e.target.value)} />
-                </div>
-               </div>
-                    <div className="d-flex gap-3 justify-content-between">
-                <div className="mb-3 w-100">
-                    <label  className="form-label">Password</label>
-                    <input type="password" className="form-control rounded-pill" id="password" onChange={(e) => setpass(e.target.value)} />
-                </div>
-               </div>
-               <div className="d-flex gap-3 mb-3 ">
-                <div className="w-100">
-                    <label className="form-label" >Bank Name</label>
-                    <input type="text" className="form-control rounded-pill" onChange={(e) => setbank(e.target.value)}></input>
-                </div>
-                <div className="w-100">
-                    <label className="form-label" >Phone</label>
-                    <input type="number" className="form-control rounded-pill" onChange={(e) => setphn(e.target.value)}></input>
-                </div>
-               </div>
-               <div className="d-flex gap-3 mb-3 ">
-                <div className="w-100">
-                    <label className="form-label" >City</label>
-                    <input type="text" className="form-control rounded-pill" onChange={(e) => setcity(e.target.value)}></input>
-                </div>
-                <div className="w-100">
-                    <label className="form-label" >State</label>
-                    <input type="text" className="form-control rounded-pill" onChange={(e) => setstate(e.target.value)}></input>
-                </div>
-               </div>
-                <button type="submit" className="btn btn-primary w-25">Apply</button>
-                </div>
-              <div className="col d-flex flex-column justify-content-center align-items-center text-center">
-    <img 
-        src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" 
-        alt="vendor" 
-        style={{ width: "150px" }}
-        className="mb-3"
-    />
+            </section>
 
-    <h4 className="fw-bold">Grow Your Business</h4>
-    <p className="text-muted">
-        Join our platform and start selling your products to a wide audience.
-    </p>
+            <section className="vendor-shell vendor-application-wrap">
+                <aside className="vendor-benefits-panel">
+                    <div className="vendor-benefit-icon"><i className="bi bi-rocket-takeoff"></i></div>
+                    <span className="vendor-eyebrow vendor-eyebrow-dark">Your next channel</span>
+                    <h2>More visibility. More possibility.</h2>
+                    <p>Join a marketplace made for modern electronics brands and independent sellers.</p>
+                    <div className="vendor-stat-grid">
+                        <div><strong>01</strong><span>Quick review</span></div>
+                        <div><strong>02</strong><span>Set up your catalog</span></div>
+                        <div><strong>03</strong><span>Start selling</span></div>
+                    </div>
+                    <div className="vendor-login-prompt">Already approved?<Link to="/vlogin">Sign in to your portal <i className="bi bi-arrow-right"></i></Link></div>
+                </aside>
 
-    <ul className="list-unstyled mt-3">
-        <li>✔ Easy onboarding</li>
-        <li>✔ Secure payments</li>
-        <li>✔ High reach</li>
-    </ul>
-    <p>Already A Vendor? <a href="/vlogin">Vendor Login</a></p>
-</div>
-               </div>
-               </div>
-            </form>
-           
-        </>
+                <form className="vendor-form-card" onSubmit={register}>
+                    <div className="vendor-form-heading">
+                        <span>Partner application</span>
+                        <h2>Tell us about your business.</h2>
+                        <p>Complete the details below to begin your vendor application.</p>
+                    </div>
+                    <div className="vendor-fields">
+                        <label className="vendor-field"><span>Full name</span><input type="text" required placeholder="Your name" value={name} onChange={(e) => setname(e.target.value)} /></label>
+                        <label className="vendor-field"><span>Username</span><input type="text" required placeholder="Choose a username" value={uname} onChange={(e) => setuname(e.target.value)} /></label>
+                        <label className="vendor-field vendor-field-wide"><span>Business email</span><input type="email" required placeholder="you@business.com" value={email} onChange={(e) => setemail(e.target.value)} /></label>
+                        <label className="vendor-field vendor-field-wide"><span>Password</span><input type="password" required placeholder="Create a secure password" value={pass} onChange={(e) => setpass(e.target.value)} /></label>
+                        <label className="vendor-field"><span>Bank name</span><input type="text" required placeholder="Your bank" value={bank} onChange={(e) => setbank(e.target.value)} /></label>
+                        <label className="vendor-field"><span>Phone number</span><input type="tel" required placeholder="Your phone number" value={phn} onChange={(e) => setphn(e.target.value)} /></label>
+                        <label className="vendor-field"><span>City</span><input type="text" required placeholder="Your city" value={city} onChange={(e) => setcity(e.target.value)} /></label>
+                        <label className="vendor-field"><span>State</span><input type="text" required placeholder="Your state" value={state} onChange={(e) => setstate(e.target.value)} /></label>
+                    </div>
+                    {message && <p className="vendor-form-message" role="status">{message}</p>}
+                    <button type="submit" className="vendor-primary-btn" disabled={submitting}>{submitting ? "Sending application…" : <>Submit application <i className="bi bi-arrow-right"></i></>}</button>
+                    <p className="vendor-form-note"><i className="bi bi-lock"></i> Your information is handled securely.</p>
+                </form>
+            </section>
+        </main>
     )
 }

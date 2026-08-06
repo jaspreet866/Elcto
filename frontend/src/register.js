@@ -1,154 +1,54 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Swal from "sweetalert2"
 
 export const Register = () => {
-
     const [fname, setfname] = useState("")
     const [lname, setlname] = useState("")
     const [email, setemail] = useState("")
     const [pass, setpass] = useState("")
     const [msg, setmsg] = useState("")
+    const [showPassword, setShowPassword] = useState(false)
     const navigate = useNavigate()
 
-    const register = async () => {
-        const data = { fname, lname, email, pass }
-        const result = await fetch("https://elcto-1.onrender.com/api/register", {
-            method: "post",
-            body: JSON.stringify(data),
-            headers: { "Content-type": "application/json;charset=UTF-8" }
-        })
+    const register = async (e) => {
+        e.preventDefault()
+        const result = await fetch("https://elcto-1.onrender.com/api/register", { method: "post", body: JSON.stringify({ fname, lname, email, pass }), headers: { "Content-type": "application/json;charset=UTF-8" } })
         if (result.ok) {
             const res = await result.json()
-            if (res.statuscode === 2) {
-                Swal.fire({
-                    icon: "info",
-                    title: "  👤  Registration",
-                    text: (res.message)
-                })
-            }
+            if (res.statuscode === 2) Swal.fire({ icon: "info", title: "Registration", text: res.message })
             else if (res.statuscode === 1) {
-                Swal.fire({
-                    icon: "success",
-                    title: " 👤 Registration",
-                    text: "Registered Successfully , ElectoMart Welcomes You"
-                })
-                setemail("")
-                setfname("")
-                setlname("")
-                setpass('')
-                navigate("/login")
+                Swal.fire({ icon: "success", title: "Registration", text: "Registered Successfully , ElectoMart Welcomes You" })
+                setemail(""); setfname(""); setlname(""); setpass(""); navigate("/login")
             }
-            if (res.statuscode === 3) {
-                setmsg(res.message)
-            }
-           
-
-
+            if (res.statuscode === 3) setmsg(res.message)
         }
     }
 
-    return (
-        <>
-            <section className="s-page-title d-flex align-items-center justify-content-center text-center">
-                <div className="container-fluid bread">
-                    <div className="content">
-                        <h1 className="title-page">Register</h1>
-
-                        <ul className="breadcrumbs-page list-unstyled d-flex justify-content-center align-items-center gap-2 py-3">
-                            <li>
-                                <a href="/" className="h6 link text-decoration-none">
-                                    Home
-                                </a>
-                            </li>
-                            <li>
-                                <span>{">"}</span>
-                            </li>
-                            <li>
-                                <h6 className="current-page fw-normal mb-0">
-                                    Register
-                                </h6>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-
-            <div className="container p-5">
-
-                <div className="row align-items-center g-5">
-
-
-                    <div className="col-lg-6">
-                        <h2 className="mb-4">Register 👤 </h2>
-
-                        <div className="mb-3  d-flex gap-3">
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="First Name"
-                                onChange={(e) => setfname(e.target.value)}
-                            />
-
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Last Name"
-                                onChange={(e) => setlname(e.target.value)}
-                            />
-                        </div>
-
-                        <div className="mb-3">
-                            <input
-                                type="email"
-                                className="form-control"
-                                placeholder="Email"
-                                onChange={(e) => setemail(e.target.value)}
-                            />
-                        </div>
-
-                        <div className="mb-3">
-                            <input
-                                type="password"
-                                className="form-control"
-                                placeholder="Password"
-                                onChange={(e) => setpass(e.target.value)}
-                            />
-                            <p className="text-danger ms-2 text-start">{msg}</p>
-                        </div>
-
-                        <button
-                            className="btn btn-primary"
-                            onClick={register}
-                        >
-                            Register
-                        </button>
-                    </div>
-
-
-                    <div className="col-lg-6  d-lg-flex align-items-center">
-                        <div className="p-4 bg-light rounded shadow-sm w-100 text-center">
-                            <h2 className="fw-bold">Create Your Account 🚀</h2>
-
-                            <p className="text-muted mt-3">
-                                Register to track orders, save your wishlist,
-                                and enjoy a faster checkout.
-                            </p>
-
-                            <ul className="list-unstyled mt-4">
-                                <li className="mb-2">✔ Easy order tracking</li>
-                                <li className="mb-2">✔ Secure payments</li>
-                                <li className="mb-2">✔ Exclusive offers</li>
-                            </ul>
-                            <hr></hr>
-                            <div><p className="text-primary">Already Have a Account?<br></br>Get Back to Your Account </p>
-                                <button className="btn btn-primary " onClick={() => navigate("/login")}>Login</button></div>
-                        </div>
-
-                    </div>
-
-                </div>
+    return <main className="account-page account-register-page">
+        <section className="account-showcase register-showcase">
+            <Link to="/" className="account-back"><i className="bi bi-arrow-left"></i> Back to Elcto</Link>
+            <div className="account-showcase-content">
+                <span className="vendor-eyebrow"><i className="bi bi-sparkles"></i> Your Elcto account</span>
+                <h1>Make every<br />find yours.</h1>
+                <p>Create an account to make checkout smoother and keep the products you love close.</p>
+                <div className="account-member-card"><div><i className="bi bi-person-check"></i></div><span><strong>One account, every order.</strong><small>Favorites, tracking and offers in one place.</small></span></div>
             </div>
-        </>
-    )
+        </section>
+        <section className="account-panel"><div className="account-card">
+            <Link to="/" className="account-mobile-back"><i className="bi bi-arrow-left"></i> Elcto</Link>
+            <span className="vendor-eyebrow vendor-eyebrow-dark">Join Elcto</span>
+            <h2>Create your account.</h2>
+            <p className="account-subtitle">It only takes a moment to get started.</p>
+            <form onSubmit={register} className="account-form">
+                <div className="account-name-row"><label className="vendor-field"><span>First name</span><input type="text" required autoComplete="given-name" placeholder="First name" value={fname} onChange={(e) => setfname(e.target.value)} /></label><label className="vendor-field"><span>Last name</span><input type="text" required autoComplete="family-name" placeholder="Last name" value={lname} onChange={(e) => setlname(e.target.value)} /></label></div>
+                <label className="vendor-field"><span>Email address</span><input type="email" required autoComplete="email" placeholder="you@example.com" value={email} onChange={(e) => setemail(e.target.value)} /></label>
+                <label className="vendor-field"><span>Password</span><div className="account-password-input"><input type={showPassword ? "text" : "password"} required autoComplete="new-password" placeholder="Create a password" value={pass} onChange={(e) => setpass(e.target.value)} /><button type="button" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? "Hide password" : "Show password"}><i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i></button></div></label>
+                {msg && <p className="account-error" role="alert">{msg}</p>}
+                <button className="vendor-primary-btn" type="submit">Create account <i className="bi bi-arrow-right"></i></button>
+            </form>
+            <p className="account-terms">By creating an account, you agree to receive essential account updates.</p>
+            <p className="account-switch">Already have an account? <Link to="/login">Sign in</Link></p>
+        </div></section>
+    </main>
 }

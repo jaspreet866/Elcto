@@ -1,64 +1,43 @@
-
 import { useState, useEffect, useContext } from "react"
+import { Link } from "react-router-dom"
 import { Context } from "./usecontext"
 
 export const VendorDashboard = () => {
+    const [d, setd] = useState([])
+    const [loading, setLoading] = useState(true)
+    const { id } = useContext(Context)
 
-    const [d,setd]=useState([])
-    const {id}=useContext(Context)
+    useEffect(() => { show() }, [id])
 
-    useEffect(()=>{
-        show()
-    },[id])
-
-    const show=async()=>{
-        const result=await fetch(`https://elcto-1.onrender.com/api/vendorproduct/${id}`,{
-            method:"get"
-        })
-        if(result.ok){
-            const res=await result.json()
-            if(res.statuscode===1){
-                setd(res.data)
+    const show = async () => {
+        if (!id) { setLoading(false); return }
+        setLoading(true)
+        try {
+            const result = await fetch(`https://elcto-1.onrender.com/api/vendorproduct/${id}`, { method: "get" })
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1) setd(res.data)
             }
-        }
+        } finally { setLoading(false) }
     }
 
-    return(
-        <>
-        <h1>Vendor Dashboard</h1>
-        <p>Welcome to your dashboard, where you can manage your products and view sales data.</p>
-       
-            <div className="container my-5">
-                <div className="row">
-                  
-                        {
-                            d.map((a)=>(
-                                  <div className="col-lg-4 d-flex col-md-6 col-6">
-                                 <div className="card w-100 border-0 shadow-sm text-center p-3">
-                            <div className=" rounded d-flex justify-content-center align-items-center mb-3" style={{ height: "150px" }}>
-                                <img
-                                    src={`/uploads/${a.Img}`}
-                                    alt={a.name}
-                                    className="img-fluid"
-                                    style={{ maxHeight: "120px" }}
-                                />
-                            </div>
-
-                            <div className="card-body p-0">
-                                <h6 className="fw-semibold mb-2">{a.ProductName}</h6>
-                                <p className="mb-2 text-muted">Price: {a.ProductPrice}</p>
-                                <p className="mb-2 text-muted">Sale: {a.SalePrice}%</p>
-                            </div>
-                        </div>  
-                        </div>
-                            ))
-                        }
-                               
-               
-
+    return (
+        <main className="vendor-dashboard">
+            <div className="vendor-shell">
+                <section className="vendor-dashboard-head">
+                    <div><span className="vendor-eyebrow vendor-eyebrow-dark">Seller workspace</span><h1>Product overview</h1><p>Keep an eye on every product in your Elcto catalog.</p></div>
+                    <Link to="/" className="vendor-outline-btn">View storefront <i className="bi bi-box-arrow-up-right"></i></Link>
+                </section>
+                <section className="vendor-dashboard-summary">
+                    <div className="vendor-summary-card"><span className="vendor-summary-icon blue"><i className="bi bi-box-seam"></i></span><div><small>Total products</small><strong>{d.length}</strong></div></div>
+                    <div className="vendor-summary-card"><span className="vendor-summary-icon mint"><i className="bi bi-tags"></i></span><div><small>Offers active</small><strong>{d.filter((item) => Number(item.SalePrice) > 0).length}</strong></div></div>
+                    <div className="vendor-summary-card"><span className="vendor-summary-icon amber"><i className="bi bi-lightning-charge"></i></span><div><small>Catalog status</small><strong>Live</strong></div></div>
+                </section>
+                <section className="vendor-catalog-panel">
+                    <div className="vendor-catalog-top"><div><h2>Your products</h2><p>{loading ? "Loading your catalog…" : `${d.length} product${d.length === 1 ? "" : "s"} in your catalog`}</p></div><button className="vendor-refresh-btn" onClick={show} aria-label="Refresh catalog"><i className="bi bi-arrow-clockwise"></i></button></div>
+                    {loading ? <div className="vendor-empty-state"><div className="spinner-border" role="status"><span className="visually-hidden">Loading</span></div><p>Loading your product catalog…</p></div> : d.length === 0 ? <div className="vendor-empty-state"><span className="vendor-empty-icon"><i className="bi bi-box2"></i></span><h3>Your catalog is ready for its first product.</h3><p>Products associated with your seller account will appear here.</p></div> : <div className="vendor-product-grid">{d.map((a) => <article className="vendor-product-card" key={a._id}><div className="vendor-product-image"><img src={`/uploads/${a.Img}`} alt={a.ProductName} /><span className={Number(a.SalePrice) > 0 ? "vendor-sale-pill" : "vendor-live-pill"}>{Number(a.SalePrice) > 0 ? `${a.SalePrice}% off` : "Live"}</span></div><div className="vendor-product-info"><h3>{a.ProductName}</h3><div><span>List price</span><strong>₹{a.ProductPrice}</strong></div></div></article>)}</div>}
+                </section>
             </div>
-            </div>
-     
-        </>
+        </main>
     )
 }
