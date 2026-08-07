@@ -126,7 +126,7 @@ export const Product = () => {
 
         if (confirm.isConfirmed) {
 
-            const result = await fetch(`https://elcto-1.onrender.com/api/deletepro/${pid}`, {
+            const result = await fetch(`https://elcto-1.onrender.com/api/deletepro/${id}`, {
                 method: "DELETE"
             });
 

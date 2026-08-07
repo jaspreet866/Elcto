@@ -30,7 +30,7 @@ export const VendorDashboard = () => {
                 </section>
                 <section className="vendor-dashboard-summary">
                     <div className="vendor-summary-card"><span className="vendor-summary-icon blue"><i className="bi bi-box-seam"></i></span><div><small>Total products</small><strong>{d.length}</strong></div></div>
-                    <div className="vendor-summary-card"><span className="vendor-summary-icon mint"><i className="bi bi-tags"></i></span><div><small>Offers active</small><strong>{d.filter((item) => Number(item.SalePrice) > 0).length}</strong></div></div>
+                    <div className="vendor-summary-card"><span className="vendor-summary-icon mint"><i className="bi bi-tags"></i></span><div><small>Offers active</small><strong>{d.filter((item) => Number(item.OnSale) > 0).length}</strong></div></div>
                     <div className="vendor-summary-card"><span className="vendor-summary-icon amber"><i className="bi bi-lightning-charge"></i></span><div><small>Catalog status</small><strong>Live</strong></div></div>
                 </section>
                 <section className="vendor-catalog-panel">
