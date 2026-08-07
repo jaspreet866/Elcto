@@ -20,8 +20,8 @@ export const Product = () => {
     const [specifications, setSpecifications] = useState("");
     const [allp, setallp] = useState([])
     const [d, setd] = useState([])
-    const [id, setid] = useState("")
-    const {utype}=useContext(Context)
+    const [pid, setpid] = useState("")
+    const {utype,id:vendorid}=useContext(Context)
     const navigate=useNavigate()
 
 
@@ -30,10 +30,10 @@ export const Product = () => {
         show3()
     }, [])
     useEffect(() => {
-        if (id) {
+        if (pid) {
             show2()
         }
-    }, [id])
+    }, [pid])
 
     const add = async (e) => {
         e.preventDefault()
@@ -48,7 +48,7 @@ export const Product = () => {
         formData.append("sale", sale)
         formData.append("brand", brand)
         formData.append("Specifications", specifications);
-        formData.append("addedBy", utype);
+        formData.append("vendorid",vendorid)
 
         const result = await fetch("https://elcto-1.onrender.com/api/product", {
             method: "post",
@@ -83,7 +83,7 @@ export const Product = () => {
         }
     }
     const show2 = async () => {
-        const result = await fetch(`https://elcto-1.onrender.com/api/getbrand2/${id}`, {
+        const result = await fetch(`https://elcto-1.onrender.com/api/getbrand2/${pid}`, {
             method: "get"
         })
         if (result) {
@@ -126,7 +126,7 @@ export const Product = () => {
 
         if (confirm.isConfirmed) {
 
-            const result = await fetch(`https://elcto-1.onrender.com/api/deletepro/${id}`, {
+            const result = await fetch(`https://elcto-1.onrender.com/api/deletepro/${pid}`, {
                 method: "DELETE"
             });
 
@@ -215,7 +215,7 @@ export const Product = () => {
     return (
       <>
       {
-        utype ==="admin" || utype==="Vendor"?  <>
+        utype ==="admin"||utype === "vendor" ? <> 
             <section className="s-page-title d-flex align-items-center justify-content-center text-center">
                 <div className="container-fluid bread">
                     <div className="content">
@@ -249,7 +249,7 @@ export const Product = () => {
                             <form onSubmit={add}>
                                 <select className="form-select" value={product} aria-label="Default select example " onChange={(e) => {
                                     setproduct(e.target.value)
-                                    setid(e.target.value)
+                                    setpid(e.target.value)
                                 }}>
                                     <option>Select Category</option>
                                     {

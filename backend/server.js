@@ -477,6 +477,7 @@ const product = new mongoose.Schema({
     Brand: String,
     Specifications: String,
     AddedBy: String,
+    VendorId:String
 })
 
 const pro = mongoose.model("Product", product)
@@ -493,7 +494,9 @@ app.post("/api/product", upload.single("pic"), async (req, res) => {
         Brand: req.body.brand,
         Specifications: req.body.Specifications,
         Img: req.file.path,
-        AddedBy: req.body.addedBy
+        AddedBy: req.body.addedBy,
+        VendorId:req.body.vendorid
+
     })
 
     if (result) {
