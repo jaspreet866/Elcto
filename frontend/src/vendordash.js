@@ -5,7 +5,7 @@ import { Context } from "./usecontext"
 export const VendorDashboard = () => {
     const [d, setd] = useState([])
     const [loading, setLoading] = useState(true)
-    const { id } = useContext(Context)
+    const { id} = useContext(Context)
 
     useEffect(() => { show() }, [id])
 
