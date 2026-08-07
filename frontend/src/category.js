@@ -79,7 +79,7 @@ export const Category = () => {
   return (
   <>
   {
-    utype === "admin" ?   <>
+    utype === "admin" && utype === "Vendor" ?   <>
       <section className="s-page-title d-flex align-items-center justify-content-center text-center">
         <div className="container-fluid bread">
           <div className="content">
