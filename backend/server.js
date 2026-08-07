@@ -656,6 +656,16 @@ app.get("/api/latestproduct", async (req, res) => {
     }
 })
 
+app.get("/api/vendorproduct/:id", async (req, res) => {
+    const result = await pro.find({ VendorId: req.params.id })
+    if (result) {
+        res.send({ statuscode: 1, data: result })
+    }
+    else {
+        res.send({ statuscode: 0 })
+    }
+})
+
 app.get("/api/detail/:id", async (req, res) => {
     const result = await pro.findOne({ _id: req.params.id })
     if (result) {
