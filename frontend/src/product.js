@@ -48,7 +48,7 @@ export const Product = () => {
         formData.append("sale", sale)
         formData.append("brand", brand)
         formData.append("Specifications", specifications);
-
+        formData.append("addedBy", utype);
 
         const result = await fetch("https://elcto-1.onrender.com/api/product", {
             method: "post",

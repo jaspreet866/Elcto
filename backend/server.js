@@ -475,7 +475,8 @@ const product = new mongoose.Schema({
     Date: String,
     Img: String,
     Brand: String,
-    Specifications: String
+    Specifications: String,
+    AddedBy: String,
 })
 
 const pro = mongoose.model("Product", product)
@@ -491,7 +492,8 @@ app.post("/api/product", upload.single("pic"), async (req, res) => {
         SalePrice: req.body.saleprice,
         Brand: req.body.brand,
         Specifications: req.body.Specifications,
-        Img: req.file.path
+        Img: req.file.path,
+        AddedBy: req.body.addedBy
     })
 
     if (result) {
