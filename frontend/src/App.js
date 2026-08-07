@@ -36,7 +36,7 @@ function App() {
 
       <Context.Provider value={{ id, setid, utype, setutype, mail, setmail }}>
         {
-          utype === "admin" ? <AdminHeader></AdminHeader> : <Header></Header>
+          utype === "admin" || utype==="Vendor" ? <AdminHeader></AdminHeader> : <Header></Header>
 
         }
         <ScrollToTop></ScrollToTop>
