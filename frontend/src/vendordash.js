@@ -5,7 +5,7 @@ import { Context } from "./usecontext"
 export const VendorDashboard = () => {
     const [d, setd] = useState([])
     const [loading, setLoading] = useState(true)
-    const { id} = useContext(Context)
+    const { id } = useContext(Context)
 
     useEffect(() => { show() }, [id])
 
@@ -35,7 +35,7 @@ export const VendorDashboard = () => {
                 </section>
                 <section className="vendor-catalog-panel">
                     <div className="vendor-catalog-top"><div><h2>Your products</h2><p>{loading ? "Loading your catalog…" : `${d.length} product${d.length === 1 ? "" : "s"} in your catalog`}</p></div><button className="vendor-refresh-btn" onClick={show} aria-label="Refresh catalog"><i className="bi bi-arrow-clockwise"></i></button></div>
-                    {loading ? <div className="vendor-empty-state"><div className="spinner-border" role="status"><span className="visually-hidden">Loading</span></div><p>Loading your product catalog…</p></div> : d.length === 0 ? <div className="vendor-empty-state"><span className="vendor-empty-icon"><i className="bi bi-box2"></i></span><h3>Your catalog is ready for its first product.</h3><p>Products associated with your seller account will appear here.</p></div> : <div className="vendor-product-grid">{d.map((a) => <article className="vendor-product-card" key={a._id}><div className="vendor-product-image"><img src={`/uploads/${a.Img}`} alt={a.ProductName} /><span className={Number(a.SalePrice) > 0 ? "vendor-sale-pill" : "vendor-live-pill"}>{Number(a.SalePrice) > 0 ? `${a.SalePrice}% off` : "Live"}</span></div><div className="vendor-product-info"><h3>{a.ProductName}</h3><div><span>List price</span><strong>₹{a.ProductPrice}</strong></div></div></article>)}</div>}
+                    {loading ? <div className="vendor-empty-state"><div className="spinner-border" role="status"><span className="visually-hidden">Loading</span></div><p>Loading your product catalog…</p></div> : d.length === 0 ? <div className="vendor-empty-state"><span className="vendor-empty-icon"><i className="bi bi-box2"></i></span><h3>Your catalog is ready for its first product.</h3><p>Products associated with your seller account will appear here.</p></div> : <div className="vendor-product-grid">{d.map((a) => <article className="vendor-product-card" key={a._id}><div className="vendor-product-image"><img src={`${a.Img}`} alt={a.ProductName} /><span className={Number(a.SalePrice) > 0 ? "vendor-sale-pill" : "vendor-live-pill"}>{Number(a.SalePrice) > 0 ? `${a.SalePrice}% off` : "Live"}</span></div><div className="vendor-product-info"><h3>{a.ProductName}</h3><div><span>List price</span><strong>₹{a.ProductPrice}</strong></div></div></article>)}</div>}
                 </section>
             </div>
         </main>
