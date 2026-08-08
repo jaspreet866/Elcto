@@ -5,6 +5,7 @@ import { Context } from "./usecontext";
 import logo from "./images/WhatsApp Image 2026-02-12 at 11.08.16 AM.png"
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
+import { motion, AnimatePresence } from 'framer-motion'
 
 export const Header = () => {
     const [flag, setflag] = useState(false);
@@ -93,7 +94,14 @@ export const Header = () => {
                             <span className="navbar-toggler-icon"></span>
                         </button>
                         <Link to="/" className="navbar-brand fw-bold fs-4">
-                            <img src={logo} alt="logo" style={{ height: "42px" }} className="navbar-logo" />
+                            <motion.img 
+                                src={logo} 
+                                alt="logo" 
+                                style={{ height: "42px" }} 
+                                className="navbar-logo" 
+                                whileHover={{ scale: 1.06, rotate: 1 }}
+                                whileTap={{ scale: 0.95 }}
+                            />
                         </Link>
                     </div>
 

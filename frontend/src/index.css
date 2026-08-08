@@ -1,5 +1,124 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom Premium Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #0f62fe;
+}
+
+/* Premium Card Sheen Effect */
+.card, .category-card, .brand-card {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.25) 45%,
+    rgba(255, 255, 255, 0.5) 50%,
+    transparent 55%
+  );
+  transform: translateX(-100%) rotate(25deg);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.card:hover::before {
+  transform: translateX(100%) rotate(25deg);
+}
+
+/* Image Zoom on Card Hover */
+.card img {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.card:hover img {
+  transform: scale(1.07);
+}
+
+/* Animated Section Underline */
+.section-title-modern {
+  position: relative;
+  display: inline-block;
+}
+
+.section-title-modern::after {
+  content: '';
+  display: block;
+  width: 45px;
+  height: 4px;
+  background: linear-gradient(90deg, #0d6efd, #00d2ff);
+  border-radius: 4px;
+  margin: 8px auto 0;
+  transition: width 0.4s ease;
+}
+
+.section-title-modern:hover::after {
+  width: 95px;
+}
+
+/* Badge Glow Pulse */
+.badge-pulse {
+  animation: badgePulseGlow 2.5s infinite alternate ease-in-out;
+}
+
+@keyframes badgePulseGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 15px 4px rgba(220, 53, 69, 0.7);
+  }
+}
+
+/* Ambient Glow Background Mask */
+.ambient-glow-bg {
+  position: relative;
+}
+
+.ambient-glow-bg::after {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 380px;
+  background: radial-gradient(circle, rgba(15, 98, 254, 0.07) 0%, rgba(225, 29, 72, 0.03) 50%, transparent 70%);
+  filter: blur(65px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Masked Marquee */
+.marquee {
+  mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+}
+
 star {
   color: #f4c150;
   font-size: 1.2rem;
