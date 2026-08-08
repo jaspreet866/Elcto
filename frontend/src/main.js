@@ -10,6 +10,8 @@ import AOS from "aos"
 import "aos/dist/aos.css"
 import Splide from '@splidejs/splide'
 import '@splidejs/splide/css'
+import { motion } from 'framer-motion'
+import CursorGrid from './CursorGrid'
 
 export const Main = () => {
     const [d, setd] = useState([])
@@ -313,33 +315,469 @@ export const Main = () => {
 
     return (
         <>
-   <div className='container-fluid'>
-    <div id="carouselExample" className='carousel slide hero-carousel' data-bs-ride="carousel">
-        <div className='carousel-inner'>
-            <div className='carousel-item active'>
-                <img src={banner1} className="d-block w-100" alt="banner 1" />
-            </div>
-            <div className='carousel-item'>
-                <img src={banner2} className="d-block w-100" alt="banner 2" />
-            </div>
-            <div className='carousel-item'>
-                <img src={banner3} className="d-block w-100" alt="banner 3" />
-            </div>
-        </div>
-        <button className="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span className="visually-hidden">Previous</span>
-        </button>
-        <button className="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-            <span className="carousel-control-next-icon" aria-hidden="true"></span>
-            <span className="visually-hidden">Next</span>
-        </button>
-    </div>
-    </div>      
-            <div className="container mt-5" data-aos="zoom-in">
-                <h2 className="fw-bold text-center mb-4">Product Categories</h2>
+    <div className='container-fluid px-0 px-md-3 py-2 py-md-3'>
+        <style>{`
+            @keyframes heroFadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(24px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            @keyframes heroBadgePop {
+                from {
+                    opacity: 0;
+                    transform: scale(0.85);
+                }
+                to {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
+            @keyframes progressTimer {
+                from { width: 0%; }
+                to { width: 100%; }
+            }
 
-                <div className="splide categorySlider mt-4 ">
+            .modern-hero-carousel {
+                border-radius: 26px;
+                overflow: hidden;
+                box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.28);
+                position: relative;
+                background: #090d16;
+            }
+            @media (max-width: 768px) {
+                .modern-hero-carousel {
+                    border-radius: 18px;
+                }
+            }
+            .modern-hero-carousel .carousel-item {
+                position: relative;
+                overflow: hidden;
+            }
+            .modern-hero-carousel .carousel-img-wrapper {
+                position: relative;
+                width: 100%;
+                height: clamp(340px, 50vw, 620px);
+                overflow: hidden;
+            }
+            .modern-hero-carousel .carousel-img-wrapper img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+                transition: transform 9s cubic-bezier(0.25, 1, 0.5, 1);
+            }
+            .modern-hero-carousel .carousel-item.active .carousel-img-wrapper img {
+                transform: scale(1.08);
+            }
+
+            .modern-hero-carousel .carousel-overlay {
+                position: absolute;
+                inset: 0;
+                background: 
+                    radial-gradient(circle at 75% 40%, rgba(15, 98, 254, 0.22) 0%, transparent 55%),
+                    linear-gradient(90deg, rgba(8, 12, 24, 0.88) 0%, rgba(8, 12, 24, 0.55) 50%, rgba(8, 12, 24, 0.15) 100%);
+                z-index: 1;
+            }
+            @media (max-width: 768px) {
+                .modern-hero-carousel .carousel-overlay {
+                    background: linear-gradient(180deg, rgba(8, 12, 24, 0.25) 0%, rgba(8, 12, 24, 0.92) 100%);
+                }
+            }
+
+            .modern-hero-carousel .carousel-caption-content {
+                position: absolute;
+                inset: 0;
+                z-index: 2;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: flex-start;
+                padding: 2.5rem clamp(1.5rem, 6vw, 5.5rem);
+                color: #ffffff;
+                text-align: left;
+            }
+            @media (max-width: 768px) {
+                .modern-hero-carousel .carousel-caption-content {
+                    justify-content: flex-end;
+                    padding-bottom: 4rem;
+                }
+            }
+
+            .carousel-item.active .hero-badge-animated {
+                animation: heroBadgePop 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            }
+            .carousel-item.active .hero-title-animated {
+                animation: heroFadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+                opacity: 0;
+            }
+            .carousel-item.active .hero-desc-animated {
+                animation: heroFadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+                opacity: 0;
+            }
+            .carousel-item.active .hero-actions-animated {
+                animation: heroFadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.45s forwards;
+                opacity: 0;
+            }
+
+            .modern-carousel-btn {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                z-index: 5;
+                width: 52px;
+                height: 52px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.12);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                border: 1px solid rgba(255, 255, 255, 0.25);
+                color: #ffffff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.25rem;
+                cursor: pointer;
+                transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                opacity: 0.85;
+            }
+            .modern-carousel-btn:hover {
+                background: rgba(255, 255, 255, 0.95);
+                color: #0f172a;
+                transform: translateY(-50%) scale(1.12);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+                opacity: 1;
+            }
+            .modern-carousel-btn.prev-btn { left: 22px; }
+            .modern-carousel-btn.next-btn { right: 22px; }
+            @media (max-width: 576px) {
+                .modern-carousel-btn {
+                    width: 38px;
+                    height: 38px;
+                    font-size: 1rem;
+                }
+                .modern-carousel-btn.prev-btn { left: 10px; }
+                .modern-carousel-btn.next-btn { right: 10px; }
+            }
+
+            .custom-carousel-indicators {
+                position: absolute;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 5;
+                display: flex;
+                gap: 8px;
+                margin: 0;
+                padding: 6px 14px;
+                background: rgba(10, 16, 30, 0.45);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border-radius: 30px;
+                border: 1px solid rgba(255, 255, 255, 0.18);
+            }
+            .custom-carousel-indicators button {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                border: none;
+                background-color: rgba(255, 255, 255, 0.4);
+                transition: all 0.4s ease;
+                padding: 0;
+                cursor: pointer;
+            }
+            .custom-carousel-indicators button.active {
+                width: 32px;
+                border-radius: 12px;
+                background-color: #ffffff;
+                box-shadow: 0 0 14px rgba(255, 255, 255, 0.7);
+            }
+
+            .hero-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 7px 16px;
+                border-radius: 30px;
+                font-size: 0.78rem;
+                font-weight: 700;
+                letter-spacing: 0.09em;
+                text-transform: uppercase;
+                margin-bottom: 16px;
+                backdrop-filter: blur(10px);
+                box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+            }
+            .hero-title {
+                font-size: clamp(2rem, 4.5vw, 3.6rem);
+                font-weight: 800;
+                line-height: 1.12;
+                letter-spacing: -0.025em;
+                text-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+                margin-bottom: 14px;
+                max-width: 680px;
+            }
+            .hero-desc {
+                font-size: clamp(0.92rem, 1.5vw, 1.15rem);
+                color: rgba(255, 255, 255, 0.88);
+                max-width: 540px;
+                margin-bottom: 26px;
+                line-height: 1.55;
+            }
+
+            .hero-primary-btn {
+                padding: 13px 30px;
+                border-radius: 30px;
+                font-weight: 700;
+                font-size: 0.95rem;
+                transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                text-decoration: none;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+            }
+            .hero-primary-btn:hover {
+                transform: translateY(-3px) scale(1.02);
+                box-shadow: 0 16px 35px rgba(0, 0, 0, 0.35);
+            }
+            .hero-secondary-btn {
+                padding: 13px 26px;
+                border-radius: 30px;
+                font-weight: 600;
+                font-size: 0.95rem;
+                transition: all 0.3s ease;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                text-decoration: none;
+                color: #ffffff;
+                background: rgba(255, 255, 255, 0.12);
+                backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+            }
+            .hero-secondary-btn:hover {
+                background: rgba(255, 255, 255, 0.25);
+                color: #ffffff;
+                transform: translateY(-2px);
+            }
+
+            .hero-trust-bar {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 12px;
+                margin-top: 16px;
+                padding: 16px 24px;
+                background: #ffffff;
+                border-radius: 20px;
+                box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+                border: 1px solid rgba(229, 231, 235, 0.8);
+            }
+            @media (max-width: 768px) {
+                .hero-trust-bar {
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 14px;
+                    padding: 14px;
+                }
+            }
+            .trust-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+            .trust-icon {
+                width: 42px;
+                height: 42px;
+                border-radius: 12px;
+                background: #eef4ff;
+                color: #0f62fe;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.2rem;
+                flex-shrink: 0;
+            }
+            .trust-text strong {
+                display: block;
+                font-size: 0.85rem;
+                color: #1e293b;
+                font-weight: 700;
+                line-height: 1.2;
+            }
+            .trust-text span {
+                font-size: 0.75rem;
+                color: #64748b;
+            }
+        `}</style>
+
+        <div id="carouselExample" className='carousel slide carousel-fade modern-hero-carousel' data-bs-ride="carousel" data-bs-interval="4500">
+            <CursorGrid
+                cellSize={65}
+                color="#00d2ff"
+                radius={160}
+                falloff="smooth"
+                holdTime={450}
+                fadeDuration={750}
+                lineWidth={1.2}
+                maxOpacity={0.8}
+                fillOpacity={0.06}
+                gridOpacity={0.12}
+                cellRadius={4}
+                clickPulse={true}
+                pulseSpeed={600}
+            />
+
+            <div className="custom-carousel-indicators">
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" className="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+
+            <div className='carousel-inner'>
+                <div className='carousel-item active'>
+                    <div className="carousel-img-wrapper">
+                        <img src={banner1} alt="Next-Gen Electronics Banner" />
+                        <div className="carousel-overlay"></div>
+                    </div>
+                    <div className="carousel-caption-content">
+                        <div className="hero-badge hero-badge-animated text-white" style={{ background: 'linear-gradient(135deg, #0d6efd, #00d2ff)', border: '1px solid rgba(255, 255, 255, 0.35)' }}>
+                            <i className="bi bi-lightning-charge-fill"></i> Flagship Store 2026
+                        </div>
+                        <h1 className="hero-title hero-title-animated text-white">Next-Gen Tech & Smart Devices</h1>
+                        <p className="hero-desc hero-desc-animated d-none d-sm-block">Upgrade your digital lifestyle with high-speed smartphones, flagship accessories, and pro audio electronics.</p>
+                        <div className="d-flex gap-3 flex-wrap hero-actions-animated">
+                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                <Link to="/related" className="hero-primary-btn bg-white text-dark">
+                                    Shop Collection <i className="bi bi-arrow-right-short fs-5"></i>
+                                </Link>
+                            </motion.div>
+                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                <a href="#sale" className="hero-secondary-btn">
+                                    Explore Deals <i className="bi bi-fire text-warning"></i>
+                                </a>
+                            </motion.div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className='carousel-item'>
+                    <div className="carousel-img-wrapper">
+                        <img src={banner2} alt="High-Performance Laptops Banner" />
+                        <div className="carousel-overlay"></div>
+                    </div>
+                    <div className="carousel-caption-content">
+                        <div className="hero-badge hero-badge-animated text-white" style={{ background: 'linear-gradient(135deg, #dc3545, #ff6b6b)', border: '1px solid rgba(255, 255, 255, 0.35)' }}>
+                            <i className="bi bi-cpu-fill"></i> Pro Workstations & Gaming
+                        </div>
+                        <h1 className="hero-title hero-title-animated text-white">Extreme Performance Laptops</h1>
+                        <p className="hero-desc hero-desc-animated d-none d-sm-block">Unleash unmatched speed, stunning display graphics, and supreme battery efficiency built for creator workflows.</p>
+                        <div className="d-flex gap-3 flex-wrap hero-actions-animated">
+                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                <Link to="/related" className="hero-primary-btn text-white" style={{ background: 'linear-gradient(135deg, #dc3545, #b02a37)' }}>
+                                    View Laptops <i className="bi bi-laptop fs-6 ms-1"></i>
+                                </Link>
+                            </motion.div>
+                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                <Link to="/related" className="hero-secondary-btn">
+                                    Compare Specs <i className="bi bi-sliders"></i>
+                                </Link>
+                            </motion.div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className='carousel-item'>
+                    <div className="carousel-img-wrapper">
+                        <img src={banner3} alt="Immersive Audio Banner" />
+                        <div className="carousel-overlay"></div>
+                    </div>
+                    <div className="carousel-caption-content">
+                        <div className="hero-badge hero-badge-animated text-dark" style={{ background: 'linear-gradient(135deg, #ffc107, #ff9800)', border: '1px solid rgba(255, 255, 255, 0.35)' }}>
+                            <i className="bi bi-headphones"></i> Audiophile Studio Sound
+                        </div>
+                        <h1 className="hero-title hero-title-animated text-white">Immersive Sound & Wireless Pods</h1>
+                        <p className="hero-desc hero-desc-animated d-none d-sm-block">Deep bass, active noise-cancellation, and crystal-clear acoustic clarity designed for pure musical immersion.</p>
+                        <div className="d-flex gap-3 flex-wrap hero-actions-animated">
+                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                <Link to="/related" className="hero-primary-btn text-dark" style={{ background: 'linear-gradient(135deg, #ffc107, #e0a800)' }}>
+                                    Shop Audio <i className="bi bi-bag-check-fill fs-6 ms-1"></i>
+                                </Link>
+                            </motion.div>
+                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                <Link to="/related" className="hero-secondary-btn">
+                                    Trending Models <i className="bi bi-stars text-warning"></i>
+                                </Link>
+                            </motion.div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <motion.button whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }} className="modern-carousel-btn prev-btn" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <i className="bi bi-chevron-left"></i>
+                <span className="visually-hidden">Previous</span>
+            </motion.button>
+            <motion.button whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }} className="modern-carousel-btn next-btn" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <i className="bi bi-chevron-right"></i>
+                <span className="visually-hidden">Next</span>
+            </motion.button>
+        </div>
+
+        <div className="hero-trust-bar">
+            {[
+                { icon: "bi-shield-check", title: "100% Genuine", desc: "Official Warranty" },
+                { icon: "bi-truck", title: "Express Delivery", desc: "Free on ₹999+" },
+                { icon: "bi-arrow-repeat", title: "Easy 7-Day Return", desc: "Hassle-free policy" },
+                { icon: "bi-credit-card-2-front", title: "Secure Payment", desc: "256-bit Encrypted" },
+            ].map((item, idx) => (
+                <motion.div 
+                    key={idx} 
+                    className="trust-item"
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: idx * 0.08 }}
+                    whileHover={{ y: -3, scale: 1.02 }}
+                >
+                    <div className="trust-icon"><i className={`bi ${item.icon}`}></i></div>
+                    <div className="trust-text">
+                        <strong>{item.title}</strong>
+                        <span>{item.desc}</span>
+                    </div>
+                </motion.div>
+            ))}
+        </div>
+    </div>      
+            <div className="container mt-5 position-relative py-3 rounded-4" style={{ overflow: 'hidden' }}>
+                <CursorGrid
+                    cellSize={50}
+                    color="#0d6efd"
+                    radius={130}
+                    falloff="smooth"
+                    holdTime={400}
+                    fadeDuration={700}
+                    lineWidth={1}
+                    maxOpacity={0.7}
+                    fillOpacity={0.04}
+                    gridOpacity={0.08}
+                    cellRadius={2}
+                    clickPulse={true}
+                    pulseSpeed={500}
+                />
+                <motion.h2 
+                    className="fw-bold text-center mb-4 section-title-modern position-relative"
+                    style={{ zIndex: 2 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                >
+                    Product Categories
+                </motion.h2>
+
+                <div className="splide categorySlider mt-4 position-relative" style={{ zIndex: 2 }}>
                     <div className="splide__track">
 
                         <ul className="splide__list">
@@ -348,10 +786,15 @@ export const Main = () => {
                                 <li className="splide__slide" key={a._id}>
 
                                     <Link
-                                        className="text-decoration-none"
+                                        className="text-decoration-none w-100"
                                         to={`/related?id=${a._id}`}
                                     >
-                                        <div className="card border-0 text-center p-3 w-100 category-card">
+                                        <motion.div 
+                                            className="card border-0 text-center p-3 w-100 category-card"
+                                            whileHover={{ y: -8, scale: 1.04, boxShadow: "0 18px 35px rgba(0,0,0,0.12)" }}
+                                            whileTap={{ scale: 0.96 }}
+                                            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                                        >
 
                                             <img
                                                 className="img-fluid mx-auto mb-2"
@@ -364,7 +807,7 @@ export const Main = () => {
                                                 {a.Name}
                                             </p>
 
-                                        </div>
+                                        </motion.div>
                                     </Link>
 
                                 </li>
@@ -769,75 +1212,80 @@ export const Main = () => {
                     ))}
                 </div>
             </section>
-            <section className="container mt-2 py-4" data-aos="fade-up">
-                <h2 className="fw-bold text-center mb-4">Why Choose Us</h2>
+            <section className="container mt-2 py-4">
+                <motion.h2 
+                    className="fw-bold text-center mb-4"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                >
+                    Why Choose Us
+                </motion.h2>
                 <div className="row g-4 py-5">
-                    <div className="col-md-3 col-6 text-center">
-                        <i className="bi bi-truck fs-1 text-primary"></i>
-                        <h6 className="mt-2">Free Shipping</h6>
-                        <small className="text-muted">On orders above ₹999</small>
-                    </div>
-                    <div className="col-md-3 col-6 text-center">
-                        <i className="bi bi-shield-check fs-1 text-success"></i>
-                        <h6 className="mt-2">Secure Payment</h6>
-                        <small className="text-muted">100% secure transactions</small>
-                    </div>
-                    <div className="col-md-3 col-6 text-center">
-                        <i className="bi bi-arrow-repeat fs-1 text-warning"></i>
-                        <h6 className="mt-2">Easy Returns</h6>
-                        <small className="text-muted">7 days return policy</small>
-                    </div>
-                    <div className="col-md-3 col-6 text-center">
-                        <i className="bi bi-headset fs-1 text-info"></i>
-                        <h6 className="mt-2">24/7 Support</h6>
-                        <small className="text-muted">Dedicated customer support</small>
-                    </div>
+                    {[
+                        { icon: "bi-truck", color: "text-primary", title: "Free Shipping", desc: "On orders above ₹999" },
+                        { icon: "bi-shield-check", color: "text-success", title: "Secure Payment", desc: "100% secure transactions" },
+                        { icon: "bi-arrow-repeat", color: "text-warning", title: "Easy Returns", desc: "7 days return policy" },
+                        { icon: "bi-headset", color: "text-info", title: "24/7 Support", desc: "Dedicated customer support" },
+                    ].map((item, idx) => (
+                        <motion.div 
+                            key={idx} 
+                            className="col-md-3 col-6 text-center"
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.4, delay: idx * 0.1 }}
+                            whileHover={{ y: -6 }}
+                        >
+                            <motion.i 
+                                className={`bi ${item.icon} fs-1 ${item.color} d-inline-block`}
+                                whileHover={{ rotate: [0, -12, 12, -6, 0], scale: 1.25 }}
+                                transition={{ type: "spring", stiffness: 300 }}
+                            ></motion.i>
+                            <h6 className="mt-2 fw-bold">{item.title}</h6>
+                            <small className="text-muted">{item.desc}</small>
+                        </motion.div>
+                    ))}
                 </div>
             </section>
-            <section className="bg-light py-5 mt-5" data-aos="fade-up">
+            <section className="bg-light py-5 mt-5">
                 <div className="container">
-                    <h2 className="fw-bold text-center mb-4">What Our Customers Say</h2>
+                    <motion.h2 
+                        className="fw-bold text-center mb-4"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                    >
+                        What Our Customers Say
+                    </motion.h2>
                     <div className="row">
-                        <div className="col-md-4 mb-3">
-                            <div className="card w-100 h-100 border-0 shadow-sm">
-                                <div className="card-body text-center">
-                                    <i className="bi bi-star-fill text-warning"></i>
-                                    <i className="bi bi-star-fill text-warning"></i>
-                                    <i className="bi bi-star-fill text-warning"></i>
-                                    <i className="bi bi-star-fill text-warning"></i>
-                                    <i className="bi bi-star-fill text-warning"></i>
-                                    <p className="mt-3">"Amazing products and fast delivery!"</p>
-                                    <h6 className="fw-bold">- John Doe</h6>
+                        {[
+                            { quote: "Amazing products and fast delivery!", author: "- John Doe", stars: 5 },
+                            { quote: "Great quality and excellent customer support.", author: "- Sarah Williams", stars: 4.5 },
+                            { quote: "Very satisfied with my purchase. Highly recommended!", author: "- Michael Brown", stars: 5 },
+                        ].map((review, idx) => (
+                            <motion.div 
+                                key={idx} 
+                                className="col-md-4 mb-3"
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.4, delay: idx * 0.12 }}
+                                whileHover={{ y: -8 }}
+                            >
+                                <div className="card w-100 h-100 border-0 shadow-sm rounded-4 p-2">
+                                    <div className="card-body text-center">
+                                        <div className="mb-2">
+                                            {[...Array(5)].map((_, i) => (
+                                                <i key={i} className={`bi ${i < Math.floor(review.stars) ? 'bi-star-fill' : 'bi-star-half'} text-warning me-1`}></i>
+                                            ))}
+                                        </div>
+                                        <p className="mt-3 text-muted fst-italic">"{review.quote}"</p>
+                                        <h6 className="fw-bold text-dark">{review.author}</h6>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div className="col-md-4 mb-3">
-    <div className="card w-100 h-100 border-0 shadow-sm">
-        <div className="card-body text-center">
-            <i className="bi bi-star-fill text-warning"></i>
-            <i className="bi bi-star-fill text-warning"></i>
-            <i className="bi bi-star-fill text-warning"></i>
-            <i className="bi bi-star-fill text-warning"></i>
-            <i className="bi bi-star-half text-warning"></i>
-            <p className="mt-3">"Great quality and excellent customer support."</p>
-            <h6 className="fw-bold">- Sarah Williams</h6>
-        </div>
-    </div>
-</div>
-
-<div className="col-md-4 mb-3">
-    <div className="card w-100 h-100 border-0 shadow-sm">
-        <div className="card-body text-center">
-            <i className="bi bi-star-fill text-warning"></i>
-            <i className="bi bi-star-fill text-warning"></i>
-            <i className="bi bi-star-fill text-warning"></i>
-            <i className="bi bi-star-fill text-warning"></i>
-            <i className="bi bi-star-fill text-warning"></i>
-            <p className="mt-3">"Very satisfied with my purchase. Highly recommended!"</p>
-            <h6 className="fw-bold">- Michael Brown</h6>
-        </div>
-    </div>
-</div>
+                            </motion.div>
+                        ))}
                     </div>
                 </div>
             </section>

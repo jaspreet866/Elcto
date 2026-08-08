@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { Rating } from 'react-simple-star-rating'
 import Swal from "sweetalert2"
 import { Context } from "./usecontext"
+import { motion } from 'framer-motion'
 
 export const Detail = () => {
     const [pro, setpro] = useState("")
@@ -245,11 +246,15 @@ const [activeTab, setActiveTab] = useState("specifications");
                     <div className="row g-5">
                         {/* Product Image */}
                         <div className="col-lg-6 text-center col-12">
-                            <img
+                            <motion.img
                                 src={`${img}`}
                                 className="img-fluid rounded"
                                 style={{ maxHeight: "420px", objectFit: "contain" }}
                                 alt={name}
+                                initial={{ opacity: 0, scale: 0.92 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                whileHover={{ scale: 1.05 }}
+                                transition={{ duration: 0.4 }}
                             />
                         </div>
 
