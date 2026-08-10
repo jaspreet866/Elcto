@@ -34,21 +34,34 @@ function App() {
   }, [theme]);
 
   useEffect(() => {
-    const info = JSON.parse(localStorage.getItem("data"))
-    if (info) {
-      const parts = info.split(".")
-      if (parts.length === 3) {
-        const payload = parts[1]
-        const enc = payload.replace(/-/g, '+').replace(/_/g, '/')
-        const str = atob(enc)
-        const decode = JSON.parse(str)
-        setutype(decode.usertype)
-        setid(decode.id)
-        setmail(decode.mail)
-        console.log("mail is", mail)
+    try {
+      const stored = localStorage.getItem("data");
+      if (stored) {
+        let info = stored;
+        try {
+          info = JSON.parse(stored);
+        } catch (e) {
+          info = stored;
+        }
+        if (typeof info === "string") {
+          const parts = info.split(".");
+          if (parts.length === 3) {
+            const payload = parts[1];
+            const enc = payload.replace(/-/g, '+').replace(/_/g, '/');
+            const str = atob(enc);
+            const decode = JSON.parse(str);
+            if (decode) {
+              if (decode.usertype) setutype(decode.usertype);
+              if (decode.id) setid(decode.id);
+              if (decode.mail) setmail(decode.mail);
+            }
+          }
+        }
       }
+    } catch (err) {
+      console.warn("Auth token decode error:", err);
     }
-  }, [])
+  }, []);
 
   return (
     <div className="App">
