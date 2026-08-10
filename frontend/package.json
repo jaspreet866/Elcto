@@ -2,6 +2,7 @@
   "name": "project2",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/",
   "dependencies": {
     "@fortawesome/react-fontawesome": "^3.1.1",
     "@splidejs/splide": "^4.1.4",
