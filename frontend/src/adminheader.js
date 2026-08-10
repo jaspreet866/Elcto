@@ -7,7 +7,7 @@ import logo from "./images/WhatsApp Image 2026-02-12 at 11.08.16 AM.png"
 
 export const AdminHeader = () => {
     const [flag, setflag] = useState(false);
-    const { id, setid } = useContext(Context)
+    const { id, setid, theme, toggleTheme } = useContext(Context)
     const { setutype } = useContext(Context)
     const navigate = useNavigate()
 
@@ -103,6 +103,21 @@ export const AdminHeader = () => {
                                             </>}
                                     </li>
                                 </ul>
+                            </li>
+                            <li className="nav-item d-flex align-items-center ms-lg-2">
+                                <button 
+                                    className="btn btn-theme-toggle p-2 shadow-sm rounded-circle d-flex align-items-center justify-content-center" 
+                                    onClick={toggleTheme} 
+                                    title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                                    aria-label="Toggle theme"
+                                    style={{ width: "38px", height: "38px", border: "1px solid var(--line)" }}
+                                >
+                                    {theme === "dark" ? (
+                                        <i className="bi bi-sun-fill text-warning fs-5"></i>
+                                    ) : (
+                                        <i className="bi bi-moon-stars-fill text-primary fs-5"></i>
+                                    )}
+                                </button>
                             </li>
                         </ul>
 

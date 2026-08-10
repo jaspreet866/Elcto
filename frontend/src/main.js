@@ -12,6 +12,8 @@ import Splide from '@splidejs/splide'
 import '@splidejs/splide/css'
 import { motion } from 'framer-motion'
 import CursorGrid from './CursorGrid'
+import Lightfall from './Lightfall'
+import EchoText from './EchoText'
 
 export const Main = () => {
     const [d, setd] = useState([])
@@ -23,7 +25,7 @@ export const Main = () => {
     const [mobile, setmobile] = useState([])
     const [led, setled] = useState([])
     const [airpod, setairpod] = useState([])
-    const { id } = useContext(Context)
+    const { id, theme } = useContext(Context)
     const [discount, setdiscount] = useState("")
     const [showTop, setShowTop] = useState(false);
     const [scrollProgress, setScrollProgress] = useState(0);
@@ -389,7 +391,7 @@ export const Main = () => {
                 }
             }
 
-            .modern-hero-carousel .carousel-caption-content {
+            .carousel-caption-content {
                 position: absolute;
                 inset: 0;
                 z-index: 2;
@@ -402,26 +404,23 @@ export const Main = () => {
                 text-align: left;
             }
             @media (max-width: 768px) {
-                .modern-hero-carousel .carousel-caption-content {
+                .carousel-caption-content {
                     justify-content: flex-end;
                     padding-bottom: 4rem;
                 }
             }
 
-            .carousel-item.active .hero-badge-animated {
+            .hero-badge-animated {
                 animation: heroBadgePop 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             }
-            .carousel-item.active .hero-title-animated {
+            .hero-title-animated {
                 animation: heroFadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
-                opacity: 0;
             }
-            .carousel-item.active .hero-desc-animated {
+            .hero-desc-animated {
                 animation: heroFadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
-                opacity: 0;
             }
-            .carousel-item.active .hero-actions-animated {
+            .hero-actions-animated {
                 animation: heroFadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.45s forwards;
-                opacity: 0;
             }
 
             .modern-carousel-btn {
@@ -613,117 +612,61 @@ export const Main = () => {
             }
         `}</style>
 
-        <div id="carouselExample" className='carousel slide carousel-fade modern-hero-carousel' data-bs-ride="carousel" data-bs-interval="4500">
-            <CursorGrid
-                cellSize={65}
-                color="#00d2ff"
-                radius={160}
-                falloff="smooth"
-                holdTime={450}
-                fadeDuration={750}
-                lineWidth={1.2}
-                maxOpacity={0.8}
-                fillOpacity={0.06}
-                gridOpacity={0.12}
-                cellRadius={4}
-                clickPulse={true}
-                pulseSpeed={600}
-            />
-
-            <div className="custom-carousel-indicators">
-                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" className="active" aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="2" aria-label="Slide 3"></button>
-            </div>
-
-            <div className='carousel-inner'>
-                <div className='carousel-item active'>
-                    <div className="carousel-img-wrapper">
-                        <img src={banner1} alt="Next-Gen Electronics Banner" />
-                        <div className="carousel-overlay"></div>
-                    </div>
-                    <div className="carousel-caption-content">
-                        <div className="hero-badge hero-badge-animated text-white" style={{ background: 'linear-gradient(135deg, #0d6efd, #00d2ff)', border: '1px solid rgba(255, 255, 255, 0.35)' }}>
-                            <i className="bi bi-lightning-charge-fill"></i> Flagship Store 2026
-                        </div>
-                        <h1 className="hero-title hero-title-animated text-white">Next-Gen Tech & Smart Devices</h1>
-                        <p className="hero-desc hero-desc-animated d-none d-sm-block">Upgrade your digital lifestyle with high-speed smartphones, flagship accessories, and pro audio electronics.</p>
-                        <div className="d-flex gap-3 flex-wrap hero-actions-animated">
-                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Link to="/related" className="hero-primary-btn bg-white text-dark">
-                                    Shop Collection <i className="bi bi-arrow-right-short fs-5"></i>
-                                </Link>
-                            </motion.div>
-                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <a href="#sale" className="hero-secondary-btn">
-                                    Explore Deals <i className="bi bi-fire text-warning"></i>
-                                </a>
-                            </motion.div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className='carousel-item'>
-                    <div className="carousel-img-wrapper">
-                        <img src={banner2} alt="High-Performance Laptops Banner" />
-                        <div className="carousel-overlay"></div>
-                    </div>
-                    <div className="carousel-caption-content">
-                        <div className="hero-badge hero-badge-animated text-white" style={{ background: 'linear-gradient(135deg, #dc3545, #ff6b6b)', border: '1px solid rgba(255, 255, 255, 0.35)' }}>
-                            <i className="bi bi-cpu-fill"></i> Pro Workstations & Gaming
-                        </div>
-                        <h1 className="hero-title hero-title-animated text-white">Extreme Performance Laptops</h1>
-                        <p className="hero-desc hero-desc-animated d-none d-sm-block">Unleash unmatched speed, stunning display graphics, and supreme battery efficiency built for creator workflows.</p>
-                        <div className="d-flex gap-3 flex-wrap hero-actions-animated">
-                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Link to="/related" className="hero-primary-btn text-white" style={{ background: 'linear-gradient(135deg, #dc3545, #b02a37)' }}>
-                                    View Laptops <i className="bi bi-laptop fs-6 ms-1"></i>
-                                </Link>
-                            </motion.div>
-                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Link to="/related" className="hero-secondary-btn">
-                                    Compare Specs <i className="bi bi-sliders"></i>
-                                </Link>
-                            </motion.div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className='carousel-item'>
-                    <div className="carousel-img-wrapper">
-                        <img src={banner3} alt="Immersive Audio Banner" />
-                        <div className="carousel-overlay"></div>
-                    </div>
-                    <div className="carousel-caption-content">
-                        <div className="hero-badge hero-badge-animated text-dark" style={{ background: 'linear-gradient(135deg, #ffc107, #ff9800)', border: '1px solid rgba(255, 255, 255, 0.35)' }}>
-                            <i className="bi bi-headphones"></i> Audiophile Studio Sound
-                        </div>
-                        <h1 className="hero-title hero-title-animated text-white">Immersive Sound & Wireless Pods</h1>
-                        <p className="hero-desc hero-desc-animated d-none d-sm-block">Deep bass, active noise-cancellation, and crystal-clear acoustic clarity designed for pure musical immersion.</p>
-                        <div className="d-flex gap-3 flex-wrap hero-actions-animated">
-                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Link to="/related" className="hero-primary-btn text-dark" style={{ background: 'linear-gradient(135deg, #ffc107, #e0a800)' }}>
-                                    Shop Audio <i className="bi bi-bag-check-fill fs-6 ms-1"></i>
-                                </Link>
-                            </motion.div>
-                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Link to="/related" className="hero-secondary-btn">
-                                    Trending Models <i className="bi bi-stars text-warning"></i>
-                                </Link>
-                            </motion.div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <motion.button whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }} className="modern-carousel-btn prev-btn" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                <i className="bi bi-chevron-left"></i>
-                <span className="visually-hidden">Previous</span>
-            </motion.button>
-            <motion.button whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }} className="modern-carousel-btn next-btn" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                <i className="bi bi-chevron-right"></i>
-                <span className="visually-hidden">Next</span>
-            </motion.button>
+        <div style={{ width: '100%', height: '580px', position: 'relative', overflow: 'hidden', borderBottom: '1px solid var(--line)' }}>
+          <Lightfall
+            colors={theme === 'dark' ? ['#A6C8FF', '#5227FF', '#FF9FFC', '#3B82F6'] : ['#A6C8FF', '#5227FF', '#FF9FFC']}
+            backgroundColor={theme === 'dark' ? '#090D16' : '#0A29FF'}
+            speed={1}
+            streakCount={8}
+            streakWidth={1.2}
+            streakLength={1}
+            glow={1.2}
+            density={1}
+            twinkle={1}
+            zoom={2.2}
+            backgroundGlow={1}
+            opacity={1}
+            mouseInteraction={true}
+            mouseStrength={1}
+            mouseRadius={0.6}
+          />
+          <div className="carousel-caption-content" style={{ zIndex: 10, pointerEvents: 'auto' }}>
+              <div className="hero-badge hero-badge-animated text-white" style={{ background: 'linear-gradient(135deg, #5227FF, #FF9FFC)', border: '1px solid rgba(255, 255, 255, 0.35)' }}>
+                  <i className="bi bi-lightning-charge-fill"></i> Flagship Store 2026
+              </div>
+              <div className="my-3 hero-title-animated">
+                <EchoText
+                  text="ElectoMart - Your Tech Partner"
+                  echoes={10}
+                  lag={0.2}
+                  offset={28}
+                  direction="right"
+                  fade={0.7}
+                  blur={3}
+                  tint="#7dd3fc"
+                  mode="both"
+                  cursorRadius={300}
+                  duration={900}
+                  ease="ease-out"
+                  fontSize="clamp(1.75rem, 4.5vw, 3.5rem)"
+                  fontWeight={800}
+                  color="#ffffff"
+                />
+              </div>
+              <p className="hero-desc hero-desc-animated d-none d-sm-block">Upgrade your digital lifestyle with high-speed smartphones, flagship workstations, and studio audio devices.</p>
+              <div className="d-flex gap-3 flex-wrap hero-actions-animated">
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <Link to="/related" className="hero-primary-btn bg-white text-dark shadow-lg">
+                          Shop Collection <i className="bi bi-arrow-right-short fs-5"></i>
+                      </Link>
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <a href="#sale" className="hero-secondary-btn">
+                          Explore Deals <i className="bi bi-fire text-warning"></i>
+                      </a>
+                  </motion.div>
+              </div>
+          </div>
         </div>
 
         <div className="hero-trust-bar">
@@ -754,7 +697,7 @@ export const Main = () => {
             <div className="container mt-5 position-relative py-3 rounded-4" style={{ overflow: 'hidden' }}>
                 <CursorGrid
                     cellSize={50}
-                    color="#0d6efd"
+                    color={theme === "dark" ? "#818cf8" : "#0d6efd"}
                     radius={130}
                     falloff="smooth"
                     holdTime={400}

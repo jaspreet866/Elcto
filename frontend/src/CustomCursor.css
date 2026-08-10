@@ -1,0 +1,74 @@
+.custom-cursor-dot,
+.custom-cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 99999;
+  border-radius: 50%;
+  will-change: transform;
+  transform: translate3d(-100px, -100px, 0);
+  transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1), height 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease, border-color 0.25s ease, opacity 0.25s ease;
+}
+
+/* Inner Dot */
+.custom-cursor-dot {
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  margin-top: -5px;
+  background: var(--cursor-theme-color, #0f62fe);
+  box-shadow: 0 0 12px var(--cursor-theme-color, #0f62fe);
+}
+
+.custom-cursor-dot.is-hovered {
+  width: 18px;
+  height: 18px;
+  margin-left: -9px;
+  margin-top: -9px;
+  background: #ec4899;
+  box-shadow: 0 0 20px #ec4899;
+}
+
+.custom-cursor-dot.is-clicked {
+  transform: scale(0.6);
+}
+
+/* Outer Ring */
+.custom-cursor-ring {
+  width: 40px;
+  height: 40px;
+  margin-left: -20px;
+  margin-top: -20px;
+  border: 1.5px solid var(--cursor-theme-color, rgba(15, 98, 254, 0.5));
+  background: rgba(99, 102, 241, 0.05);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+  backdrop-filter: blur(2px);
+}
+
+.custom-cursor-ring.is-hovered {
+  width: 64px;
+  height: 64px;
+  margin-left: -32px;
+  margin-top: -32px;
+  border-color: #a855f7;
+  background: rgba(168, 85, 247, 0.12);
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.35);
+}
+
+.custom-cursor-ring.is-clicked {
+  width: 30px;
+  height: 30px;
+  margin-left: -15px;
+  margin-top: -15px;
+  border-color: #ec4899;
+  background: rgba(236, 72, 153, 0.25);
+}
+
+/* Touch devices hide custom cursor */
+@media (pointer: coarse) {
+  .custom-cursor-dot,
+  .custom-cursor-ring {
+    display: none !important;
+  }
+}

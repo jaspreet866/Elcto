@@ -1,0 +1,43 @@
+.echo-text {
+  position: relative;
+  display: inline-block;
+  white-space: normal;
+  max-width: 100%;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  user-select: none;
+  font-kerning: normal;
+  text-rendering: geometricPrecision;
+}
+
+.echo-text__echo {
+  position: absolute;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+  transform: translate3d(0, 0, 0);
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  white-space: nowrap;
+}
+
+.echo-text__echo--front {
+  position: relative;
+  z-index: 2;
+  opacity: 1 !important;
+  filter: none !important;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  will-change: transform;
+  white-space: normal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .echo-text__echo:not(.echo-text__echo--front) {
+    display: none;
+  }
+
+  .echo-text__echo--front {
+    transform: none !important;
+  }
+}

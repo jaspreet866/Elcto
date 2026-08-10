@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 export const Header = () => {
     const [flag, setflag] = useState(false);
-    const { id, setid } = useContext(Context)
+    const { id, setid, theme, toggleTheme } = useContext(Context)
     const { setutype } = useContext(Context)
      const[d,setd]=useState([])
     const searchRef = useRef(null);
@@ -239,6 +239,19 @@ export const Header = () => {
                         </ul>
 
                         <div className="ms-lg-4 d-flex align-items-center gap-2">
+                            <button 
+                                className="btn btn-theme-toggle p-2 shadow-sm rounded-circle d-flex align-items-center justify-content-center" 
+                                onClick={toggleTheme} 
+                                title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                                aria-label="Toggle theme"
+                                style={{ width: "40px", height: "40px", border: "1px solid var(--line)" }}
+                            >
+                                {theme === "dark" ? (
+                                    <i className="bi bi-sun-fill text-warning fs-5"></i>
+                                ) : (
+                                    <i className="bi bi-moon-stars-fill text-primary fs-5"></i>
+                                )}
+                            </button>
                             <button className="btn btn-light p-2 position-relative shadow-sm" onClick={() => cart()} title="Cart">
                                 <i className="bi bi-bag-fill fs-5 text-dark"></i>
                             </button>
@@ -260,9 +273,24 @@ export const Header = () => {
 
             {/* moblie */}
             <div className="offcanvas offcanvas-start d-lg-none" tabIndex="-1" id="mobileOffcanvas" aria-labelledby="mobileOffcanvasLabel">
-                <div className="offcanvas-header border-bottom">
-                    <h5 className="offcanvas-title fw-bold" id="mobileOffcanvasLabel">ElectoMart</h5>
-                    <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                <div className="offcanvas-header border-bottom d-flex align-items-center justify-content-between">
+                    <h5 className="offcanvas-title fw-bold m-0" id="mobileOffcanvasLabel">ElectoMart</h5>
+                    <div className="d-flex align-items-center gap-2">
+                        <button 
+                            className="btn btn-theme-toggle p-2 shadow-sm rounded-circle d-flex align-items-center justify-content-center" 
+                            onClick={toggleTheme} 
+                            title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                            aria-label="Toggle theme"
+                            style={{ width: "36px", height: "36px", border: "1px solid var(--line)" }}
+                        >
+                            {theme === "dark" ? (
+                                <i className="bi bi-sun-fill text-warning fs-6"></i>
+                            ) : (
+                                <i className="bi bi-moon-stars-fill text-primary fs-6"></i>
+                            )}
+                        </button>
+                        <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
                 </div>
                 <div className="offcanvas-body">
                     <ul className="navbar-nav">
