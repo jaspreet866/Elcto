@@ -3,8 +3,6 @@ import { useContext, useState, useEffect ,useRef} from "react"
 import Swal from "sweetalert2";
 import { Context } from "./usecontext";
 import logo from "./images/WhatsApp Image 2026-02-12 at 11.08.16 AM.png"
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import { motion, AnimatePresence } from 'framer-motion'
 
 export const Header = () => {
@@ -243,7 +241,8 @@ export const Header = () => {
                                 className="btn btn-theme-toggle p-2 shadow-sm rounded-circle d-flex align-items-center justify-content-center" 
                                 onClick={toggleTheme} 
                                 title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
-                                aria-label="Toggle theme"
+                                aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+                                aria-pressed={theme === "dark"}
                                 style={{ width: "40px", height: "40px", border: "1px solid var(--line)" }}
                             >
                                 {theme === "dark" ? (
@@ -280,7 +279,8 @@ export const Header = () => {
                             className="btn btn-theme-toggle p-2 shadow-sm rounded-circle d-flex align-items-center justify-content-center" 
                             onClick={toggleTheme} 
                             title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
-                            aria-label="Toggle theme"
+                            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+                            aria-pressed={theme === "dark"}
                             style={{ width: "36px", height: "36px", border: "1px solid var(--line)" }}
                         >
                             {theme === "dark" ? (

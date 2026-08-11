@@ -616,7 +616,7 @@ export const Main = () => {
           <Lightfall
             colors={theme === 'dark' ? ['#A6C8FF', '#5227FF', '#FF9FFC', '#3B82F6'] : ['#A6C8FF', '#5227FF', '#FF9FFC']}
             backgroundColor={theme === 'dark' ? '#090D16' : '#0A29FF'}
-            speed={1}
+            speed={0.25}
             streakCount={8}
             streakWidth={1.2}
             streakLength={1}

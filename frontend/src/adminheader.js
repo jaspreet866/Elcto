@@ -109,7 +109,8 @@ export const AdminHeader = () => {
                                     className="btn btn-theme-toggle p-2 shadow-sm rounded-circle d-flex align-items-center justify-content-center" 
                                     onClick={toggleTheme} 
                                     title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
-                                    aria-label="Toggle theme"
+                                    aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+                                    aria-pressed={theme === "dark"}
                                     style={{ width: "38px", height: "38px", border: "1px solid var(--line)" }}
                                 >
                                     {theme === "dark" ? (
