@@ -1,5 +1,5 @@
 
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import banner2 from './images/banner2.png'
 import banner1 from './images/banner1.png'
@@ -29,6 +29,15 @@ export const Main = () => {
     const [discount, setdiscount] = useState("")
     const [showTop, setShowTop] = useState(false);
     const [scrollProgress, setScrollProgress] = useState(0);
+    const [isMobile, setIsMobile] = useState(
+        () => window.matchMedia?.("(max-width: 767px), (prefers-reduced-motion: reduce)")?.matches ?? false
+    );
+    const lightfallColors = useMemo(
+        () => theme === 'dark'
+            ? ['#A6C8FF', '#5227FF', '#FF9FFC', '#3B82F6']
+            : ['#A6C8FF', '#5227FF', '#FF9FFC'],
+        [theme]
+    );
 
     const navigate = useNavigate()
 
@@ -40,6 +49,16 @@ export const Main = () => {
             offset: 120
         })
     }, [])
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia?.("(max-width: 767px), (prefers-reduced-motion: reduce)");
+        if (!mediaQuery) return undefined;
+        const updateViewport = () => setIsMobile(mediaQuery.matches);
+
+        updateViewport();
+        mediaQuery.addEventListener("change", updateViewport);
+        return () => mediaQuery.removeEventListener("change", updateViewport);
+    }, []);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -612,24 +631,29 @@ export const Main = () => {
             }
         `}</style>
 
-        <div style={{ width: '100%', height: '580px', position: 'relative', overflow: 'hidden', borderBottom: '1px solid var(--line)' }}>
-          <Lightfall
-            colors={theme === 'dark' ? ['#A6C8FF', '#5227FF', '#FF9FFC', '#3B82F6'] : ['#A6C8FF', '#5227FF', '#FF9FFC']}
-            backgroundColor={theme === 'dark' ? '#090D16' : '#0A29FF'}
-            speed={0.25}
-            streakCount={8}
-            streakWidth={1.2}
-            streakLength={1}
-            glow={1.2}
-            density={1}
-            twinkle={1}
-            zoom={2.2}
-            backgroundGlow={1}
-            opacity={1}
-            mouseInteraction={true}
-            mouseStrength={1}
-            mouseRadius={0.6}
-          />
+        <div className="home-hero" style={{ width: '100%', height: '580px', position: 'relative', overflow: 'hidden', borderBottom: '1px solid var(--line)' }}>
+          {isMobile ? (
+            <div className={`hero-lightfall-fallback ${theme === 'dark' ? 'hero-lightfall-fallback-dark' : ''}`} aria-hidden="true" />
+          ) : (
+            <Lightfall
+              colors={lightfallColors}
+              backgroundColor={theme === 'dark' ? '#090D16' : '#0A29FF'}
+              dpr={1}
+              speed={0.25}
+              streakCount={8}
+              streakWidth={1.2}
+              streakLength={1}
+              glow={1.2}
+              density={1}
+              twinkle={1}
+              zoom={2.2}
+              backgroundGlow={1}
+              opacity={1}
+              mouseInteraction={true}
+              mouseStrength={1}
+              mouseRadius={0.6}
+            />
+          )}
           <div className="carousel-caption-content" style={{ zIndex: 10, pointerEvents: 'auto' }}>
               <div className="hero-badge hero-badge-animated text-white" style={{ background: 'linear-gradient(135deg, #5227FF, #FF9FFC)', border: '1px solid rgba(255, 255, 255, 0.35)' }}>
                   <i className="bi bi-lightning-charge-fill"></i> Flagship Store 2026
@@ -669,7 +693,7 @@ export const Main = () => {
           </div>
         </div>
 
-        <div className="hero-trust-bar">
+        {/* <div className="hero-trust-bar">
             {[
                 { icon: "bi-shield-check", title: "100% Genuine", desc: "Official Warranty" },
                 { icon: "bi-truck", title: "Express Delivery", desc: "Free on ₹999+" },
@@ -692,7 +716,7 @@ export const Main = () => {
                     </div>
                 </motion.div>
             ))}
-        </div>
+        </div> */}
     </div>      
             <div className="container mt-5 position-relative py-3 rounded-4" style={{ overflow: 'hidden' }}>
                 <CursorGrid

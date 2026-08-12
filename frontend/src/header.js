@@ -78,7 +78,7 @@ export const Header = () => {
         <>
 
 
-            <nav className="navbar navbar-expand-lg sticky-glass-nav py-2">
+            <nav className="navbar navbar-expand-lg sticky-glass-nav t py-2">
                 <div className="container">
                     <div className="d-flex align-items-center gap-3">
                         <button

@@ -992,9 +992,12 @@ body {
   background: var(--surface-soft);
 }
 
-body,
-.App {
+body {
   overflow-x: hidden;
+}
+
+.App {
+  overflow-x: clip;
 }
 
 .container {
@@ -2290,4 +2293,282 @@ body {
 [data-theme="dark"] .modal-backdrop,
 [data-theme="dark"] .offcanvas-backdrop {
   --bs-backdrop-opacity: 0.68;
+}
+
+/* Dark-mode completion layer: page-specific components that use fixed light colours. */
+[data-theme="dark"] .navbar {
+  background: rgba(9, 15, 29, 0.92) !important;
+  border-bottom-color: var(--glass-border) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .navbar-toggler {
+  border-color: var(--line) !important;
+  color: var(--ink) !important;
+}
+
+[data-theme="dark"] .navbar .btn-light,
+[data-theme="dark"] .navbar .btn.fs-4 {
+  background: var(--surface-elevated) !important;
+  color: var(--ink) !important;
+  border-color: var(--line) !important;
+}
+
+[data-theme="dark"] .navbar .btn-light .text-dark,
+[data-theme="dark"] .offcanvas .text-black,
+[data-theme="dark"] .offcanvas .text-dark {
+  color: var(--ink) !important;
+}
+
+[data-theme="dark"] .input-group-text,
+[data-theme="dark"] .search-box .input-group-text {
+  background: var(--surface-elevated) !important;
+  color: var(--muted) !important;
+  border-color: var(--line) !important;
+}
+
+[data-theme="dark"] .live-search-dropdown,
+[data-theme="dark"] .search-result,
+[data-theme="dark"] .cart-drawer-panel {
+  background: var(--surface-card) !important;
+  border-color: var(--line) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+[data-theme="dark"] .search-item-row,
+[data-theme="dark"] .search-result li,
+[data-theme="dark"] .cart-drawer-header,
+[data-theme="dark"] .cart-drawer-footer {
+  background: transparent !important;
+  border-color: var(--line) !important;
+}
+
+[data-theme="dark"] .search-item-row:hover,
+[data-theme="dark"] .search-result li:hover {
+  background: rgba(96, 165, 250, 0.12) !important;
+}
+
+[data-theme="dark"] .search-item-thumb,
+[data-theme="dark"] .vendor-product-image,
+[data-theme="dark"] .container.my-5 .row.g-5 > .col-lg-6:first-child {
+  background: var(--surface-elevated) !important;
+  border-color: var(--line) !important;
+}
+
+[data-theme="dark"] .category-card,
+[data-theme="dark"] .brand-card,
+[data-theme="dark"] .container.my-5 .row.g-5,
+[data-theme="dark"] .container.mt-5 .col-lg-3.d-none.d-md-block {
+  background: linear-gradient(180deg, var(--surface-card), #101827) !important;
+  border-color: var(--line) !important;
+}
+
+[data-theme="dark"] .checkout-card,
+[data-theme="dark"] .checkout-payment-box .accordion-item,
+[data-theme="dark"] .contact-form-card,
+[data-theme="dark"] .contact-form-section,
+[data-theme="dark"] .vendor-benefits-panel,
+[data-theme="dark"] .vendor-login-page,
+[data-theme="dark"] .account-page,
+[data-theme="dark"] .account-panel {
+  background: var(--surface-card) !important;
+  border-color: var(--line) !important;
+  color: var(--ink) !important;
+}
+
+[data-theme="dark"] .contact-page,
+[data-theme="dark"] .checkout-page,
+[data-theme="dark"] .vendor-page,
+[data-theme="dark"] .vendor-login-page,
+[data-theme="dark"] .vendor-dashboard,
+[data-theme="dark"] .account-page {
+  color: var(--ink) !important;
+  background: var(--surface-soft) !important;
+}
+
+[data-theme="dark"] .contact-form-visual,
+[data-theme="dark"] .contact-store-image {
+  background: var(--surface-elevated) !important;
+}
+
+[data-theme="dark"] .contact-form-card h2,
+[data-theme="dark"] .vendor-benefits-panel h2,
+[data-theme="dark"] .vendor-summary-card strong,
+[data-theme="dark"] .vendor-product-info strong,
+[data-theme="dark"] .vendor-empty-state h3 {
+  color: var(--ink) !important;
+}
+
+[data-theme="dark"] .contact-form-intro,
+[data-theme="dark"] .contact-fields label,
+[data-theme="dark"] .contact-save,
+[data-theme="dark"] .vendor-benefits-panel p,
+[data-theme="dark"] .vendor-stat-grid div,
+[data-theme="dark"] .vendor-login-prompt,
+[data-theme="dark"] .vendor-form-heading p,
+[data-theme="dark"] .vendor-login-subtitle,
+[data-theme="dark"] .vendor-field,
+[data-theme="dark"] .vendor-form-note,
+[data-theme="dark"] .vendor-new-account,
+[data-theme="dark"] .vendor-dashboard-head p,
+[data-theme="dark"] .vendor-catalog-top p,
+[data-theme="dark"] .vendor-summary-card small,
+[data-theme="dark"] .vendor-product-info span,
+[data-theme="dark"] .vendor-empty-state,
+[data-theme="dark"] .account-subtitle,
+[data-theme="dark"] .account-check,
+[data-theme="dark"] .account-switch,
+[data-theme="dark"] .account-terms {
+  color: var(--muted) !important;
+}
+
+[data-theme="dark"] .contact-fields input,
+[data-theme="dark"] .contact-fields select,
+[data-theme="dark"] .contact-fields textarea,
+[data-theme="dark"] .vendor-field input,
+[data-theme="dark"] .vendor-outline-btn,
+[data-theme="dark"] .vendor-refresh-btn {
+  background: var(--surface-elevated) !important;
+  color: var(--ink) !important;
+  border-color: var(--line) !important;
+}
+
+[data-theme="dark"] .contact-fields input:focus,
+[data-theme="dark"] .contact-fields select:focus,
+[data-theme="dark"] .contact-fields textarea:focus,
+[data-theme="dark"] .vendor-field input:focus {
+  background: var(--surface-elevated) !important;
+  border-color: var(--brand) !important;
+  box-shadow: var(--focus-ring) !important;
+}
+
+[data-theme="dark"] .vendor-stat-grid strong,
+[data-theme="dark"] .vendor-empty-icon,
+[data-theme="dark"] .vendor-summary-icon.blue {
+  background: rgba(96, 165, 250, 0.14) !important;
+  color: #93c5fd !important;
+}
+
+[data-theme="dark"] .vendor-summary-icon.mint { background: rgba(52, 211, 153, 0.14) !important; color: #6ee7b7 !important; }
+[data-theme="dark"] .vendor-summary-icon.amber { background: rgba(251, 191, 36, 0.14) !important; color: #fcd34d !important; }
+[data-theme="dark"] .vendor-sale-pill { background: rgba(251, 113, 133, 0.16) !important; color: #fda4af !important; }
+[data-theme="dark"] .vendor-live-pill { background: rgba(52, 211, 153, 0.14) !important; color: #6ee7b7 !important; }
+
+[data-theme="dark"] .contact-status.success { background: rgba(16, 185, 129, 0.15) !important; color: #6ee7b7 !important; }
+[data-theme="dark"] .contact-status.error { background: rgba(244, 63, 94, 0.15) !important; color: #fda4af !important; }
+
+[data-theme="dark"] .marquee-content img,
+[data-theme="dark"] .brandSlider img {
+  background: var(--surface-card) !important;
+  border-color: var(--line) !important;
+}
+
+[data-theme="dark"] .cardicons p,
+[data-theme="dark"] .cardicons .btn {
+  background: var(--surface-elevated) !important;
+  color: var(--ink) !important;
+  border-color: var(--line) !important;
+}
+
+[data-theme="dark"] #goTopBtn .go-top-icon {
+  color: #93c5fd;
+  background: var(--surface-card);
+  border-color: var(--line);
+}
+
+/* Header refinement: keep the search control as one clean field in dark mode. */
+[data-theme="dark"] .navbar .search-box {
+  background: transparent !important;
+  border: 0 !important;
+  color: inherit !important;
+}
+
+[data-theme="dark"] .sticky-glass-nav {
+  background: rgba(7, 12, 25, 0.94) !important;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.18) !important;
+}
+
+@media (min-width: 992px) {
+  .sticky-glass-nav {
+    min-height: 72px;
+  }
+
+  .sticky-glass-nav .container {
+    gap: 22px;
+  }
+
+  .sticky-glass-nav .search-box {
+    width: min(350px, 25vw) !important;
+    margin-inline: 4px !important;
+  }
+
+  .sticky-glass-nav .navbar-nav {
+    gap: 4px !important;
+  }
+
+  .sticky-glass-nav .nav-link {
+    padding: 9px 12px !important;
+  }
+
+  .sticky-glass-nav .ms-lg-4 {
+    margin-left: 10px !important;
+    gap: 8px !important;
+  }
+}
+
+.sticky-glass-nav .search-box .input-group {
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.sticky-glass-nav .search-box .input-group-text {
+  min-width: 48px;
+  justify-content: center;
+  border-right: 0 !important;
+  border-radius: 999px 0 0 999px !important;
+}
+
+.sticky-glass-nav .search-box .form-control {
+  border-left: 0 !important;
+  border-radius: 0 999px 999px 0 !important;
+}
+
+[data-theme="dark"] .sticky-glass-nav .search-box .input-group-text,
+[data-theme="dark"] .sticky-glass-nav .search-box .form-control {
+  background: #17233a !important;
+  border-color: rgba(148, 163, 184, 0.22) !important;
+}
+
+[data-theme="dark"] .sticky-glass-nav .search-box .form-control::placeholder {
+  color: #a8b5c8 !important;
+}
+
+[data-theme="dark"] .sticky-glass-nav .search-box:focus-within .input-group-text,
+[data-theme="dark"] .sticky-glass-nav .search-box:focus-within .form-control {
+  border-color: #60a5fa !important;
+  box-shadow: none !important;
+}
+
+/* Static mobile hero: avoids a continuously-rendered WebGL canvas on small devices. */
+.hero-lightfall-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(125, 211, 252, 0.44), transparent 32%),
+    radial-gradient(circle at 84% 74%, rgba(255, 159, 252, 0.28), transparent 35%),
+    linear-gradient(135deg, #0a29ff 0%, #2437d8 48%, #5227ff 100%);
+}
+
+.hero-lightfall-fallback-dark {
+  background:
+    radial-gradient(circle at 18% 18%, rgba(96, 165, 250, 0.25), transparent 32%),
+    radial-gradient(circle at 84% 74%, rgba(168, 85, 247, 0.2), transparent 35%),
+    linear-gradient(135deg, #090d16 0%, #111b3b 48%, #1d163c 100%);
+}
+
+@media (max-width: 767px) {
+  .home-hero {
+    height: 455px !important;
+  }
 }
