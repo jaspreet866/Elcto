@@ -632,50 +632,50 @@ export const Main = () => {
         `}</style>
 
         <div className="home-hero" style={{ width: '100%', height: '580px', position: 'relative', overflow: 'hidden', borderBottom: '1px solid var(--line)' }}>
-          {isMobile ? (
-            <div className={`hero-lightfall-fallback ${theme === 'dark' ? 'hero-lightfall-fallback-dark' : ''}`} aria-hidden="true" />
-          ) : (
-            <Lightfall
-              colors={lightfallColors}
-              backgroundColor={theme === 'dark' ? '#090D16' : '#0A29FF'}
-              dpr={1}
-              speed={0.25}
-              streakCount={8}
-              streakWidth={1.2}
-              streakLength={1}
-              glow={1.2}
-              density={1}
-              twinkle={1}
-              zoom={2.2}
-              backgroundGlow={1}
-              opacity={1}
-              mouseInteraction={true}
-              mouseStrength={1}
-              mouseRadius={0.6}
-            />
-          )}
+          <Lightfall
+            colors={lightfallColors}
+            backgroundColor={theme === 'dark' ? '#090D16' : '#0A29FF'}
+            dpr={isMobile ? 0.7 : 1}
+            speed={isMobile ? 0.16 : 0.25}
+            streakCount={isMobile ? 3 : 8}
+            streakWidth={isMobile ? 0.9 : 1.2}
+            streakLength={isMobile ? 0.72 : 1}
+            glow={isMobile ? 0.8 : 1.2}
+            density={isMobile ? 0.48 : 1}
+            twinkle={isMobile ? 0.35 : 1}
+            zoom={isMobile ? 1.65 : 2.2}
+            backgroundGlow={isMobile ? 0.7 : 1}
+            opacity={1}
+            mouseInteraction={!isMobile}
+            mouseStrength={1}
+            mouseRadius={0.6}
+          />
           <div className="carousel-caption-content" style={{ zIndex: 10, pointerEvents: 'auto' }}>
               <div className="hero-badge hero-badge-animated text-white" style={{ background: 'linear-gradient(135deg, #5227FF, #FF9FFC)', border: '1px solid rgba(255, 255, 255, 0.35)' }}>
                   <i className="bi bi-lightning-charge-fill"></i> Flagship Store 2026
               </div>
               <div className="my-3 hero-title-animated">
-                <EchoText
-                  text="ElectoMart - Your Tech Partner"
-                  echoes={10}
-                  lag={0.2}
-                  offset={28}
-                  direction="right"
-                  fade={0.7}
-                  blur={3}
-                  tint="#7dd3fc"
-                  mode="both"
-                  cursorRadius={300}
-                  duration={900}
-                  ease="ease-out"
-                  fontSize="clamp(1.75rem, 4.5vw, 3.5rem)"
-                  fontWeight={800}
-                  color="#ffffff"
-                />
+                {isMobile ? (
+                  <h1 className="hero-mobile-title">ElectoMart — Your Tech Partner</h1>
+                ) : (
+                  <EchoText
+                    text="ElectoMart - Your Tech Partner"
+                    echoes={10}
+                    lag={0.2}
+                    offset={28}
+                    direction="right"
+                    fade={0.7}
+                    blur={3}
+                    tint="#7dd3fc"
+                    mode="both"
+                    cursorRadius={300}
+                    duration={900}
+                    ease="ease-out"
+                    fontSize="clamp(1.75rem, 4.5vw, 3.5rem)"
+                    fontWeight={800}
+                    color="#ffffff"
+                  />
+                )}
               </div>
               <p className="hero-desc hero-desc-animated d-none d-sm-block">Upgrade your digital lifestyle with high-speed smartphones, flagship workstations, and studio audio devices.</p>
               <div className="d-flex gap-3 flex-wrap hero-actions-animated">

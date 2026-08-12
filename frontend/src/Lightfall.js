@@ -200,6 +200,8 @@ const Lightfall = ({
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+    let isVisible = true;
+    let isDocumentVisible = !document.hidden;
 
     let renderer;
     try {
@@ -272,6 +274,19 @@ const Lightfall = ({
     const ro = new ResizeObserver(resize);
     ro.observe(container);
 
+    const intersectionObserver = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+      },
+      { threshold: 0.01 }
+    );
+    intersectionObserver.observe(container);
+
+    const onVisibilityChange = () => {
+      isDocumentVisible = !document.hidden;
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
     const onPointerMove = e => {
       const rect = canvas.getBoundingClientRect();
       const scale = renderer.dpr || 1;
@@ -303,7 +318,7 @@ const Lightfall = ({
       } else {
         lastTimeRef.current = t;
       }
-      if (!paused && programRef.current && meshRef.current) {
+      if (!paused && isVisible && isDocumentVisible && programRef.current && meshRef.current) {
         try {
           renderer.render({ scene: meshRef.current });
         } catch (e) {
@@ -317,6 +332,8 @@ const Lightfall = ({
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       if (mouseInteraction) canvas.removeEventListener('pointermove', onPointerMove);
       ro.disconnect();
+      intersectionObserver.disconnect();
+      document.removeEventListener('visibilitychange', onVisibilityChange);
       if (canvas.parentElement === container) {
         container.removeChild(canvas);
       }

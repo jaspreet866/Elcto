@@ -103,6 +103,21 @@ export const Header = () => {
                         </Link>
                     </div>
 
+                    <div className="header-mobile-actions d-lg-none">
+                        <button
+                            className="btn btn-theme-toggle header-mobile-action"
+                            onClick={toggleTheme}
+                            title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+                            aria-pressed={theme === "dark"}
+                        >
+                            <i className={`bi ${theme === "dark" ? "bi-sun-fill text-warning" : "bi-moon-stars-fill text-primary"}`}></i>
+                        </button>
+                        <button className="btn header-mobile-action position-relative" onClick={cart} aria-label="Open cart">
+                            <i className="bi bi-bag-fill"></i>
+                        </button>
+                    </div>
+
                     <div className="search-box d-none d-lg-block search-input-wrapper flex-grow-1 max-w-md mx-4" style={{ maxWidth: "380px" }}>
                         <div className="input-group">
                             <span className="input-group-text bg-light border-0 rounded-start-pill ps-3 text-muted">
