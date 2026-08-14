@@ -360,14 +360,13 @@ app.get("/api/getcategory", async (req, res) => {
 
 app.put("/api/updatepro/:id", async (req, res) => {
     // Run multer upload inside the route so we can catch upload errors (Cloudinary/multer)
-    upload.single("pic")(req, res, async function (uploadErr) {
+    upload.any()(req, res, async function (uploadErr) {
         if (uploadErr) {
             console.error('Upload error in /api/updatepro/:id', uploadErr);
             return res.status(500).send({ statuscode: 0, error: uploadErr.message });
         }
 
         try {
-            // Build update object conditionally to avoid accessing req.file when undefined
             const updateFields = {
                 Category: req.body.productt,
                 ProductName: req.body.name,
@@ -380,17 +379,18 @@ app.put("/api/updatepro/:id", async (req, res) => {
                 Specifications: req.body.specifications || req.body.Specifications
             };
 
-            // If a file was uploaded, set Img to the Cloudinary path; otherwise leave unchanged
-            if (req.file && req.file.path) {
-                updateFields.Img = req.file.path;
+            const uploadedFiles = req.files || (req.file ? [req.file] : []);
+            if (uploadedFiles.length > 0) {
+                const imagePaths = uploadedFiles.map(f => f.path || f.secure_url || f.filename);
+                updateFields.Img = imagePaths[0];
+                updateFields.Images = imagePaths;
             }
 
             const result = await pro.updateOne({ _id: req.params.id }, { $set: updateFields });
 
-            if (result.modifiedCount === 1) {
+            if (result.modifiedCount === 1 || result.matchedCount === 1) {
                 res.send({ statuscode: 1 });
             } else {
-                // If nothing was modified, still return informative response
                 res.send({ statuscode: 0, message: 'No changes made' });
             }
         } catch (err) {
@@ -474,42 +474,53 @@ const product = new mongoose.Schema({
     SalePrice: String,
     Date: String,
     Img: String,
+    Images: [String],
     Brand: String,
     Specifications: String,
     AddedBy: String,
-    VendorId:String
+    VendorId: String
 })
 
 const pro = mongoose.model("Product", product)
 
-app.post("/api/product", upload.single("pic"), async (req, res) => {
-    const result = new pro({
-        Category: req.body.productt,
-        ProductName: req.body.name,
-        ProductPrice: req.body.price,
-        ProductDetail: req.body.detail,
-        OnSale: req.body.sale,
-        Date: new Date(),
-        SalePrice: req.body.saleprice,
-        Brand: req.body.brand,
-        Specifications: req.body.Specifications,
-        Img: req.file.path,
-        AddedBy: req.body.addedBy,
-        VendorId:req.body.vendorid
-
-    })
-
-    if (result) {
-        const resp = await result.save()
-        if (resp) {
-            res.send({ statuscode: 1 })
+app.post("/api/product", (req, res) => {
+    upload.any()(req, res, async function (uploadErr) {
+        if (uploadErr) {
+            console.error('Upload error in /api/product', uploadErr);
+            return res.status(500).send({ statuscode: 0, error: uploadErr.message });
         }
-        else {
-            res.send({ statuscode: 0 })
-        }
-    }
+        try {
+            const uploadedFiles = req.files || (req.file ? [req.file] : []);
+            const imagePaths = uploadedFiles.map(f => f.path || f.secure_url || f.filename);
 
-})
+            const result = new pro({
+                Category: req.body.productt,
+                ProductName: req.body.name,
+                ProductPrice: req.body.price,
+                ProductDetail: req.body.detail,
+                OnSale: req.body.sale,
+                Date: new Date(),
+                SalePrice: req.body.saleprice,
+                Brand: req.body.brand,
+                Specifications: req.body.Specifications,
+                Img: imagePaths[0] || '',
+                Images: imagePaths,
+                AddedBy: req.body.addedBy,
+                VendorId: req.body.vendorid
+            });
+
+            const resp = await result.save();
+            if (resp) {
+                res.send({ statuscode: 1 });
+            } else {
+                res.send({ statuscode: 0 });
+            }
+        } catch (err) {
+            console.error('Error in /api/product', err);
+            res.status(500).send({ statuscode: 0, error: err.message });
+        }
+    });
+});
 
 app.get("/api/laptop", async (req, res) => {
     const result = await pro.find({ Category: '6970dd60300a757a6dcdb92e' }).limit(8)
@@ -571,28 +582,7 @@ app.delete("/api/deletepro/:id", async (req, res) => {
     }
 })
 
-app.put("/api/updatepro/:id", upload.single("pic"), async (req, res) => {
-    const result = await pro.updateOne({ _id: req.params.id }, {
-        $set: {
-            Category: req.body.productt,
-            ProductName: req.body.name,
-            ProductPrice: req.body.price,
-            ProductDetail: req.body.detail,
-            OnSale: req.body.sale,
-            Date: new Date(),
-            SalePrice: req.body.saleprice,
-            Brand: req.body.brand,
-            Specifications: req.body.specifications,
-            Img: req.file.path
-        }
-    })
-    if (result.modifiedCount === 1) {
-        res.send({ statuscode: 1 })
-    }
-    else {
-        res.send({ statuscode: 0 })
-    }
-})
+
 
 app.get("/api/related/:id", async (req, res) => {
     const result = await pro.find({ Category: req.params.id })

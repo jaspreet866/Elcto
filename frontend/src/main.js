@@ -14,6 +14,7 @@ import { motion } from 'framer-motion'
 import CursorGrid from './CursorGrid'
 import Lightfall from './Lightfall'
 import EchoText from './EchoText'
+import { ImageModal } from './ImageModal'
 
 export const Main = () => {
     const [d, setd] = useState([])
@@ -28,6 +29,18 @@ export const Main = () => {
     const { id, theme } = useContext(Context)
     const [discount, setdiscount] = useState("")
     const [showTop, setShowTop] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalData, setModalData] = useState({ img: "", title: "", price: "", salePrice: "" });
+
+    const openImageModal = (imgSrc, titleText, itemPrice, itemSalePrice) => {
+        setModalData({
+            img: imgSrc,
+            title: titleText,
+            price: itemPrice,
+            salePrice: itemSalePrice
+        });
+        setIsModalOpen(true);
+    };
     const [scrollProgress, setScrollProgress] = useState(0);
     const [isMobile, setIsMobile] = useState(
         () => window.matchMedia?.("(max-width: 767px), (prefers-reduced-motion: reduce)")?.matches ?? false
@@ -817,14 +830,15 @@ export const Main = () => {
                             <div className="card w-100 border-0 card-sm- shadow-sm text-center p-3" data-aos="fade-up">
                                 <div className='cardicons justify-self-end'>
 
-                                    <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id, p.SalePrice) }}><i class="bi bi-heart-fill"></i>
+                                    <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id, p.SalePrice) }}><i className="bi bi-heart-fill"></i>
                                     </p>
-                                    <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}><i class="bi bi-cart"></i></p>
-                                    <p><i class="bi bi-eye"></i></p>
+                                    <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}><i className="bi bi-cart"></i></p>
+                                    <p className="btn" onClick={() => openImageModal(p.Img, p.ProductName, p.ProductPrice, p.SalePrice)} title="Quick view image"><i className="bi bi-eye"></i></p>
                                 </div>
                                 <div
-                                    className=" rounded d-flex justify-content-center align-items-center mb-3"
-                                    style={{ height: "150px" }}
+                                    className=" rounded d-flex justify-content-center align-items-center mb-3 cursor-pointer"
+                                    style={{ height: "150px", cursor: "zoom-in" }}
+                                    onClick={() => openImageModal(p.Img, p.ProductName, p.ProductPrice, p.SalePrice)}
                                 >
                                     <img
                                         src={`${p.Img}`}
@@ -888,12 +902,12 @@ export const Main = () => {
                                 </div>
                                 <div className='cardicons justify-self-end'>
 
-                                    <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id, p.SalePrice) }}><i class="bi bi-heart-fill"></i>
+                                    <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id, p.SalePrice) }}><i className="bi bi-heart-fill"></i>
                                     </p>
-                                    <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity) }}><i class="bi bi-cart"></i></p>
-                                    <p><i class="bi bi-eye"></i></p>
+                                    <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity) }}><i className="bi bi-cart"></i></p>
+                                    <p className="btn" onClick={() => openImageModal(p.Img, p.ProductName, p.ProductPrice, p.SalePrice)} title="Quick view image"><i className="bi bi-eye"></i></p>
                                 </div>
-                                <div className=" rounded d-flex justify-content-center align-items-center mb-3" style={{ height: "150px" }}>
+                                <div className=" rounded d-flex justify-content-center align-items-center mb-3 cursor-pointer" style={{ height: "150px", cursor: "zoom-in" }} onClick={() => openImageModal(p.Img, p.ProductName, p.ProductPrice, p.SalePrice)}>
                                     <img
                                         src={`${p.Img}`}
                                         alt={p.name}
@@ -949,12 +963,12 @@ export const Main = () => {
                             <div className="card w-100 border-0 shadow-sm text-center p-3" data-aos="fade-up">
                                 <div className='cardicons justify-self-end'>
 
-                                    <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id, p.SalePrice) }}><i class="bi bi-heart-fill"></i>
+                                    <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id, p.SalePrice) }}><i className="bi bi-heart-fill"></i>
                                     </p>
-                                    <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}><i class="bi bi-cart"></i></p>
-                                    <p><i class="bi bi-eye"></i></p>
+                                    <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}><i className="bi bi-cart"></i></p>
+                                    <p className="btn" onClick={() => openImageModal(p.Img, p.ProductName, p.ProductPrice, p.SalePrice)} title="Quick view image"><i className="bi bi-eye"></i></p>
                                 </div>
-                                <div className=" rounded d-flex justify-content-center align-items-center mb-3" style={{ height: "150px" }}>
+                                <div className=" rounded d-flex justify-content-center align-items-center mb-3 cursor-pointer" style={{ height: "150px", cursor: "zoom-in" }} onClick={() => openImageModal(p.Img, p.ProductName, p.ProductPrice, p.SalePrice)}>
                                     <img
                                         src={`${p.Img}`}
                                         alt={p.name}
@@ -1010,12 +1024,12 @@ export const Main = () => {
                             <div className="card w-100 border-0 shadow-sm text-center p-3" data-aos="fade-up">
                                 <div className='cardicons justify-self-end'>
 
-                                    <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id, p.SalePrice) }}><i class="bi bi-heart-fill"></i>
+                                    <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id, p.SalePrice) }}><i className="bi bi-heart-fill"></i>
                                     </p>
-                                    <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}><i class="bi bi-cart"></i></p>
-                                    <p><i class="bi bi-eye"></i></p>
+                                    <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}><i className="bi bi-cart"></i></p>
+                                    <p className="btn" onClick={() => openImageModal(p.Img, p.ProductName, p.ProductPrice, p.SalePrice)} title="Quick view image"><i className="bi bi-eye"></i></p>
                                 </div>
-                                <div className=" rounded d-flex justify-content-center align-items-center mb-3" style={{ height: "150px" }}>
+                                <div className=" rounded d-flex justify-content-center align-items-center mb-3 cursor-pointer" style={{ height: "150px", cursor: "zoom-in" }} onClick={() => openImageModal(p.Img, p.ProductName, p.ProductPrice, p.SalePrice)}>
                                     <img
                                         src={`${p.Img}`}
                                         alt={p.name}
@@ -1070,12 +1084,12 @@ export const Main = () => {
                             <div className="card w-100 border-0 shadow-sm text-center p-3" data-aos="fade-up">
                                 <div className='cardicons justify-self-end'>
 
-                                    <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id, p.SalePrice) }}><i class="bi bi-heart-fill"></i>
+                                    <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id, p.SalePrice) }}><i className="bi bi-heart-fill"></i>
                                     </p>
-                                    <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}><i class="bi bi-cart"></i></p>
-                                    <p><i class="bi bi-eye"></i></p>
+                                    <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}><i className="bi bi-cart"></i></p>
+                                    <p className="btn" onClick={() => openImageModal(p.Img, p.ProductName, p.ProductPrice, p.SalePrice)} title="Quick view image"><i className="bi bi-eye"></i></p>
                                 </div>
-                                <div className=" rounded d-flex justify-content-center align-items-center mb-3" style={{ height: "150px" }}>
+                                <div className=" rounded d-flex justify-content-center align-items-center mb-3 cursor-pointer" style={{ height: "150px", cursor: "zoom-in" }} onClick={() => openImageModal(p.Img, p.ProductName, p.ProductPrice, p.SalePrice)}>
                                     <img
                                         src={`${p.Img}`}
                                         alt={p.name}
@@ -1131,12 +1145,12 @@ export const Main = () => {
                             <div className="card w-100 border-0 shadow-sm text-center p-3" data-aos="fade-up">
                                 <div className='cardicons justify-self-end'>
 
-                                    <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id, p.SalePrice) }}><i class="bi bi-heart-fill"></i>
+                                    <p className='text-danger btn' onClick={() => { wish(id, p.ProductName, p.ProductPrice, p.Img, p._id, p.SalePrice) }}><i className="bi bi-heart-fill"></i>
                                     </p>
-                                    <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}><i class="bi bi-cart"></i></p>
-                                    <p><i class="bi bi-eye"></i></p>
+                                    <p className='btn' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}><i className="bi bi-cart"></i></p>
+                                    <p className="btn" onClick={() => openImageModal(p.Img, p.ProductName, p.ProductPrice, p.SalePrice)} title="Quick view image"><i className="bi bi-eye"></i></p>
                                 </div>
-                                <div className=" rounded d-flex justify-content-center align-items-center mb-3" style={{ height: "150px" }}>
+                                <div className=" rounded d-flex justify-content-center align-items-center mb-3 cursor-pointer" style={{ height: "150px", cursor: "zoom-in" }} onClick={() => openImageModal(p.Img, p.ProductName, p.ProductPrice, p.SalePrice)}>
                                     <img
                                         src={`${p.Img}`}
                                         alt={p.name}
@@ -1285,6 +1299,15 @@ export const Main = () => {
                     </span>
                 </button>
             )}
+
+            <ImageModal 
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                imgSrc={modalData.img}
+                title={modalData.title}
+                price={modalData.price}
+                salePrice={modalData.salePrice}
+            />
         </>
     )
 };

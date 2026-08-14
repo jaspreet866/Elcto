@@ -4,6 +4,8 @@ import { Rating } from 'react-simple-star-rating'
 import Swal from "sweetalert2"
 import { Context } from "./usecontext"
 import { motion } from 'framer-motion'
+import { ImageModal } from "./ImageModal"
+import { API_BASE } from "./apiConfig"
 
 export const Detail = () => {
     const [pro, setpro] = useState("")
@@ -27,7 +29,20 @@ export const Detail = () => {
     const [rating, setrating] = useState(0)
     const [review, setreview] = useState([])
     const navigate = useNavigate()
-const [activeTab, setActiveTab] = useState("specifications");
+    const [activeTab, setActiveTab] = useState("specifications");
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalData, setModalData] = useState({ img: "", title: "", price: "", salePrice: "" });
+    const [imgList, setImgList] = useState([]);
+
+    const openImageModal = (imgSrc, titleText, itemPrice, itemSalePrice) => {
+        setModalData({
+            img: imgSrc,
+            title: titleText,
+            price: itemPrice,
+            salePrice: itemSalePrice
+        });
+        setIsModalOpen(true);
+    };
     useEffect(() => {
         show();
         show2()
@@ -35,7 +50,7 @@ const [activeTab, setActiveTab] = useState("specifications");
     }, [prr])
 
     const show = async () => {
-        const result = await fetch(`https://elcto-1.onrender.com/api/detail/${prr}`, {
+        const result = await fetch(`${API_BASE}/api/detail/${prr}`, {
             method: "get"
         })
         if (result.ok) {
@@ -46,7 +61,13 @@ const [activeTab, setActiveTab] = useState("specifications");
                 setsaleprice(res.data.SalePrice)
                 setpro(res.data.Category)
                 setdetail(res.data.ProductDetail)
-                setimg(res.data.Img)
+                if (res.data.Images && Array.isArray(res.data.Images) && res.data.Images.length > 0) {
+                    setImgList(res.data.Images);
+                    setimg(res.data.Images[0]);
+                } else {
+                    setimg(res.data.Img);
+                    if (res.data.Img) setImgList([res.data.Img]);
+                }
                 setSpecs(res.data.Specifications)
                 setidd(id)
             }
@@ -57,7 +78,7 @@ const [activeTab, setActiveTab] = useState("specifications");
     }
     const goto = async () => {
         const data = { value, img, name, price, id, prr }
-        const result = await fetch(`https://elcto-1.onrender.com/api/cartdata/${prr}`, {
+        const result = await fetch(`${API_BASE}/api/cartdata/${prr}`, {
             method: "post",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }
@@ -86,7 +107,7 @@ const [activeTab, setActiveTab] = useState("specifications");
     }
 
     const show2 = async () => {
-        const result = await fetch(`https://elcto-1.onrender.com/api/relatedtwo/${catidd}`, {
+        const result = await fetch(`${API_BASE}/api/relatedtwo/${catidd}`, {
             method: "get"
         })
         if (result.ok) {
@@ -102,7 +123,7 @@ const [activeTab, setActiveTab] = useState("specifications");
 
     const wish = async () => {
         const data = { img, name, price, id, }
-        const result = await fetch(`https://elcto-1.onrender.com/api/wishpost/${prr}`, {
+        const result = await fetch(`${API_BASE}/api/wishpost/${prr}`, {
             method: "post",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }
@@ -135,7 +156,7 @@ const [activeTab, setActiveTab] = useState("specifications");
     }
     const wish2 = async (id, name, price, img, prr) => {
         const data = { id, name, price, img }
-        const result = await fetch(`https://elcto-1.onrender.com/api/wishpost/${prr}`, {
+        const result = await fetch(`${API_BASE}/api/wishpost/${prr}`, {
             method: "post",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }
@@ -165,7 +186,7 @@ const [activeTab, setActiveTab] = useState("specifications");
     }
     const cart = async (id, name, price, img, value = 1, prr) => {
         const data = { id, name, price, img, value }
-        const result = await fetch(`https://elcto-1.onrender.com/api/cartdata/${prr}`, {
+        const result = await fetch(`${API_BASE}/api/cartdata/${prr}`, {
             method: "post",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }
@@ -246,16 +267,42 @@ const [activeTab, setActiveTab] = useState("specifications");
                     <div className="row g-5">
                         {/* Product Image */}
                         <div className="col-lg-6 text-center col-12">
-                            <motion.img
-                                src={`${img}`}
-                                className="img-fluid rounded"
-                                style={{ maxHeight: "420px", objectFit: "contain" }}
-                                alt={name}
-                                initial={{ opacity: 0, scale: 0.92 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                whileHover={{ scale: 1.05 }}
-                                transition={{ duration: 0.4 }}
-                            />
+                            <div 
+                                className="position-relative d-inline-block rounded p-2 overflow-hidden shadow-sm hover-shadow transition-all"
+                                style={{ cursor: "zoom-in" }}
+                                onClick={() => openImageModal(img, name, price, saleprice)}
+                                title="Click to view full image"
+                            >
+                                <motion.img
+                                    src={`${img}`}
+                                    className="img-fluid rounded"
+                                    style={{ maxHeight: "420px", objectFit: "contain" }}
+                                    alt={name}
+                                    initial={{ opacity: 0, scale: 0.92 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    whileHover={{ scale: 1.04 }}
+                                    transition={{ duration: 0.4 }}
+                                />
+                                <div className="position-absolute bottom-0 end-0 m-3 px-3 py-1 bg-dark bg-opacity-75 text-white rounded-pill small">
+                                    <i className="bi bi-arrows-angle-expand me-1"></i> Expand Image
+                                </div>
+                            </div>
+
+                            {/* Multiple Images Thumbnail Gallery */}
+                            {imgList.length > 1 && (
+                                <div className="d-flex gap-2 justify-content-center mt-3 overflow-auto py-2">
+                                    {imgList.map((thumbUrl, idx) => (
+                                        <img
+                                            key={idx}
+                                            src={thumbUrl}
+                                            alt={`${name} thumbnail ${idx + 1}`}
+                                            className={`rounded border ${img === thumbUrl ? 'border-primary border-3 shadow' : 'opacity-75'}`}
+                                            style={{ width: "65px", height: "65px", objectFit: "contain", cursor: "pointer", transition: "all 0.2s" }}
+                                            onClick={() => setimg(thumbUrl)}
+                                        />
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         {/* Product Details */}
@@ -480,17 +527,17 @@ const [activeTab, setActiveTab] = useState("specifications");
                         <div className="col-lg-3 col-md-4 col-sm-6 col-6" key={a._id}>
                             <div className="card w-100 border-0 shadow-sm wishlist-card">
                                 <div className='cardicons justify-self-end'>
-                                    <p className='text-danger btn' onClick={() => { wish2(id, a.ProductName, a.ProductPrice, a.Img, a._id) }}><i class="bi bi-heart-fill"></i>
+                                    <p className='text-danger btn' onClick={() => { wish2(id, a.ProductName, a.ProductPrice, a.Img, a._id) }}><i className="bi bi-heart-fill"></i>
                                     </p>
-                                    <p className="btn" onClick={() => { cart(id, a.ProductName, a.ProductPrice, a.Img, a.Quantity, a._id) }}><i class="bi bi-cart"></i></p>
-                                    <p><i class="bi bi-eye"></i></p>
+                                    <p className="btn" onClick={() => { cart(id, a.ProductName, a.ProductPrice, a.Img, a.Quantity, a._id) }}><i className="bi bi-cart"></i></p>
+                                    <p className="btn" onClick={() => openImageModal(a.Img, a.ProductName, a.ProductPrice, a.SalePrice)} title="Quick view image"><i className="bi bi-eye"></i></p>
                                 </div>
-                                <div className="">
+                                <div className="cursor-pointer" onClick={() => openImageModal(a.Img, a.ProductName, a.ProductPrice, a.SalePrice)}>
                                     <img
                                         src={`${a.Img}`}
                                         className="card-img-top p-3"
                                         alt={a.ProductName}
-                                        style={{ height: "140px", objectFit: "contain" }}
+                                        style={{ height: "140px", objectFit: "contain", cursor: "zoom-in" }}
                                     />
                                 </div>
 
@@ -528,6 +575,14 @@ const [activeTab, setActiveTab] = useState("specifications");
                 
             </div>
             
+            <ImageModal 
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                imgSrc={modalData.img}
+                title={modalData.title}
+                price={modalData.price}
+                salePrice={modalData.salePrice}
+            />
         </>
     )
 }

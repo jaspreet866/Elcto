@@ -4,6 +4,7 @@ import Swal from "sweetalert2"
 import { Context } from "./usecontext"
 import Splide from '@splidejs/splide'
 import '@splidejs/splide/css'
+import { ImageModal } from "./ImageModal"
 
 export const Related = () => {
     const [d, setd] = useState([])
@@ -14,6 +15,18 @@ export const Related = () => {
     const [pr] = useSearchParams()
     const navigate = useNavigate()
     const prr = pr.get("id")
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalData, setModalData] = useState({ img: "", title: "", price: "", salePrice: "" });
+
+    const openImageModal = (imgSrc, titleText, itemPrice, itemSalePrice) => {
+        setModalData({
+            img: imgSrc,
+            title: titleText,
+            price: itemPrice,
+            salePrice: itemSalePrice
+        });
+        setIsModalOpen(true);
+    };
 
     useEffect(() => {
         if (prr) {
@@ -268,13 +281,17 @@ export const Related = () => {
                                         <div className="card border-0 shadow-sm text-center p-3 w-100">
                                             <div className='cardicons justify-self-end'>
 
-                                                <p className='text-danger btn' onClick={() => { wish(id, b.ProductName, b.ProductPrice, b.Img, b._id) }}><i class="bi bi-heart-fill"></i>
+                                                <p className='text-danger btn' onClick={() => { wish(id, b.ProductName, b.ProductPrice, b.Img, b._id) }}><i className="bi bi-heart-fill"></i>
                                                 </p>
-                                                <p className="btn" onClick={() => { cart(id, b.ProductName, b.ProductPrice, b.Img, b.Quantity, b._id) }}><i class="bi bi-cart"></i></p>
-                                                <p><i class="bi bi-eye"></i></p>
+                                                <p className="btn" onClick={() => { cart(id, b.ProductName, b.ProductPrice, b.Img, b.Quantity, b._id) }}><i className="bi bi-cart"></i></p>
+                                                <p className="btn" onClick={(e) => { e.preventDefault(); e.stopPropagation(); openImageModal(b.Img, b.ProductName, b.ProductPrice, b.SalePrice); }} title="Quick view image"><i className="bi bi-eye"></i></p>
                                             </div>
 
-                                            <div className="d-flex justify-content-center align-items-center mb-3" style={{ height: "150px" }}>
+                                            <div 
+                                                className="d-flex justify-content-center align-items-center mb-3 cursor-pointer"
+                                                style={{ height: "150px", cursor: "zoom-in" }}
+                                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); openImageModal(b.Img, b.ProductName, b.ProductPrice, b.SalePrice); }}
+                                            >
                                                 <img
                                                     src={`${b.Img}`}
                                                     alt={b.ProductName}
@@ -376,7 +393,14 @@ export const Related = () => {
 
             </div>
 
-
+            <ImageModal 
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                imgSrc={modalData.img}
+                title={modalData.title}
+                price={modalData.price}
+                salePrice={modalData.salePrice}
+            />
         </>
     )
 }
