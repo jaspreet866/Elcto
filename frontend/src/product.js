@@ -1,6 +1,6 @@
 
 import { useContext, useEffect, useState } from "react"
-import { useNavigate, useSearchParams } from "react-router-dom"
+import { useNavigate, useSearchParams, Navigate } from "react-router-dom"
 import Swal from "sweetalert2"
 import { Context } from "./usecontext"
 import { API_BASE } from "./apiConfig"
@@ -91,47 +91,48 @@ export const Product = () => {
         }
     }
     const show = async (e) => {
-
-
-        const result = await fetch(`${API_BASE}/api/getcategory`, {
-            method: "get"
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setd(res.data)
-
+        try {
+            const result = await fetch(`${API_BASE}/api/getcategory`, {
+                method: "get"
+            })
+            if (result && result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1) {
+                    setd(res.data)
+                }
             }
+        } catch (err) {
+            console.warn("Failed to fetch categories:", err)
         }
     }
     const show2 = async () => {
-        const result = await fetch(`${API_BASE}/api/getbrand2/${pid}`, {
-            method: "get"
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-
-                setdatta(res.data)
+        try {
+            const result = await fetch(`${API_BASE}/api/getbrand2/${pid}`, {
+                method: "get"
+            })
+            if (result && result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1) {
+                    setdatta(res.data)
+                }
             }
-            else {
-                alert("faileds")
-            }
+        } catch (err) {
+            console.warn("Failed to fetch brands:", err)
         }
     }
     const show3 = async () => {
-
-        const result = await fetch(`${API_BASE}/api/getproduct`, {
-            method: "get"
-        })
-        if (result.ok) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setallp(res.data)
+        try {
+            const result = await fetch(`${API_BASE}/api/getproduct`, {
+                method: "get"
+            })
+            if (result && result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1) {
+                    setallp(res.data)
+                }
             }
-            else {
-                alert("not found")
-            }
+        } catch (err) {
+            console.warn("Failed to fetch products:", err)
         }
     }
 
@@ -397,7 +398,7 @@ Camera: 48MP`} value={specifications}
                         </div>
                     </section>
 
-                </> : navigate("/")
+                </> : <Navigate to="/" replace />
             }</>
     )
 }
