@@ -1,12 +1,14 @@
 
 import { useContext, useEffect, useState } from "react"
-import { useNavigate, useSearchParams, Navigate } from "react-router-dom"
+import { useSearchParams, Navigate } from "react-router-dom"
 import Swal from "sweetalert2"
 import { Context } from "./usecontext"
 import { API_BASE } from "./apiConfig"
 
 
 export const Product = () => {
+
+    const PRODUCTS_PER_PAGE = 6
 
     const [product, setproduct] = useState("")
     const [idd, setidd] = useState("")
@@ -24,7 +26,20 @@ export const Product = () => {
     const [d, setd] = useState([])
     const [pid, setpid] = useState("")
     const { utype, id: vendorid } = useContext(Context)
-    const navigate = useNavigate()
+    const [searchParams, setSearchParams] = useSearchParams()
+    const requestedPage = Number(searchParams.get("page"))
+    const currentPage = Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1
+    const totalPages = Math.max(1, Math.ceil(allp.length / PRODUCTS_PER_PAGE))
+    const activePage = Math.min(currentPage, totalPages)
+    const paginatedProducts = allp.slice(
+        (activePage - 1) * PRODUCTS_PER_PAGE,
+        activePage * PRODUCTS_PER_PAGE
+    )
+
+    const changePage = (page) => {
+        const nextPage = Math.min(Math.max(page, 1), totalPages)
+        setSearchParams(nextPage === 1 ? {} : { page: String(nextPage) })
+    }
 
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
@@ -129,6 +144,10 @@ export const Product = () => {
                 const res = await result.json()
                 if (res.statuscode === 1) {
                     setallp(res.data)
+                    const pageCount = Math.max(1, Math.ceil(res.data.length / PRODUCTS_PER_PAGE))
+                    if (currentPage > pageCount) {
+                        setSearchParams(pageCount === 1 ? {} : { page: String(pageCount) })
+                    }
                 }
             }
         } catch (err) {
@@ -374,7 +393,7 @@ Camera: 48MP`} value={specifications}
                     <section>
                         <div className="container">
                             {
-                                allp.map((a) =>
+                                paginatedProducts.map((a) =>
                                     <div key={a._id}>
                                         <div className="card  w-100 my-auto mt-3   " style={{ height: "auto" }}>
                                             <div className="d-flex align-items-center justify-content-between px-4 py-2">
@@ -395,6 +414,46 @@ Camera: 48MP`} value={specifications}
                                         </div>
                                     </div>)
                             }
+                            {allp.length > PRODUCTS_PER_PAGE && (
+                                <nav className="d-flex justify-content-center mt-4" aria-label="Product pagination">
+                                    <ul className="pagination">
+                                        <li className={`page-item ${activePage === 1 ? "disabled" : ""}`}>
+                                            <button
+                                                type="button"
+                                                className="page-link"
+                                                onClick={() => changePage(activePage - 1)}
+                                                disabled={activePage === 1}
+                                                aria-label="Previous page"
+                                            >
+                                                Previous
+                                            </button>
+                                        </li>
+                                        {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                                            <li key={page} className={`page-item ${page === activePage ? "active" : ""}`}>
+                                                <button
+                                                    type="button"
+                                                    className="page-link"
+                                                    onClick={() => changePage(page)}
+                                                    aria-current={page === activePage ? "page" : undefined}
+                                                >
+                                                    {page}
+                                                </button>
+                                            </li>
+                                        ))}
+                                        <li className={`page-item ${activePage === totalPages ? "disabled" : ""}`}>
+                                            <button
+                                                type="button"
+                                                className="page-link"
+                                                onClick={() => changePage(activePage + 1)}
+                                                disabled={activePage === totalPages}
+                                                aria-label="Next page"
+                                            >
+                                                Next
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            )}
                         </div>
                     </section>
 
