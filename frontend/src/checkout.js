@@ -78,21 +78,6 @@ export const Check = () => {
         return false
     }
 
-    const deletecart = async () => {
-        const result = await fetch(`${API_BASE}/api/removecartdata/${id}`, {
-            method: "delete"
-        })
-        if (result.ok) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-
-            }
-            else {
-                alert("not")
-            }
-        }
-    }
-
     const handleCheckout = async (e) => {
         e.preventDefault()
 
@@ -112,10 +97,7 @@ export const Check = () => {
         }
 
         setsaving(true)
-        const saved = await save()
-        if (saved) {
-            await deletecart()
-        }
+        await save()
         setsaving(false)
     }
 
