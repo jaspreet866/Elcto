@@ -23,6 +23,7 @@ export const Product = () => {
     const [saleprice, setsaleprice] = useState()
     const [specifications, setSpecifications] = useState("");
     const [allp, setallp] = useState([])
+    const [stock, setstock] = useState()
     const [d, setd] = useState([])
     const [pid, setpid] = useState("")
     const { utype, id: vendorid } = useContext(Context)
@@ -82,6 +83,7 @@ export const Product = () => {
         formData.append("detail", detail)
         formData.append("sale", sale)
         formData.append("brand", brand)
+        formData.append("stock", stock)
         formData.append("Specifications", specifications);
         formData.append("vendorid", vendorid)
 
@@ -327,6 +329,7 @@ Camera: 48MP`} value={specifications}
                                             <input className="form-check-input" type="checkbox" checked={sale} onChange={(e) => setsale(e.target.checked)} />
                                             <label className="form-check-label" htmlFor="switchCheckChecked">On Sale</label>
                                         </div>
+                                        <input type="number" className="form-control mt-3" value={stock} placeholder="Product Stock" onChange={(e) => setstock(e.target.value)}></input>
 
                                         <input type="number" className="form-control mt-3" value={saleprice} placeholder="Sale Price" onChange={(e) => setsaleprice(e.target.value)}></input>
 

@@ -474,6 +474,7 @@ const product = new mongoose.Schema({
     SalePrice: String,
     Date: String,
     Img: String,
+    Stock:Number,
     Images: [String],
     Brand: String,
     Specifications: String,
@@ -492,6 +493,11 @@ app.post("/api/product", (req, res) => {
         try {
             const uploadedFiles = req.files || (req.file ? [req.file] : []);
             const imagePaths = uploadedFiles.map(f => f.path || f.secure_url || f.filename);
+            const stock = Number(req.body.stock);
+
+            if (!Number.isInteger(stock) || stock < 0) {
+                return res.status(400).send({ statuscode: 0, error: "Stock must be a non-negative whole number" });
+            }
 
             const result = new pro({
                 Category: req.body.productt,
@@ -504,6 +510,7 @@ app.post("/api/product", (req, res) => {
                 Brand: req.body.brand,
                 Specifications: req.body.Specifications,
                 Img: imagePaths[0] || '',
+                Stock: stock,
                 Images: imagePaths,
                 AddedBy: req.body.addedBy,
                 VendorId: req.body.vendorid
@@ -712,32 +719,31 @@ const Cart = new mongoose.Schema({
 const cartmodel = mongoose.model("Cart", Cart)
 
 app.post("/api/cartdata/:proid", async (req, res) => {
-    const proid = req.params.proid
-    const exist = await cartmodel.findOne({
-        ProductId: proid,
-        User: req.body.id
-    })
-    if (exist) {
-        res.send({ statuscode: 2, message: "Already in Cart" })
-    }
-    else {
-        const result = new cartmodel({
-            ProductId: proid,
-            Name: req.body.name,
-            Price: req.body.price,
-            Img: req.body.img,
-            Quantity: req.body.value,
-            User: req.body.id
-        })
-        if (result) {
-            const resp = await result.save()
-            if (resp) {
-                res.send({ statuscode: 1 })
-            }
-            else {
-                req.send({ statuscode: 0 })
-            }
+    try {
+        const proid = req.params.proid
+        const quantity = req.body.value === undefined ? 1 : Number(req.body.value)
+        const item = await pro.findById(proid)
+
+        if (!item) return res.status(404).send({ statuscode: 0, message: "Product not found" })
+        if (!Number.isInteger(quantity) || quantity < 1 || item.Stock < quantity) {
+            return res.status(400).send({ statuscode: 0, message: "Requested quantity is not in stock" })
         }
+
+        const exist = await cartmodel.findOne({ ProductId: proid, User: req.body.id })
+        if (exist) return res.send({ statuscode: 2, message: "Already in Cart" })
+
+        await new cartmodel({
+            ProductId: proid,
+            Name: item.ProductName,
+            Price: item.ProductPrice,
+            Img: item.Img,
+            Quantity: quantity,
+            User: req.body.id
+        }).save()
+        res.send({ statuscode: 1 })
+    } catch (err) {
+        console.error("Error adding cart item", err)
+        res.status(500).send({ statuscode: 0, message: "Could not add item to cart" })
     }
 })
 
@@ -768,6 +774,30 @@ app.delete("/api/removecartdata/:id", async (req, res) => {
     }
     else {
         res.send({ statuscode: 0 })
+    }
+})
+
+app.put("/api/cartquantity/:id", async (req, res) => {
+    try {
+        const quantity = Number(req.body.quantity)
+        if (!Number.isInteger(quantity) || quantity < 1) {
+            return res.status(400).send({ statuscode: 0, message: "Quantity must be at least 1" })
+        }
+
+        const cartItem = await cartmodel.findById(req.params.id)
+        if (!cartItem) return res.status(404).send({ statuscode: 0, message: "Cart item not found" })
+
+        const item = await pro.findById(cartItem.ProductId)
+        if (!item || item.Stock < quantity) {
+            return res.status(400).send({ statuscode: 0, message: "Only the available stock can be added" })
+        }
+
+        cartItem.Quantity = quantity
+        await cartItem.save()
+        res.send({ statuscode: 1, data: cartItem })
+    } catch (err) {
+        console.error("Error updating cart quantity", err)
+        res.status(500).send({ statuscode: 0, message: "Could not update cart quantity" })
     }
 })
 
@@ -897,35 +927,71 @@ const Check = new mongoose.Schema({
     Payment: String,
     OrderNo: String,
     Total: Number,
-    Order: [{ ProductName: String, Quantity: Number, Price: Number, Img: String }]
+    Order: [{ ProductId: String, ProductName: String, Quantity: Number, Price: Number, Img: String }]
 })
 
 const cout = mongoose.model("Checkout", Check)
 
 app.post("/api/checkout", async (req, res) => {
-    const result = new cout({
-        FirstName: req.body.fname,
-        LastName: req.body.lname,
-        Phone: req.body.phn,
-        Email: req.body.email,
-        Country: req.body.country,
-        State: req.body.state,
-        City: req.body.city,
-        Address: req.body.address,
-        PostalCode: req.body.postal,
-        Date: new Date(),
-        UserId: req.body.id,
-        Payment: req.body.payment,
-        Total: req.body.totalprice,
-        Order: req.body.data,
-        OrderNo: req.body.orderno
-    })
-    const resp = await result.save()
-    if (resp) {
+    const reducedItems = []
+    try {
+        const cartItems = await cartmodel.find({ User: req.body.id })
+        if (!cartItems.length) {
+            return res.status(400).send({ statuscode: 0, message: "Cart is empty" })
+        }
+
+        const orderItems = []
+        let total = 0
+        for (const cartItem of cartItems) {
+            const quantity = Number(cartItem.Quantity)
+            const updatedProduct = await pro.findOneAndUpdate(
+                { _id: cartItem.ProductId, Stock: { $gte: quantity } },
+                { $inc: { Stock: -quantity } },
+                { new: true }
+            )
+
+            if (!updatedProduct) {
+                throw new Error(`${cartItem.Name} no longer has enough stock`)
+            }
+
+            reducedItems.push({ productId: cartItem.ProductId, quantity })
+            const price = Number(updatedProduct.ProductPrice)
+            orderItems.push({
+                ProductId: cartItem.ProductId,
+                ProductName: updatedProduct.ProductName,
+                Quantity: quantity,
+                Price: price,
+                Img: updatedProduct.Img
+            })
+            total += price * quantity
+        }
+
+        await new cout({
+            FirstName: req.body.fname,
+            LastName: req.body.lname,
+            Phone: req.body.phn,
+            Email: req.body.email,
+            Country: req.body.country,
+            State: req.body.state,
+            City: req.body.city,
+            Address: req.body.address,
+            PostalCode: req.body.postal,
+            Date: new Date(),
+            UserId: req.body.id,
+            Payment: req.body.payment,
+            Total: total,
+            Order: orderItems,
+            OrderNo: req.body.orderno
+        }).save()
+
+        await cartmodel.deleteMany({ User: req.body.id })
         res.send({ statuscode: 1 })
-    }
-    else {
-        res.send({ statuscode: 0 })
+    } catch (err) {
+        await Promise.all(reducedItems.map(({ productId, quantity }) =>
+            pro.updateOne({ _id: productId }, { $inc: { Stock: quantity } })
+        ))
+        console.error("Error during checkout", err)
+        res.status(400).send({ statuscode: 0, message: err.message || "Order could not be placed" })
     }
 })
 

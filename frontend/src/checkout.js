@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 import Swal from "sweetalert2"
 import { useLocation, useSearchParams } from "react-router-dom"
+import { API_BASE } from "./apiConfig"
 
 export const Check = () => {
 
@@ -27,11 +28,11 @@ export const Check = () => {
     }, [d, totalprice])
 
     const show = useCallback(async () => {
-        const result = await fetch(`https://elcto-1.onrender.com/api/getcartdata/${id}`, {
+        const result = await fetch(`${API_BASE}/api/getcartdata/${id}`, {
             method: "get"
         })
+        const res = await result.json()
         if (result.ok) {
-            const res = await result.json()
             if (res.statuscode === 1) {
                 setd(res.data)
             }
@@ -53,13 +54,13 @@ export const Check = () => {
             Img: item.Img
         }))
         const data = { fname, lname, phn, email, country, state, city, postal, address, id, payment, orderno, totalprice: orderTotal, data: items }
-        const result = await fetch("https://elcto-1.onrender.com/api/checkout", {
+        const result = await fetch(`${API_BASE}/api/checkout`, {
             method: "post",
             body: JSON.stringify(data),
             headers: { "Content-type": "application/json;charset=UTF-8" }
         })
+        const res = await result.json()
         if (result.ok) {
-            const res = await result.json()
             if (res.statuscode === 1) {
                 Swal.fire({
                     icon: "success",
@@ -69,14 +70,16 @@ export const Check = () => {
                 return true
             }
             else {
-                Swal.fire("Error", "Order could not be placed", "error")
+                Swal.fire("Error", res.message || "Order could not be placed", "error")
             }
+        } else {
+            Swal.fire("Error", res.message || "Order could not be placed", "error")
         }
         return false
     }
 
     const deletecart = async () => {
-        const result = await fetch(`https://elcto-1.onrender.com/api/removecartdata/${id}`, {
+        const result = await fetch(`${API_BASE}/api/removecartdata/${id}`, {
             method: "delete"
         })
         if (result.ok) {

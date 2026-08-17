@@ -14,6 +14,7 @@ export const Detail = () => {
     const [name, setname] = useState("")
     const [price, setprice] = useState("")
     const [saleprice, setsaleprice] = useState(0)
+    const [stock, setstock] = useState(0)
     const [detail, setdetail] = useState("")
     const [specs, setSpecs] = useState("")
     const { id } = useContext(Context)
@@ -59,6 +60,7 @@ export const Detail = () => {
                 setname(res.data.ProductName)
                 setprice(res.data.ProductPrice)
                 setsaleprice(res.data.SalePrice)
+                setstock(Number(res.data.Stock) || 0)
                 setpro(res.data.Category)
                 setdetail(res.data.ProductDetail)
                 if (res.data.Images && Array.isArray(res.data.Images) && res.data.Images.length > 0) {
@@ -77,6 +79,10 @@ export const Detail = () => {
         }
     }
     const goto = async () => {
+        if (Number(value) > stock) {
+            Swal.fire("Stock unavailable", `Only ${stock} item${stock === 1 ? " is" : "s are"} available.`, "info")
+            return
+        }
         const data = { value, img, name, price, id, prr }
         const result = await fetch(`${API_BASE}/api/cartdata/${prr}`, {
             method: "post",
@@ -334,16 +340,22 @@ export const Detail = () => {
                                 <p>{detail}</p>
                             </div>
 
+                            <p className={`fw-semibold mb-0 ${stock > 0 ? "text-success" : "text-danger"}`}>
+                                <i className={`bi ${stock > 0 ? "bi-check-circle-fill" : "bi-x-circle-fill"} me-2`}></i>
+                                {stock > 0 ? `${stock} item${stock === 1 ? "" : "s"} available in stock` : "Out of stock"}
+                            </p>
+
                             <div className="d-flex align-items-center gap-3 mt-3">
                                 <input
                                     type="number"
                                     min="1"
+                                    max={stock}
                                     className="form-control w-25 text-center"
                                     value={value}
                                     onChange={(e) => setvalue(e.target.value)}
                                 />
-                                <button className="btn btn-primary" onClick={goto}>
-                                    ADD TO CART
+                                <button className="btn btn-primary" onClick={goto} disabled={stock < 1}>
+                                    {stock > 0 ? "ADD TO CART" : "OUT OF STOCK"}
                                 </button>
                                 <button
                                     className="btn text-danger "

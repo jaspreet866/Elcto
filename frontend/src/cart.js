@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react"
 import { Context } from "./usecontext"
 import Swal from "sweetalert2"
 import { useNavigate, useSearchParams } from "react-router-dom"
+import { API_BASE } from "./apiConfig"
 
 export const Cart = () => {
     const [d, setd] = useState([])
@@ -21,7 +22,7 @@ export const Cart = () => {
     })
 
     const show = async () => {
-        const result = await fetch(`https://elcto-1.onrender.com/api/getcartdata/${id}`, {
+        const result = await fetch(`${API_BASE}/api/getcartdata/${id}`, {
             method: "get"
         })
         if (result.ok) {
@@ -32,13 +33,24 @@ export const Cart = () => {
             }
         }
     }
-    const qty = (index, change) => {
-        const value = [...d]
-        const newQty = value[index].Quantity + change
+    const qty = async (index, change) => {
+        const item = d[index]
+        const newQty = item.Quantity + change
         if (newQty < 1) return
 
-        value[index].Quantity = newQty
-        setd(value)
+        const result = await fetch(`${API_BASE}/api/cartquantity/${item._id}`, {
+            method: "PUT",
+            body: JSON.stringify({ quantity: newQty }),
+            headers: { "Content-type": "application/json;charset=UTF-8" }
+        })
+        const res = await result.json()
+        if (result.ok && res.statuscode === 1) {
+            setd(current => current.map((cartItem, itemIndex) =>
+                itemIndex === index ? { ...cartItem, Quantity: newQty } : cartItem
+            ))
+        } else {
+            Swal.fire("Stock unavailable", res.message || "This quantity is not available.", "info")
+        }
 
     }
 
@@ -55,7 +67,7 @@ export const Cart = () => {
 
         if (confirm.isConfirmed) {
 
-            const result = await fetch(`https://elcto-1.onrender.com/api/remove/${id}`, {
+            const result = await fetch(`${API_BASE}/api/remove/${id}`, {
                 method: "DELETE"
             });
 
