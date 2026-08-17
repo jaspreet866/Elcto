@@ -23,7 +23,7 @@ export const Product = () => {
     const [saleprice, setsaleprice] = useState()
     const [specifications, setSpecifications] = useState("");
     const [allp, setallp] = useState([])
-    const [stock, setstock] = useState()
+    const [stock, setstock] = useState("")
     const [d, setd] = useState([])
     const [pid, setpid] = useState("")
     const { utype, id: vendorid } = useContext(Context)
@@ -70,6 +70,11 @@ export const Product = () => {
     const add = async (e) => {
         e.preventDefault()
 
+        if (!Number.isInteger(Number(stock)) || Number(stock) < 0) {
+            Swal.fire("Invalid stock", "Enter a whole-number stock quantity of 0 or more.", "info")
+            return
+        }
+
         const formData = new FormData()
         formData.append("name", name)
         formData.append("productt", product)
@@ -91,8 +96,8 @@ export const Product = () => {
             method: "post",
             body: formData
         })
+        const res = await result.json()
         if (result.ok) {
-            const res = await result.json()
             if (res.statuscode === 1) {
                 Swal.fire({
                     icon: "success",
@@ -100,11 +105,14 @@ export const Product = () => {
                 })
                 setimages([])
                 setpreviews([])
+                setstock("")
                 show3()
             }
             else {
-                alert("not now")
+                Swal.fire("Error", res.error || "Product could not be added.", "error")
             }
+        } else {
+            Swal.fire("Error", res.error || "Product could not be added.", "error")
         }
     }
     const show = async (e) => {
@@ -329,7 +337,7 @@ Camera: 48MP`} value={specifications}
                                             <input className="form-check-input" type="checkbox" checked={sale} onChange={(e) => setsale(e.target.checked)} />
                                             <label className="form-check-label" htmlFor="switchCheckChecked">On Sale</label>
                                         </div>
-                                        <input type="number" className="form-control mt-3" value={stock} placeholder="Product Stock" onChange={(e) => setstock(e.target.value)}></input>
+                                        <input type="number" min="0" step="1" required className="form-control mt-3" value={stock} placeholder="Product Stock" onChange={(e) => setstock(e.target.value)}></input>
 
                                         <input type="number" className="form-control mt-3" value={saleprice} placeholder="Sale Price" onChange={(e) => setsaleprice(e.target.value)}></input>
 
