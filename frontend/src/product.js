@@ -101,7 +101,7 @@ export const Product = () => {
             if (res.statuscode === 1) {
                 Swal.fire({
                     icon: "success",
-                    text: "Product Added Successfully"
+                    text: `Product added successfully. Stock saved: ${res.data?.stock ?? "not returned by this API"}`
                 })
                 setimages([])
                 setpreviews([])

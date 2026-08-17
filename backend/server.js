@@ -518,7 +518,7 @@ app.post("/api/product", (req, res) => {
 
             const resp = await result.save();
             if (resp) {
-                res.send({ statuscode: 1 });
+                res.send({ statuscode: 1, data: { id: resp._id, stock: resp.Stock } });
             } else {
                 res.send({ statuscode: 0 });
             }
