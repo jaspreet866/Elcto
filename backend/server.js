@@ -510,7 +510,7 @@ app.post("/api/product", (req, res) => {
                 Brand: req.body.brand,
                 Specifications: req.body.Specifications,
                 Img: imagePaths[0] || '',
-                Stock: stock,
+                Stock: req.body.stock,
                 Images: imagePaths,
                 AddedBy: req.body.addedBy,
                 VendorId: req.body.vendorid
