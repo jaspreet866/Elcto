@@ -577,11 +577,15 @@ export const Main = () => {
                 align-items: center;
                 gap: 8px;
                 text-decoration: none;
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+                background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+                color: #ffffff !important;
+                box-shadow: 0 10px 30px rgba(99, 102, 241, 0.45);
+                border: 1px solid rgba(255, 255, 255, 0.25);
             }
             .hero-primary-btn:hover {
                 transform: translateY(-3px) scale(1.02);
-                box-shadow: 0 16px 35px rgba(0, 0, 0, 0.35);
+                box-shadow: 0 16px 38px rgba(99, 102, 241, 0.65);
+                color: #ffffff !important;
             }
             .hero-secondary-btn {
                 padding: 13px 26px;
@@ -594,14 +598,24 @@ export const Main = () => {
                 gap: 8px;
                 text-decoration: none;
                 color: #ffffff;
-                background: rgba(255, 255, 255, 0.12);
-                backdrop-filter: blur(12px);
-                border: 1px solid rgba(255, 255, 255, 0.3);
+                background: rgba(255, 255, 255, 0.16);
+                backdrop-filter: blur(14px);
+                border: 1.5px solid rgba(255, 255, 255, 0.45);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
             }
             .hero-secondary-btn:hover {
-                background: rgba(255, 255, 255, 0.25);
+                background: rgba(255, 255, 255, 0.32);
                 color: #ffffff;
+                border-color: #ffffff;
                 transform: translateY(-2px);
+                box-shadow: 0 12px 28px rgba(255, 255, 255, 0.2);
+            }
+            .hero-flame-icon {
+                color: #f97316 !important;
+                filter: drop-shadow(0 0 4px rgba(249, 115, 22, 0.6));
+                font-size: 1.15rem;
+                display: inline-block;
+                vertical-align: middle;
             }
 
             .hero-trust-bar {
@@ -701,13 +715,20 @@ export const Main = () => {
               <p className="hero-desc hero-desc-animated d-none d-sm-block">Upgrade your digital lifestyle with high-speed smartphones, flagship workstations, and studio audio devices.</p>
               <div className="d-flex gap-3 flex-wrap hero-actions-animated">
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Link to="/related" className="hero-primary-btn bg-white text-dark shadow-lg">
+                      <Link to="/related" className="hero-primary-btn shadow-lg">
                           Shop Collection <i className="bi bi-arrow-right-short fs-5"></i>
                       </Link>
                   </motion.div>
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <a href="#sale" className="hero-secondary-btn">
-                          Explore Deals <i className="bi bi-fire text-warning"></i>
+                      <a 
+                          href="#sale" 
+                          className="hero-secondary-btn"
+                          onClick={(e) => {
+                              e.preventDefault();
+                              document.getElementById('sale')?.scrollIntoView({ behavior: 'smooth' });
+                          }}
+                      >
+                          Explore Deals <i className="bi bi-fire hero-flame-icon ms-1"></i>
                       </a>
                   </motion.div>
               </div>
@@ -892,7 +913,7 @@ export const Main = () => {
                     ))}
                 </div>
             </section>
-            <section className="container  py-4 mt-2" data-aos="fade-up">
+            <section id="sale" className="container py-4 mt-2" data-aos="fade-up">
                 <div className=" align-items-center mb-4 mt-2">
                     <h2 className="fw-bold">🔥 On Sale Products</h2>
 
