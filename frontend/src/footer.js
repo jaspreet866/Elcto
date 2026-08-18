@@ -91,15 +91,54 @@ export const Footer = () => {
                         </div>
 
                         <div className="col-md-4 text-center">
-                            <div className="d-flex justify-content-center gap-3 fs-4">
-                                {["fa-facebook", "fa-instagram", "fa-x-twitter"].map((icon, idx) => (
-                                    <motion.i 
-                                        key={idx} 
-                                        className={`fa-brands ${icon}`}
-                                        whileHover={{ y: -5, scale: 1.25, color: "#0d6efd" }}
-                                        transition={{ type: "spring", stiffness: 350 }}
-                                    ></motion.i>
-                                ))}
+                            <div className="footer-social-links d-flex justify-content-center gap-3">
+                                <motion.a 
+                                    href="https://facebook.com" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="footer-social-icon social-facebook"
+                                    aria-label="Facebook"
+                                    whileHover={{ y: -5, scale: 1.15 }}
+                                    whileTap={{ scale: 0.95 }}
+                                >
+                                    <i className="bi bi-facebook"></i>
+                                </motion.a>
+
+                                <motion.a 
+                                    href="https://instagram.com" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="footer-social-icon social-instagram"
+                                    aria-label="Instagram"
+                                    whileHover={{ y: -5, scale: 1.15 }}
+                                    whileTap={{ scale: 0.95 }}
+                                >
+                                    <i className="bi bi-instagram"></i>
+                                </motion.a>
+
+                                <motion.a 
+                                    href="https://twitter.com" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="footer-social-icon social-x"
+                                    aria-label="Twitter X"
+                                    whileHover={{ y: -5, scale: 1.15 }}
+                                    whileTap={{ scale: 0.95 }}
+                                >
+                                    <i className="bi bi-twitter-x"></i>
+                                </motion.a>
+
+                                <motion.a 
+                                    href="https://linkedin.com" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="footer-social-icon social-linkedin"
+                                    aria-label="LinkedIn"
+                                    whileHover={{ y: -5, scale: 1.15 }}
+                                    whileTap={{ scale: 0.95 }}
+                                >
+                                    <i className="bi bi-linkedin"></i>
+                                </motion.a>
                             </div>
                         </div>
 

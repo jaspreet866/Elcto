@@ -8,26 +8,27 @@
   border-radius: 50%;
   will-change: transform;
   transform: translate3d(-100px, -100px, 0);
-  transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1), height 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease, border-color 0.25s ease, opacity 0.25s ease;
+  transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1), height 0.22s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.22s ease, border-color 0.22s ease, opacity 0.22s ease, box-shadow 0.22s ease;
 }
 
 /* Inner Dot */
 .custom-cursor-dot {
-  width: 10px;
-  height: 10px;
-  margin-left: -5px;
-  margin-top: -5px;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  margin-top: -4px;
   background: var(--cursor-theme-color, #0f62fe);
-  box-shadow: 0 0 12px var(--cursor-theme-color, #0f62fe);
+  box-shadow: 0 0 10px var(--cursor-theme-color, #0f62fe);
 }
 
+/* Inner Dot - Compact & Precise on Hover */
 .custom-cursor-dot.is-hovered {
-  width: 18px;
-  height: 18px;
-  margin-left: -9px;
-  margin-top: -9px;
-  background: #ec4899;
-  box-shadow: 0 0 20px #ec4899;
+  width: 5px;
+  height: 5px;
+  margin-left: -2.5px;
+  margin-top: -2.5px;
+  background: #6366f1;
+  box-shadow: 0 0 10px #6366f1;
 }
 
 .custom-cursor-dot.is-clicked {
@@ -36,33 +37,34 @@
 
 /* Outer Ring */
 .custom-cursor-ring {
-  width: 40px;
-  height: 40px;
-  margin-left: -20px;
-  margin-top: -20px;
+  width: 36px;
+  height: 36px;
+  margin-left: -18px;
+  margin-top: -18px;
   border: 1.5px solid var(--cursor-theme-color, rgba(15, 98, 254, 0.5));
   background: rgba(99, 102, 241, 0.05);
-  box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 0 16px rgba(99, 102, 241, 0.15);
   backdrop-filter: blur(2px);
 }
 
+/* Outer Ring - Shrinks to a Smaller Compact Precision Ring on Hover */
 .custom-cursor-ring.is-hovered {
-  width: 64px;
-  height: 64px;
-  margin-left: -32px;
-  margin-top: -32px;
-  border-color: #a855f7;
-  background: rgba(168, 85, 247, 0.12);
-  box-shadow: 0 0 30px rgba(168, 85, 247, 0.35);
+  width: 20px;
+  height: 20px;
+  margin-left: -10px;
+  margin-top: -10px;
+  border-color: #818cf8;
+  background: rgba(99, 102, 241, 0.25);
+  box-shadow: 0 0 16px rgba(99, 102, 241, 0.5);
 }
 
 .custom-cursor-ring.is-clicked {
-  width: 30px;
-  height: 30px;
-  margin-left: -15px;
-  margin-top: -15px;
+  width: 14px;
+  height: 14px;
+  margin-left: -7px;
+  margin-top: -7px;
   border-color: #ec4899;
-  background: rgba(236, 72, 153, 0.25);
+  background: rgba(236, 72, 153, 0.3);
 }
 
 /* Touch devices hide custom cursor */
