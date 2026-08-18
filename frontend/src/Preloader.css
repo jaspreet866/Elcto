@@ -1,0 +1,165 @@
+/* Electo Preloader Styles - Clean Full Logo */
+
+.electo-preloader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg, #ffffff);
+  color: var(--text, #0f172a);
+  user-select: none;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .electo-preloader-overlay {
+  background-color: #060911 !important;
+  color: #f8fafc !important;
+}
+
+/* Background Ambient Lighting */
+.preloader-glow-orb {
+  position: absolute;
+  width: 450px;
+  height: 450px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.22) 0%, rgba(168, 85, 247, 0.12) 40%, transparent 70%);
+  filter: blur(65px);
+  animation: preloaderPulse 3s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+[data-theme="dark"] .preloader-glow-orb {
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.35) 0%, rgba(236, 72, 153, 0.18) 45%, transparent 75%);
+}
+
+@keyframes preloaderPulse {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0.95;
+  }
+}
+
+/* Central Content Container */
+.preloader-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  padding: 30px;
+  text-align: center;
+}
+
+/* Clean Full Logo Display (No Background Box/Rings) */
+.preloader-logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.preloader-full-logo {
+  max-width: 250px;
+  max-height: 95px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.08));
+}
+
+[data-theme="dark"] .preloader-full-logo {
+  filter: none !important;
+}
+
+/* Subtitle */
+.preloader-subtitle {
+  font-size: 12px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #64748b;
+  margin-top: -8px;
+  margin-bottom: 0;
+}
+
+[data-theme="dark"] .preloader-subtitle {
+  color: #94a3b8;
+}
+
+/* Progress Track & Bar */
+.preloader-track {
+  width: 220px;
+  height: 6px;
+  background: rgba(148, 163, 184, 0.18);
+  border-radius: 99px;
+  overflow: hidden;
+  position: relative;
+  margin-top: 6px;
+}
+
+.preloader-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #4f46e5, #3b82f6, #ec4899);
+  border-radius: 99px;
+  transition: width 0.15s ease-out;
+  box-shadow: 0 0 14px rgba(99, 102, 241, 0.7);
+}
+
+/* Status Text & Percentage */
+.preloader-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 220px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  margin-top: -10px;
+}
+
+[data-theme="dark"] .preloader-status {
+  color: #94a3b8;
+}
+
+.preloader-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #22c55e;
+  display: inline-block;
+  margin-right: 6px;
+  box-shadow: 0 0 8px #22c55e;
+  animation: dotPulse 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes dotPulse {
+  0% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.preloader-percent {
+  font-weight: 800;
+  color: #4f46e5;
+}
+
+[data-theme="dark"] .preloader-percent {
+  color: #818cf8;
+}

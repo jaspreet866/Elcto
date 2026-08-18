@@ -15,8 +15,10 @@ import CursorGrid from './CursorGrid'
 import Lightfall from './Lightfall'
 import EchoText from './EchoText'
 import { ImageModal } from './ImageModal'
+import { Preloader } from './Preloader'
 
 export const Main = () => {
+    const [pageLoading, setPageLoading] = useState(true)
     const [d, setd] = useState([])
     const [spro, setspro] = useState([])
     const [lpro, setlpro] = useState([])
@@ -111,7 +113,12 @@ export const Main = () => {
         show6()
         show7()
         show8() 
-        
+
+        const timer = setTimeout(() => {
+            setPageLoading(false);
+        }, 1400);
+
+        return () => clearTimeout(timer);
     }, [])
 
     useEffect(() => {
@@ -349,6 +356,7 @@ export const Main = () => {
 
     return (
         <>
+            <Preloader loading={pageLoading} />
     <div className='container-fluid px-0 px-md-3 py-2 py-md-3'>
         <style>{`
             @keyframes heroFadeInUp {
