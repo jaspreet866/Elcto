@@ -51,7 +51,7 @@ export const AdminHeader = () => {
 
 
                     <button
-                        className="navbar-toggler"
+                        className="navbar-toggler border-0 shadow-none bg-transparent"
                         type="button"
                         data-bs-toggle="collapse"
                         data-bs-target="#adminNavbar"
@@ -106,12 +106,11 @@ export const AdminHeader = () => {
                             </li>
                             <li className="nav-item d-flex align-items-center ms-lg-2">
                                 <button 
-                                    className="btn btn-theme-toggle p-2 shadow-sm rounded-circle d-flex align-items-center justify-content-center" 
+                                    className="btn btn-theme-toggle header-icon-btn" 
                                     onClick={toggleTheme} 
                                     title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
                                     aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
                                     aria-pressed={theme === "dark"}
-                                    style={{ width: "38px", height: "38px", border: "1px solid var(--line)" }}
                                 >
                                     {theme === "dark" ? (
                                         <i className="bi bi-sun-fill text-warning fs-5"></i>

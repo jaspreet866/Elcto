@@ -253,12 +253,11 @@ export const Header = () => {
 
                         <div className="ms-lg-4 d-flex align-items-center gap-2">
                             <button 
-                                className="btn btn-theme-toggle p-2 shadow-sm rounded-circle d-flex align-items-center justify-content-center" 
+                                className="btn btn-theme-toggle header-icon-btn" 
                                 onClick={toggleTheme} 
                                 title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
                                 aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
                                 aria-pressed={theme === "dark"}
-                                style={{ width: "40px", height: "40px", border: "1px solid var(--line)" }}
                             >
                                 {theme === "dark" ? (
                                     <i className="bi bi-sun-fill text-warning fs-5"></i>
@@ -266,10 +265,10 @@ export const Header = () => {
                                     <i className="bi bi-moon-stars-fill text-primary fs-5"></i>
                                 )}
                             </button>
-                            <button className="btn btn-light p-2 position-relative shadow-sm" onClick={() => cart()} title="Cart">
-                                <i className="bi bi-bag-fill fs-5 text-dark"></i>
+                            <button className="btn header-icon-btn position-relative" onClick={() => cart()} title="Cart" aria-label="Cart">
+                                <i className="bi bi-bag-fill fs-5"></i>
                             </button>
-                            <button className="btn btn-light  p-2 position-relative shadow-sm" onClick={() => wish()} title="Wishlist">
+                            <button className="btn header-icon-btn position-relative" onClick={() => wish()} title="Wishlist" aria-label="Wishlist">
                                 <i className="bi bi-heart-fill fs-5 text-danger"></i>
                             </button>
                             {flag ? (
@@ -291,12 +290,11 @@ export const Header = () => {
                     <h5 className="offcanvas-title fw-bold m-0" id="mobileOffcanvasLabel">ElectoMart</h5>
                     <div className="d-flex align-items-center gap-2">
                         <button 
-                            className="btn btn-theme-toggle p-2 shadow-sm rounded-circle d-flex align-items-center justify-content-center" 
+                            className="btn btn-theme-toggle header-icon-btn" 
                             onClick={toggleTheme} 
                             title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
                             aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
                             aria-pressed={theme === "dark"}
-                            style={{ width: "36px", height: "36px", border: "1px solid var(--line)" }}
                         >
                             {theme === "dark" ? (
                                 <i className="bi bi-sun-fill text-warning fs-6"></i>

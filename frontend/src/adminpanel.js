@@ -383,24 +383,40 @@ export const Dashboard = () => {
         <>
             {utype === "admin" ? (
                 <div className="container-fluid py-4">
-                    <div className="row g-4">
+                    <div className="row g-4 align-items-start">
                         {/* Sidebar Navigation */}
-                        <div className="col-lg-3 col-md-4">
-                            <div className="card shadow-sm border-0 sticky-top" style={{ top: "80px" }}>
+                        <div className="col-lg-3 col-md-4 admin-sticky-sidebar">
+                            <div className="card shadow-sm border-0 admin-sidebar-card">
                                 <div className="card-body p-3">
-                                    <h4 className="fw-bold mb-3 text-primary">Admin Panel</h4>
-                                    <div className="list-group list-group-flush">
+                                    <div className="d-flex align-items-center gap-2 mb-3 pb-2 border-bottom">
+                                        <i className="bi bi-shield-lock-fill fs-4 text-primary"></i>
+                                        <h5 className="fw-bold m-0 text-primary">Admin Panel</h5>
+                                    </div>
+                                    <div className="list-group list-group-flush admin-sidebar-nav">
                                         <a href="#stats" className="list-group-item list-group-item-action border-0 fw-semibold">
-                                            📊 Overview & Statistics
+                                            <i className="bi bi-pie-chart-fill text-primary fs-5"></i>
+                                            <span>Overview & Stats</span>
                                         </a>
                                         <a href="#orders" className="list-group-item list-group-item-action border-0 fw-semibold">
-                                            📦 Orders List ({ordersList.length})
+                                            <i className="bi bi-box-seam-fill text-warning fs-5"></i>
+                                            <span>Orders List</span>
+                                            <span className="badge bg-warning bg-opacity-25 text-warning ms-auto rounded-pill px-2">
+                                                {ordersList.length}
+                                            </span>
                                         </a>
                                         <a href="#users" className="list-group-item list-group-item-action border-0 fw-semibold">
-                                            👤 Users List ({usersList.length})
+                                            <i className="bi bi-people-fill text-info fs-5"></i>
+                                            <span>Users List</span>
+                                            <span className="badge bg-info bg-opacity-25 text-info ms-auto rounded-pill px-2">
+                                                {usersList.length}
+                                            </span>
                                         </a>
                                         <a href="#vendors" className="list-group-item list-group-item-action border-0 fw-semibold">
-                                            🏪 Vendors List ({vendorsList.length})
+                                            <i className="bi bi-shop text-success fs-5"></i>
+                                            <span>Vendors List</span>
+                                            <span className="badge bg-success bg-opacity-25 text-success ms-auto rounded-pill px-2">
+                                                {vendorsList.length}
+                                            </span>
                                         </a>
                                     </div>
                                 </div>
@@ -412,34 +428,54 @@ export const Dashboard = () => {
                             {/* Summary Stat Cards */}
                             <div className="row g-3 mb-4" id="stats">
                                 <div className="col-md-3 col-sm-6">
-                                    <div className="card text-white bg-primary shadow-sm border-0">
-                                        <div className="card-body">
-                                            <h6>Categories</h6>
-                                            <h3>{categoryCount}</h3>
+                                    <div className="card text-white bg-primary shadow-sm border-0 admin-stat-card">
+                                        <div className="card-body d-flex justify-content-between align-items-center p-3">
+                                            <div>
+                                                <h6 className="text-white-50 text-uppercase fw-semibold small mb-1">Categories</h6>
+                                                <h3 className="fw-bold m-0">{categoryCount}</h3>
+                                            </div>
+                                            <div className="fs-1 opacity-75">
+                                                <i className="bi bi-grid-3x3-gap-fill"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-md-3 col-sm-6">
-                                    <div className="card text-white bg-success shadow-sm border-0">
-                                        <div className="card-body">
-                                            <h6>Products</h6>
-                                            <h3>{productCount}</h3>
+                                    <div className="card text-white bg-success shadow-sm border-0 admin-stat-card">
+                                        <div className="card-body d-flex justify-content-between align-items-center p-3">
+                                            <div>
+                                                <h6 className="text-white-50 text-uppercase fw-semibold small mb-1">Products</h6>
+                                                <h3 className="fw-bold m-0">{productCount}</h3>
+                                            </div>
+                                            <div className="fs-1 opacity-75">
+                                                <i className="bi bi-box-fill"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-md-3 col-sm-6">
-                                    <div className="card text-white bg-warning shadow-sm border-0">
-                                        <div className="card-body">
-                                            <h6>Users</h6>
-                                            <h3>{totalUsersCount}</h3>
+                                    <div className="card text-white bg-warning shadow-sm border-0 admin-stat-card">
+                                        <div className="card-body d-flex justify-content-between align-items-center p-3">
+                                            <div>
+                                                <h6 className="text-white-50 text-uppercase fw-semibold small mb-1">Users</h6>
+                                                <h3 className="fw-bold m-0 text-white">{totalUsersCount}</h3>
+                                            </div>
+                                            <div className="fs-1 opacity-75 text-white">
+                                                <i className="bi bi-people-fill"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-md-3 col-sm-6">
-                                    <div className="card text-white bg-dark shadow-sm border-0">
-                                        <div className="card-body">
-                                            <h6>Brands</h6>
-                                            <h3>{brandCount}</h3>
+                                    <div className="card text-white bg-dark shadow-sm border-0 admin-stat-card">
+                                        <div className="card-body d-flex justify-content-between align-items-center p-3">
+                                            <div>
+                                                <h6 className="text-white-50 text-uppercase fw-semibold small mb-1">Brands</h6>
+                                                <h3 className="fw-bold m-0">{brandCount}</h3>
+                                            </div>
+                                            <div className="fs-1 opacity-75">
+                                                <i className="bi bi-award-fill"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -449,7 +485,10 @@ export const Dashboard = () => {
                             <div className="row g-4 mb-4">
                                 <div className="col-md-6">
                                     <div className="card shadow-sm border-0 p-3">
-                                        <h5 className="fw-bold">User Distribution</h5>
+                                        <h5 className="fw-bold d-flex align-items-center gap-2">
+                                            <i className="bi bi-bar-chart-line-fill text-primary"></i>
+                                            User Distribution
+                                        </h5>
                                         <div style={{ height: "300px" }}>
                                             <Bar data={barChartData} options={chartOptions} />
                                         </div>
@@ -457,7 +496,10 @@ export const Dashboard = () => {
                                 </div>
                                 <div className="col-md-6">
                                     <div className="card shadow-sm border-0 p-3">
-                                        <h5 className="fw-bold">Orders Breakdown</h5>
+                                        <h5 className="fw-bold d-flex align-items-center gap-2">
+                                            <i className="bi bi-pie-chart-fill text-warning"></i>
+                                            Orders Breakdown
+                                        </h5>
                                         <div style={{ height: "300px" }}>
                                             <Pie data={pieChartData} options={chartOptions} />
                                         </div>
@@ -467,7 +509,10 @@ export const Dashboard = () => {
 
                             {/* Sales Trend Chart */}
                             <div className="card shadow-sm border-0 p-3 mb-5">
-                                <h5 className="fw-bold mb-3">Monthly Sales</h5>
+                                <h5 className="fw-bold mb-3 d-flex align-items-center gap-2">
+                                    <i className="bi bi-graph-up text-success"></i>
+                                    Monthly Sales
+                                </h5>
                                 <div style={{ height: "300px" }}>
                                     <Line data={monthlyData} options={chartOptions} />
                                 </div>
@@ -478,24 +523,32 @@ export const Dashboard = () => {
                             {/* ======================================================== */}
                             <div className="card shadow-sm border-0 mb-5" id="orders">
                                 <div className="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                                    <h5 className="fw-bold mb-0">Customer Orders</h5>
-                                    <span className="badge bg-primary">Total Orders: {filteredOrders.length}</span>
+                                    <h5 className="fw-bold mb-0 d-flex align-items-center gap-2">
+                                        <i className="bi bi-bag-check-fill text-primary"></i>
+                                        Customer Orders
+                                    </h5>
+                                    <span className="badge bg-primary rounded-pill px-3">Total Orders: {filteredOrders.length}</span>
                                 </div>
 
                                 <div className="card-body">
                                     {/* Search & Filter Bar */}
                                     <div className="row g-2 mb-3">
                                         <div className="col-md-7">
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                placeholder="Search by order number or name..."
-                                                value={orderSearch}
-                                                onChange={(e) => {
-                                                    setOrderSearch(e.target.value);
-                                                    setOrderPage(1);
-                                                }}
-                                            />
+                                            <div className="input-group">
+                                                <span className="input-group-text bg-light border-end-0">
+                                                    <i className="bi bi-search text-muted"></i>
+                                                </span>
+                                                <input
+                                                    type="text"
+                                                    className="form-control border-start-0"
+                                                    placeholder="Search by order number or name..."
+                                                    value={orderSearch}
+                                                    onChange={(e) => {
+                                                        setOrderSearch(e.target.value);
+                                                        setOrderPage(1);
+                                                    }}
+                                                />
+                                            </div>
                                         </div>
                                         <div className="col-md-5">
                                             <select
@@ -525,10 +578,10 @@ export const Dashboard = () => {
                                                             data-bs-toggle="collapse"
                                                             data-bs-target={`#order${ord._id}`}
                                                         >
-                                                            <div className="w-100 d-flex justify-content-between pe-3">
-                                                                <span><strong>Order #{ord.OrderNo || ord._id.slice(-6)}</strong></span>
+                                                            <div className="w-100 d-flex justify-content-between pe-3 align-items-center">
+                                                                <span><i className="bi bi-receipt me-2 text-primary"></i><strong>Order #{ord.OrderNo || ord._id.slice(-6)}</strong></span>
                                                                 <span>Customer: {ord.FirstName} {ord.LastName}</span>
-                                                                <span className="badge bg-secondary">{ord.Payment}</span>
+                                                                <span className="badge bg-secondary rounded-pill">{ord.Payment}</span>
                                                             </div>
                                                         </button>
                                                     </h2>
@@ -543,7 +596,7 @@ export const Dashboard = () => {
                                                                     <div className="d-flex align-items-center gap-3">
                                                                         <img src={item.Img} alt={item.ProductName} width="45" height="45" className="rounded" />
                                                                         <div>
-                                                                            <div>{item.ProductName}</div>
+                                                                            <div className="fw-semibold">{item.ProductName}</div>
                                                                             <small className="text-muted">Quantity: {item.Quantity} × ₹{item.Price}</small>
                                                                         </div>
                                                                     </div>
@@ -566,18 +619,18 @@ export const Dashboard = () => {
                                         </small>
                                         <div className="btn-group">
                                             <button
-                                                className="btn btn-outline-primary btn-sm"
+                                                className="btn btn-outline-primary btn-sm rounded-start-pill px-3"
                                                 disabled={orderPage === 1}
                                                 onClick={() => setOrderPage(orderPage - 1)}
                                             >
-                                                Previous
+                                                <i className="bi bi-chevron-left me-1"></i> Previous
                                             </button>
                                             <button
-                                                className="btn btn-outline-primary btn-sm"
+                                                className="btn btn-outline-primary btn-sm rounded-end-pill px-3"
                                                 disabled={orderPage >= totalOrderPages}
                                                 onClick={() => setOrderPage(orderPage + 1)}
                                             >
-                                                Next
+                                                Next <i className="bi bi-chevron-right ms-1"></i>
                                             </button>
                                         </div>
                                     </div>
@@ -589,24 +642,32 @@ export const Dashboard = () => {
                             {/* ======================================================== */}
                             <div className="card shadow-sm border-0 mb-5" id="users">
                                 <div className="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                                    <h5 className="fw-bold mb-0">Registered Users List</h5>
-                                    <span className="badge bg-warning text-dark">Total Users: {filteredUsers.length}</span>
+                                    <h5 className="fw-bold mb-0 d-flex align-items-center gap-2">
+                                        <i className="bi bi-people-fill text-info"></i>
+                                        Registered Users List
+                                    </h5>
+                                    <span className="badge bg-warning text-dark rounded-pill px-3">Total Users: {filteredUsers.length}</span>
                                 </div>
 
                                 <div className="card-body">
                                     {/* User Search and Filters */}
                                     <div className="row g-2 mb-3">
                                         <div className="col-md-6">
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                placeholder="Search user by name or email..."
-                                                value={userSearch}
-                                                onChange={(e) => {
-                                                    setUserSearch(e.target.value);
-                                                    setUserPage(1);
-                                                }}
-                                            />
+                                            <div className="input-group">
+                                                <span className="input-group-text bg-light border-end-0">
+                                                    <i className="bi bi-search text-muted"></i>
+                                                </span>
+                                                <input
+                                                    type="text"
+                                                    className="form-control border-start-0"
+                                                    placeholder="Search user by name or email..."
+                                                    value={userSearch}
+                                                    onChange={(e) => {
+                                                        setUserSearch(e.target.value);
+                                                        setUserPage(1);
+                                                    }}
+                                                />
+                                            </div>
                                         </div>
                                         <div className="col-md-3">
                                             <select
@@ -655,17 +716,20 @@ export const Dashboard = () => {
                                                 {paginatedUsers.length > 0 ? (
                                                     paginatedUsers.map((u) => (
                                                         <tr key={u._id}>
-                                                            <td className="fw-semibold">{u.FirstName} {u.LastName}</td>
+                                                            <td className="fw-semibold">
+                                                                <i className="bi bi-person-circle me-2 text-secondary"></i>
+                                                                {u.FirstName} {u.LastName}
+                                                            </td>
                                                             <td>{u.Email}</td>
                                                             <td>
                                                                 {u.Status === "Active" ? (
-                                                                    <span className="badge bg-success">Active</span>
+                                                                    <span className="badge bg-success rounded-pill px-2">Active</span>
                                                                 ) : (
-                                                                    <span className="badge bg-danger">Inactive</span>
+                                                                    <span className="badge bg-danger rounded-pill px-2">Inactive</span>
                                                                 )}
                                                             </td>
                                                             <td>
-                                                                <span className="badge bg-secondary">{u.UserType}</span>
+                                                                <span className="badge bg-secondary rounded-pill px-2">{u.UserType}</span>
                                                             </td>
                                                             <td>
                                                                 <div className="d-flex gap-1">
@@ -678,9 +742,10 @@ export const Dashboard = () => {
                                                                         <option value="user">User</option>
                                                                     </select>
                                                                     <button
-                                                                        className="btn btn-sm btn-primary"
+                                                                        className="btn btn-sm btn-primary d-flex align-items-center gap-1"
                                                                         onClick={() => changeUserRole(u._id)}
                                                                     >
+                                                                        <i className="bi bi-arrow-repeat"></i>
                                                                         Update
                                                                     </button>
                                                                 </div>
@@ -696,9 +761,10 @@ export const Dashboard = () => {
                                                                         <option value="Inactive">Inactive</option>
                                                                     </select>
                                                                     <button
-                                                                        className="btn btn-sm btn-success"
+                                                                        className="btn btn-sm btn-success d-flex align-items-center gap-1"
                                                                         onClick={() => changeUserStatus(u._id)}
                                                                     >
+                                                                        <i className="bi bi-arrow-repeat"></i>
                                                                         Update
                                                                     </button>
                                                                 </div>
@@ -721,18 +787,18 @@ export const Dashboard = () => {
                                         </small>
                                         <div className="btn-group">
                                             <button
-                                                className="btn btn-outline-primary btn-sm"
+                                                className="btn btn-outline-primary btn-sm rounded-start-pill px-3"
                                                 disabled={userPage === 1}
                                                 onClick={() => setUserPage(userPage - 1)}
                                             >
-                                                Previous
+                                                <i className="bi bi-chevron-left me-1"></i> Previous
                                             </button>
                                             <button
-                                                className="btn btn-outline-primary btn-sm"
+                                                className="btn btn-outline-primary btn-sm rounded-end-pill px-3"
                                                 disabled={userPage >= totalUserPages}
                                                 onClick={() => setUserPage(userPage + 1)}
                                             >
-                                                Next
+                                                Next <i className="bi bi-chevron-right ms-1"></i>
                                             </button>
                                         </div>
                                     </div>
@@ -744,24 +810,32 @@ export const Dashboard = () => {
                             {/* ======================================================== */}
                             <div className="card shadow-sm border-0 mb-5" id="vendors">
                                 <div className="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                                    <h5 className="fw-bold mb-0">Vendor List</h5>
-                                    <span className="badge bg-success">Total Vendors: {filteredVendors.length}</span>
+                                    <h5 className="fw-bold mb-0 d-flex align-items-center gap-2">
+                                        <i className="bi bi-shop-window text-success"></i>
+                                        Vendor List
+                                    </h5>
+                                    <span className="badge bg-success rounded-pill px-3">Total Vendors: {filteredVendors.length}</span>
                                 </div>
 
                                 <div className="card-body">
                                     {/* Vendor Search and Filter */}
                                     <div className="row g-2 mb-3">
                                         <div className="col-md-8">
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                placeholder="Search vendor by name, email or phone..."
-                                                value={vendorSearch}
-                                                onChange={(e) => {
-                                                    setVendorSearch(e.target.value);
-                                                    setVendorPage(1);
-                                                }}
-                                            />
+                                            <div className="input-group">
+                                                <span className="input-group-text bg-light border-end-0">
+                                                    <i className="bi bi-search text-muted"></i>
+                                                </span>
+                                                <input
+                                                    type="text"
+                                                    className="form-control border-start-0"
+                                                    placeholder="Search vendor by name, email or phone..."
+                                                    value={vendorSearch}
+                                                    onChange={(e) => {
+                                                        setVendorSearch(e.target.value);
+                                                        setVendorPage(1);
+                                                    }}
+                                                />
+                                            </div>
                                         </div>
                                         <div className="col-md-4">
                                             <select
@@ -796,11 +870,14 @@ export const Dashboard = () => {
                                                 {paginatedVendors.length > 0 ? (
                                                     paginatedVendors.map((v) => (
                                                         <tr key={v._id}>
-                                                            <td className="fw-semibold">{v.Name}</td>
+                                                            <td className="fw-semibold">
+                                                                <i className="bi bi-building me-2 text-secondary"></i>
+                                                                {v.Name}
+                                                            </td>
                                                             <td>{v.Email}</td>
                                                             <td>{v.Phone || "N/A"}</td>
                                                             <td>
-                                                                <span className={`badge ${v.Status === 'Accept' ? 'bg-success' : v.Status === 'Pending' ? 'bg-warning text-dark' : 'bg-secondary'}`}>
+                                                                <span className={`badge rounded-pill px-2 ${v.Status === 'Accept' ? 'bg-success' : v.Status === 'Pending' ? 'bg-warning text-dark' : 'bg-secondary'}`}>
                                                                     {v.Status || 'Pending'}
                                                                 </span>
                                                             </td>
@@ -816,9 +893,10 @@ export const Dashboard = () => {
                                                                         <option value="Reject">Reject</option>
                                                                     </select>
                                                                     <button
-                                                                        className="btn btn-sm btn-primary"
+                                                                        className="btn btn-sm btn-primary d-flex align-items-center gap-1"
                                                                         onClick={() => changeVendorStatus(v._id)}
                                                                     >
+                                                                        <i className="bi bi-check2-circle"></i>
                                                                         Approve
                                                                     </button>
                                                                 </div>
@@ -841,18 +919,18 @@ export const Dashboard = () => {
                                         </small>
                                         <div className="btn-group">
                                             <button
-                                                className="btn btn-outline-primary btn-sm"
+                                                className="btn btn-outline-primary btn-sm rounded-start-pill px-3"
                                                 disabled={vendorPage === 1}
                                                 onClick={() => setVendorPage(vendorPage - 1)}
                                             >
-                                                Previous
+                                                <i className="bi bi-chevron-left me-1"></i> Previous
                                             </button>
                                             <button
-                                                className="btn btn-outline-primary btn-sm"
+                                                className="btn btn-outline-primary btn-sm rounded-end-pill px-3"
                                                 disabled={vendorPage >= totalVendorPages}
                                                 onClick={() => setVendorPage(vendorPage + 1)}
                                             >
-                                                Next
+                                                Next <i className="bi bi-chevron-right ms-1"></i>
                                             </button>
                                         </div>
                                     </div>
