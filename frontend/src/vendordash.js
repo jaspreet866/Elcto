@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react"
 import { Link } from "react-router-dom"
 import { Context } from "./usecontext"
+import { SEO } from "./SEO"
 
 export const VendorDashboard = () => {
     const [d, setd] = useState([])
@@ -23,6 +24,10 @@ export const VendorDashboard = () => {
 
     return (
         <main className="vendor-dashboard">
+            <SEO
+                title="Vendor Dashboard"
+                robots="noindex, nofollow"
+            />
             <div className="vendor-shell">
                 <section className="vendor-dashboard-head">
                     <div><span className="vendor-eyebrow vendor-eyebrow-dark">Seller workspace</span><h1>Product overview</h1><p>Keep an eye on every product in your Elcto catalog.</p></div>

@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import Swal from "sweetalert2"
+import { SEO } from "./SEO"
 
 export const Register = () => {
     const [fname, setfname] = useState("")
@@ -26,6 +27,10 @@ export const Register = () => {
     }
 
     return <main className="account-page account-register-page">
+        <SEO
+            title="Create Account"
+            robots="noindex, nofollow"
+        />
         <section className="account-showcase register-showcase">
             <Link to="/" className="account-back"><i className="bi bi-arrow-left"></i> Back to Elcto</Link>
             <div className="account-showcase-content">

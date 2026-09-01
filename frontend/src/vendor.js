@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
+import { SEO } from "./SEO"
 
 export const Vendor = () => {
     const [name, setname] = useState("")
@@ -35,6 +36,11 @@ export const Vendor = () => {
 
     return (
         <main className="vendor-page">
+            <SEO
+                title="Sell on ElectoMart - Vendor Registration"
+                description="Join the ElectoMart Partner Network. Sell your electronics to thousands of tech buyers across India with simple onboarding."
+                keywords="sell electronics online, vendor registration, ElectoMart partner network, tech sellers"
+            />
             <section className="vendor-hero">
                 <div className="vendor-shell vendor-hero-content">
                     <span className="vendor-eyebrow"><i className="bi bi-shop-window"></i> Elcto Partner Network</span>

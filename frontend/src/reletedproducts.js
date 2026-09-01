@@ -5,6 +5,7 @@ import { Context } from "./usecontext"
 import Splide from '@splidejs/splide'
 import '@splidejs/splide/css'
 import { ImageModal } from "./ImageModal"
+import { SEO } from "./SEO"
 
 export const Related = () => {
     const [d, setd] = useState([])
@@ -174,6 +175,11 @@ export const Related = () => {
 
     return (
         <>
+            <SEO
+                title="Related & Filtered Products"
+                description="Browse related electronics, tech deals, and filtered product selections on ElectoMart."
+                keywords="related products, similar gadgets, electronics recommendations, ElectoMart"
+            />
             <section className="s-page-title d-flex align-items-center justify-content-center text-center">
                 <div className="container-fluid bread">
                     <div className="content">

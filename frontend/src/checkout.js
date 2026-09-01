@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import Swal from "sweetalert2"
 import { useLocation, useSearchParams } from "react-router-dom"
 import { API_BASE } from "./apiConfig"
+import { SEO } from "./SEO"
 
 export const Check = () => {
 
@@ -104,6 +105,10 @@ export const Check = () => {
 
     return (
         <>
+            <SEO
+                title="Secure Checkout"
+                robots="noindex, nofollow"
+            />
             <section className="s-page-title d-flex align-items-center justify-content-center text-center">
                 <div className="container-fluid bread">
                     <div className="content">

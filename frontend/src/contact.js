@@ -1,6 +1,7 @@
 import { useState } from "react";
 import img1 from "./images/img_01.jpg";
 import img2 from "./images/contact.jpg";
+import { SEO } from "./SEO";
 
 const initialForm = { name: "", mail: "", phn: "", type: "", msg: "", saveInfo: false };
 
@@ -38,8 +39,30 @@ export const Contact = () => {
     }
   };
 
+  const contactSchema = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Contact ElectoMart Customer Support",
+    "description": "Contact ElectoMart for queries, order status, warranty claims, and tech support.",
+    "url": typeof window !== 'undefined' ? window.location.href : "https://electomart.com/contact",
+    "mainEntity": {
+      "@type": "Organization",
+      "name": "ElectoMart",
+      "telephone": "+91-XXXXXXXXXX",
+      "contactType": "Customer Support",
+      "areaServed": "IN",
+      "availableLanguage": ["English", "Hindi"]
+    }
+  };
+
   return (
     <main className="contact-page">
+      <SEO
+        title="Contact Us - Customer Support & Assistance"
+        description="Get in touch with ElectoMart customer support for inquiries, order tracking, returns, and expert tech advice."
+        keywords="contact ElectoMart, customer support, electronics help desk, order inquiry, support team"
+        schema={contactSchema}
+      />
       <section className="s-page-title d-flex align-items-center justify-content-center text-center">
         <div className="container-fluid bread">
           <div className="content">

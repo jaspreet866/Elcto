@@ -2,6 +2,7 @@ import { useContext, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import Swal from "sweetalert2"
 import { Context } from "./usecontext"
+import { SEO } from "./SEO"
 
 export const Login = () => {
     const [email, setemail] = useState("")
@@ -24,6 +25,10 @@ export const Login = () => {
     }
 
     return <main className="account-page">
+        <SEO
+            title="Sign In"
+            robots="noindex, nofollow"
+        />
         <section className="account-showcase login-showcase">
             <Link to="/" className="account-back"><i className="bi bi-arrow-left"></i> Back to Elcto</Link>
             <div className="account-showcase-content">

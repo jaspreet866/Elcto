@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { API_BASE } from "./apiConfig";
+import { SEO } from "./SEO";
 
 export const Verifyy = () => {
     const [otp, setOtp] = useState("");
@@ -120,6 +121,10 @@ export const Verifyy = () => {
 
     return (
         <main className="account-page">
+            <SEO
+                title="Verify Security Code"
+                robots="noindex, nofollow"
+            />
             <section className="account-showcase verify-showcase">
                 <Link to="/forgot" className="account-back">
                     <i className="bi bi-arrow-left"></i> Change Email

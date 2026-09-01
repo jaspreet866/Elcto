@@ -4,6 +4,7 @@ import { useSearchParams, Navigate } from "react-router-dom"
 import Swal from "sweetalert2"
 import { Context } from "./usecontext"
 import { API_BASE } from "./apiConfig"
+import { SEO } from "./SEO"
 
 
 export const Product = () => {
@@ -266,8 +267,24 @@ export const Product = () => {
 
 
 
+    const isAdminOrVendor = utype === "admin" || utype === "Vendor";
+    const catalogSchema = {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Electronics & Gadgets Catalog",
+        "description": "Browse our full collection of electronics, smartphones, laptops, smartwatches, and accessories.",
+        "url": typeof window !== 'undefined' ? window.location.href : "https://electomart.com/product"
+    };
+
     return (
         <>
+            <SEO
+                title={isAdminOrVendor ? "Manage Products - Admin" : "Browse All Electronics & Gadgets"}
+                description="Explore all electronics, laptops, phones, smart devices, and accessories with best prices and fast shipping on ElectoMart."
+                keywords="electronics catalog, buy gadgets online, latest tech, smartphones, laptops"
+                robots={isAdminOrVendor ? "noindex, nofollow" : "index, follow"}
+                schema={isAdminOrVendor ? null : catalogSchema}
+            />
             {
                 utype === "admin" || utype === "Vendor" ? <>
                     <section className="s-page-title d-flex align-items-center justify-content-center text-center">

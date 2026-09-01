@@ -6,6 +6,7 @@ import { Context } from "./usecontext"
 import { motion } from 'framer-motion'
 import { ImageModal } from "./ImageModal"
 import { API_BASE } from "./apiConfig"
+import { SEO } from "./SEO"
 
 export const Detail = () => {
     const [pro, setpro] = useState("")
@@ -266,8 +267,66 @@ export const Detail = () => {
 
 
 
+    const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+    const productSchema = name ? {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Product",
+                "name": name,
+                "image": imgList && imgList.length > 0 ? imgList : (img ? [img] : []),
+                "description": detail || `Buy ${name} online at the best price with fast delivery on ElectoMart.`,
+                "sku": prr || undefined,
+                "category": pro || "Electronics",
+                "offers": {
+                    "@type": "Offer",
+                    "url": currentUrl,
+                    "priceCurrency": "INR",
+                    "price": saleprice && Number(saleprice) > 0 ? saleprice : (price || 0),
+                    "availability": Number(stock) > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+                    "itemCondition": "https://schema.org/NewCondition",
+                    "seller": {
+                        "@type": "Organization",
+                        "name": "ElectoMart"
+                    }
+                }
+            },
+            {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                    {
+                        "@type": "ListItem",
+                        "position": 1,
+                        "name": "Home",
+                        "item": typeof window !== 'undefined' ? window.location.origin : "https://electomart.com"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 2,
+                        "name": pro || "Products",
+                        "item": `${typeof window !== 'undefined' ? window.location.origin : "https://electomart.com"}/product`
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 3,
+                        "name": name,
+                        "item": currentUrl
+                    }
+                ]
+            }
+        ]
+    } : null;
+
     return (
         <>
+            <SEO
+                title={name ? `${name} - Best Price Online` : "Product Details"}
+                description={name ? `Buy ${name} online on ElectoMart for ₹${saleprice || price}. ${detail ? detail.slice(0, 120) + '...' : 'Fast shipping, warranty & genuine quality.'}` : "View product details on ElectoMart."}
+                keywords={`${name}, buy ${name}, ${pro}, electronics online, ElectoMart deals`}
+                image={img || '/logo512.png'}
+                type="product"
+                schema={productSchema}
+            />
             <section>
                 <div className="container my-5">
                     <div className="row g-5">

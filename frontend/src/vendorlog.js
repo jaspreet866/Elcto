@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import { SEO } from "./SEO"
 
 export const VendorLogin = () => {
     const [email, setemail] = useState("")
@@ -26,6 +27,10 @@ export const VendorLogin = () => {
 
     return (
         <main className="vendor-login-page">
+            <SEO
+                title="Vendor Login"
+                robots="noindex, nofollow"
+            />
             <section className="vendor-login-visual">
                 <Link to="/" className="vendor-back-link"><i className="bi bi-arrow-left"></i> Back to Elcto</Link>
                 <div className="vendor-login-visual-content">

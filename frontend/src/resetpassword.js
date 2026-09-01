@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { API_BASE } from "./apiConfig";
+import { SEO } from "./SEO";
 
 export const ResetPassword = () => {
     const [pass, setPass] = useState("");
@@ -109,6 +110,10 @@ export const ResetPassword = () => {
 
     return (
         <main className="account-page">
+            <SEO
+                title="Reset Password"
+                robots="noindex, nofollow"
+            />
             <section className="account-showcase reset-showcase">
                 <Link to="/login" className="account-back">
                     <i className="bi bi-arrow-left"></i> Back to Login

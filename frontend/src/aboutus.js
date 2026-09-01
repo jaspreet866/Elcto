@@ -9,6 +9,7 @@ import { useEffect, useState } from "react"
 import AOS from "aos"
 import "aos/dist/aos.css"
 import CountUp from "react-countup"
+import { SEO } from "./SEO"
 
 export const About = () => {
 
@@ -62,8 +63,37 @@ export const About = () => {
 
     if (loading) return <p className="text-center mt-5">Loading...</p>
 
+    const aboutSchema = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "AboutPage",
+                "name": "About ElectoMart",
+                "description": "Learn about ElectoMart's mission, values, leadership, and our commitment to bringing top electronic technology to customers worldwide.",
+                "url": typeof window !== 'undefined' ? window.location.href : "https://electomart.com/about"
+            },
+            {
+                "@type": "FAQPage",
+                "mainEntity": faqs.map(faq => ({
+                    "@type": "Question",
+                    "name": faq.question,
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": faq.answer
+                    }
+                }))
+            }
+        ]
+    };
+
     return (
         <>
+            <SEO
+                title="About Us - Our Story, Team & Mission"
+                description="Learn about ElectoMart, our journey in modern electronics, premium customer support, warranty policies, and team."
+                keywords="about ElectoMart, electronics store India, trusted tech retailer, warranty, customer satisfaction"
+                schema={aboutSchema}
+            />
 
             {/* Logo */}
             <div className="container mt-4">

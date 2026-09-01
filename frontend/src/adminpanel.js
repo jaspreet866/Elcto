@@ -15,6 +15,7 @@ import { Bar, Pie, Line } from 'react-chartjs-2';
 import { Context } from "./usecontext";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { SEO } from "./SEO";
 
 ChartJs.register(
     CategoryScale,
@@ -381,6 +382,10 @@ export const Dashboard = () => {
 
     return (
         <>
+            <SEO
+                title="Admin Dashboard"
+                robots="noindex, nofollow"
+            />
             {utype === "admin" ? (
                 <div className="container-fluid py-4">
                     <div className="row g-4 align-items-start">

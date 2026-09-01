@@ -6,6 +6,14 @@
   <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#f8fafc" />
+
+  <!-- Preconnect & DNS-Prefetch for Performance & Faster Core Web Vitals -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+  <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
+  <link rel="dns-prefetch" href="https://elcto-1.onrender.com" />
+
+  <!-- Theme Script (Inline for zero-FOUC) -->
   <script>
     (function () {
       try {
@@ -19,21 +27,47 @@
       } catch (error) {}
     }());
   </script>
-  <meta name="description" content="ElectoMart - Modern Electronics & Tech Store" />
+
+  <!-- Primary SEO Meta Tags -->
+  <title>ElectoMart - Modern Electronics & Tech Store</title>
+  <meta name="title" content="ElectoMart - Modern Electronics & Tech Store" />
+  <meta name="description" content="Shop the latest electronics, smartphones, laptops, smartwatches, and headphones at ElectoMart with best prices, fast shipping, and warranty." />
+  <meta name="keywords" content="electronics store, buy gadgets online, latest smartphones, laptops, headphones, smart gadgets, ElectoMart deals, electronics shopping" />
+  <meta name="author" content="ElectoMart" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://electomart.com/" />
+
+  <!-- Open Graph / Facebook / WhatsApp / LinkedIn -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="ElectoMart" />
+  <meta property="og:url" content="https://electomart.com/" />
+  <meta property="og:title" content="ElectoMart - Modern Electronics & Tech Store" />
+  <meta property="og:description" content="Shop the latest electronics, smartphones, laptops, smartwatches, and headphones at ElectoMart with best prices, fast shipping, and warranty." />
+  <meta property="og:image" content="%PUBLIC_URL%/logo512.png" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ElectoMart - Modern Electronics & Tech Store" />
+  <meta name="twitter:description" content="Shop the latest electronics, smartphones, laptops, smartwatches, and headphones at ElectoMart with best prices, fast shipping, and warranty." />
+  <meta name="twitter:image" content="%PUBLIC_URL%/logo512.png" />
+
+  <!-- Mobile & PWA -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="ElectoMart" />
   <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/css/splide.min.css" />
-
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-  <title>ElectoMart</title>
+
+  <!-- External Stylesheets -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4/dist/css/splide.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
-
 </body>
 
 </html>

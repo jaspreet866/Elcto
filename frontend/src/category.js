@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { Context } from "./usecontext"
 import { useNavigate } from "react-router-dom"
+import { SEO } from "./SEO"
 
 
 
@@ -78,6 +79,11 @@ export const Category = () => {
 
   return (
   <>
+  <SEO
+    title="Browse Categories - Electronics & Gadgets"
+    description="Shop electronics by category: smartphones, laptops, smart TVs, audio, gaming, and wearables on ElectoMart."
+    keywords="electronics categories, buy laptops by brand, smartphones category, audio devices, smart wearables"
+  />
   {
     utype === "admin" && utype === "Vendor" ?   <>
       <section className="s-page-title d-flex align-items-center justify-content-center text-center">

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { API_BASE } from "./apiConfig";
+import { SEO } from "./SEO";
 
 export const ForgetPass = () => {
     const [email, setEmail] = useState("");
@@ -62,6 +63,10 @@ export const ForgetPass = () => {
 
     return (
         <main className="account-page">
+            <SEO
+                title="Forgot Password"
+                robots="noindex, nofollow"
+            />
             <section className="account-showcase forgot-showcase">
                 <Link to="/login" className="account-back">
                     <i className="bi bi-arrow-left"></i> Back to Login

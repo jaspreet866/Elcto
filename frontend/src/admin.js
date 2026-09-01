@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Context } from "./usecontext";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { SEO } from "./SEO";
 
 export const Admin = () => {
     // Context & Routing
@@ -133,6 +134,10 @@ export const Admin = () => {
 
     return (
         <>
+            <SEO
+                title="Admin - User Management"
+                robots="noindex, nofollow"
+            />
             {utype === "admin" ? (
                 <div className="container py-5">
                     <div className="d-flex justify-content-between align-items-center mb-4">

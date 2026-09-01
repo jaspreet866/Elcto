@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { useSearchParams } from "react-router-dom"
+import { SEO } from "./SEO"
 
 export const Brand = () => {
 
@@ -33,6 +34,11 @@ export const Brand = () => {
 
   return (
     <>
+      <SEO
+        title="Top Electronics Brands - Shop Genuine Products"
+        description="Discover top electronics brands with genuine warranty and best pricing on ElectoMart."
+        keywords="electronics brands, genuine electronics, Apple, Samsung, Sony, HP, Dell, ElectoMart"
+      />
       <div className="container mt-5">
         <div className="row g-4">
           {

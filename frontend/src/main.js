@@ -16,6 +16,7 @@ import Lightfall from './Lightfall'
 import EchoText from './EchoText'
 import { ImageModal } from './ImageModal'
 import { Preloader } from './Preloader'
+import { SEO } from './SEO'
 
 export const Main = () => {
     const [pageLoading, setPageLoading] = useState(true)
@@ -354,8 +355,49 @@ export const Main = () => {
 
 
 
+    const homeSchema = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Organization",
+                "@id": "#organization",
+                "name": "ElectoMart",
+                "url": typeof window !== 'undefined' ? window.location.origin : 'https://electomart.com',
+                "logo": typeof window !== 'undefined' ? `${window.location.origin}/logo512.png` : '/logo512.png',
+                "description": "Modern electronics & tech store offering the latest gadgets, smartphones, laptops, and wearables at unbeatable prices.",
+                "contactPoint": {
+                    "@type": "ContactPoint",
+                    "telephone": "+91-XXXXXXXXXX",
+                    "contactType": "customer service"
+                }
+            },
+            {
+                "@type": "WebSite",
+                "@id": "#website",
+                "name": "ElectoMart",
+                "url": typeof window !== 'undefined' ? window.location.origin : 'https://electomart.com',
+                "publisher": { "@id": "#organization" },
+                "potentialAction": {
+                    "@type": "SearchAction",
+                    "target": {
+                        "@type": "EntryPoint",
+                        "urlTemplate": `${typeof window !== 'undefined' ? window.location.origin : 'https://electomart.com'}/related?search={search_term_string}`
+                    },
+                    "query-input": "required name=search_term_string"
+                }
+            }
+        ]
+    };
+
     return (
         <>
+            <SEO
+                title="ElectoMart | Modern Electronics & Gadgets Store"
+                description="Shop the latest electronics, smartphones, laptops, smartwatches, and headphones at ElectoMart. Best prices, fast delivery, and 100% genuine products with warranty."
+                keywords="electronics store, buy gadgets online, latest smartphones, laptops, headphones, smart gadgets, ElectoMart deals, online electronics shopping India"
+                type="website"
+                schema={homeSchema}
+            />
             <Preloader loading={pageLoading} />
     <div className='container-fluid px-0 px-md-3 py-2 py-md-3'>
         <style>{`

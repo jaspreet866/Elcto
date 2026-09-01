@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { Context } from "./usecontext"
+import { SEO } from "./SEO"
 
 export const Order = () => {
     const [d, setd] = useState([])
@@ -27,6 +28,10 @@ export const Order = () => {
 
     return (
         <>
+            <SEO
+                title="My Orders"
+                robots="noindex, nofollow"
+            />
             <section className="s-page-title d-flex align-items-center justify-content-center text-center">
                 <div className="container-fluid bread">
                     <div className="content">

@@ -3,6 +3,7 @@ import { Context } from "./usecontext"
 import Swal from "sweetalert2"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { API_BASE } from "./apiConfig"
+import { SEO } from "./SEO"
 
 export const Cart = () => {
     const [d, setd] = useState([])
@@ -101,6 +102,10 @@ export const Cart = () => {
 
     return (
         <>
+            <SEO
+                title="Your Shopping Cart"
+                robots="noindex, nofollow"
+            />
             <section className="s-page-title d-flex align-items-center justify-content-center text-center">
                 <div className="container-fluid bread">
                     <div className="content">

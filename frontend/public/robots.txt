@@ -1,3 +1,26 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+Allow: /product
+Allow: /category
+Allow: /brand
+Allow: /about
+Allow: /contact
+Allow: /detail
+
+# Disallow private user, admin, vendor and checkout routes
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /vendor
+Disallow: /vendordash
+Disallow: /vlogin
+Disallow: /cart
+Disallow: /checkout
+Disallow: /wish
+Disallow: /myorder
+Disallow: /forgot
+Disallow: /verify
+Disallow: /resetpassword
+
+# Sitemap
+Sitemap: https://electomart.com/sitemap.xml

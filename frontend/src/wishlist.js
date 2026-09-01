@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react"
 import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import Swal from "sweetalert2"
 import { Context } from "./usecontext"
+import { SEO } from "./SEO"
 
 export const Wish = () => {
 
@@ -90,6 +91,10 @@ export const Wish = () => {
 
     return (
         <>
+            <SEO
+                title="My Wishlist"
+                robots="noindex, nofollow"
+            />
             <section className="s-page-title d-flex align-items-center justify-content-center text-center">
                 <div className="container-fluid bread">
                     <div className="content">
