@@ -1,15 +1,16 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState, useContext } from "react"
 import Swal from "sweetalert2"
-import { useLocation, useSearchParams } from "react-router-dom"
+import { useLocation, useSearchParams, useNavigate } from "react-router-dom"
+import { Context } from "./usecontext"
 import { API_BASE } from "./apiConfig"
 import { SEO } from "./SEO"
 
 export const Check = () => {
-
+    const { id: contextId, mail: contextMail, fetchCart } = useContext(Context)
     const [fname, setfname] = useState("")
     const [lname, setlname] = useState("")
     const [phn, setphn] = useState()
-    const [email, setemail] = useState("")
+    const [email, setemail] = useState(contextMail || "")
     const [country, setcountry] = useState("")
     const [state, setstate] = useState("")
     const [city, setcity] = useState("")
@@ -17,35 +18,46 @@ export const Check = () => {
     const [address, setaddress] = useState("")
     const [d, setd] = useState([])
     const location = useLocation()
+    const navigate = useNavigate()
     const orderno = Math.floor(Math.random() * 1000)
     const [payment, setpayment] = useState("")
     const [agree, setagree] = useState(false)
     const [saving, setsaving] = useState(false)
     const { totalprice } = location.state || {};
     const [idd] = useSearchParams()
-    const id = idd.get("id")
+    const id = idd.get("id") || contextId;
     const orderTotal = useMemo(() => {
         return totalprice || d.reduce((acc, item) => acc + (item.Quantity * item.Price), 0)
     }, [d, totalprice])
 
     const show = useCallback(async () => {
-        const result = await fetch(`${API_BASE}/api/getcartdata/${id}`, {
-            method: "get"
-        })
-        const res = await result.json()
-        if (result.ok) {
-            if (res.statuscode === 1) {
-                setd(res.data)
+        if (!id) return;
+        try {
+            const result = await fetch(`${API_BASE}/api/getcartdata/${id}`, {
+                method: "get"
+            })
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1 && Array.isArray(res.data)) {
+                    setd(res.data)
+                }
             }
-            else {
-                alert("nothing in cart")
-            }
+        } catch (err) {
+            console.error("Failed to load checkout cart data:", err);
         }
     }, [id])
 
     useEffect(() => {
-        show()
-    }, [show])
+        if (id) {
+            show()
+        }
+    }, [id, show])
+
+    useEffect(() => {
+        if (!email && contextMail) {
+            setemail(contextMail);
+        }
+    }, [contextMail, email]);
 
     const save = async () => {
         const items = d.map(item => ({
@@ -63,6 +75,7 @@ export const Check = () => {
         const res = await result.json()
         if (result.ok) {
             if (res.statuscode === 1) {
+                if (fetchCart) fetchCart();
                 Swal.fire({
                     icon: "success",
                     title: "Thank You",

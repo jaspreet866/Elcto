@@ -53,7 +53,7 @@ export const MiniCartDrawer = () => {
     const handleCheckout = () => {
         setIsCartOpen(false);
         if (id) {
-            navigate('/checkout');
+            navigate(`/checkout?id=${id}`, { state: { totalprice: cartTotal } });
         } else {
             navigate('/login');
         }
@@ -62,7 +62,7 @@ export const MiniCartDrawer = () => {
     const handleViewFullCart = () => {
         setIsCartOpen(false);
         if (id) {
-            navigate('/cart');
+            navigate(`/cart?id=${id}`);
         } else {
             navigate('/login');
         }
