@@ -8,7 +8,7 @@ export const Login = () => {
     const [email, setemail] = useState("")
     const [pass, setpass] = useState("")
     const [showPassword, setShowPassword] = useState(false)
-    const { setid, setutype } = useContext(Context)
+    const { loginAuth } = useContext(Context)
     const navigate = useNavigate()
 
     const login = async (e) => {
@@ -17,9 +17,11 @@ export const Login = () => {
         if (result) {
             const res = await result.json()
             if (res.statuscode === 1) {
-                localStorage.setItem("data", JSON.stringify(res.jwtoken))
-                Swal.fire({ icon: "success", title: "Login SuccessFully" })
-                setutype(res.data.usertype); setid(res.data.id); navigate(`/`); setemail(""); setpass("")
+                loginAuth(res.jwtoken)
+                Swal.fire({ icon: "success", title: "Login Successful" })
+                navigate(`/`)
+                setemail("")
+                setpass("")
             } else Swal.fire({ icon: "error", title: "Login Error", text: "Check Password and Mail is Correct" })
         }
     }

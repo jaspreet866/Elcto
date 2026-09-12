@@ -8,7 +8,7 @@ import { SEO } from "./SEO"
 export const Cart = () => {
     const [d, setd] = useState([])
     const [price, setprice] = useState(0)
-    const { id } = useContext(Context)
+    const { id, fetchCart } = useContext(Context)
     const navigate = useNavigate()
     useEffect(() => {
         show()
@@ -49,6 +49,7 @@ export const Cart = () => {
             setd(current => current.map((cartItem, itemIndex) =>
                 itemIndex === index ? { ...cartItem, Quantity: newQty } : cartItem
             ))
+            if (fetchCart) fetchCart();
         } else {
             Swal.fire("Stock unavailable", res.message || "This quantity is not available.", "info")
         }
@@ -82,6 +83,7 @@ export const Cart = () => {
                 });
 
                 show(); // reload products
+                if (fetchCart) fetchCart();
 
             } else {
                 Swal.fire("Error", "Something went wrong", "error");

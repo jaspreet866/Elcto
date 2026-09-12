@@ -1,41 +1,28 @@
 import { Link, useNavigate } from "react-router-dom"
-import { useState, useEffect, useContext } from "react";
+import { useContext } from "react";
 import { Context } from "./usecontext";
 import Swal from "sweetalert2"
 import logo from "./images/WhatsApp Image 2026-02-12 at 11.08.16 AM.png"
 
 
 export const AdminHeader = () => {
-    const [flag, setflag] = useState(false);
-    const { id, setid, theme, toggleTheme } = useContext(Context)
-    const { setutype } = useContext(Context)
+    const { id, theme, toggleTheme, logoutAuth } = useContext(Context)
+    const flag = Boolean(id || localStorage.getItem("data"));
     const navigate = useNavigate()
 
-
-    useEffect(() => {
-
-        const token = localStorage.getItem("data")
-        if (token) {
-            setflag(true);
-
-        }
-        else {
-            setflag(false);
-        }
-    }, [id])
-
-
     const logout = () => {
-        localStorage.removeItem("data");
-         Swal.fire({
+        if (logoutAuth) {
+            logoutAuth();
+        } else {
+            localStorage.removeItem("data");
+        }
+        Swal.fire({
             title: 'Logged Out',
             text: 'You have been logged out successfully.',
             icon: 'success',
             confirmButtonText: 'OK'
         });
-        setflag(false);
-        setid("");
-        setutype("User")
+        navigate("/");
     }
     return (
         <>

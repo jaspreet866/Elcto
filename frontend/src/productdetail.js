@@ -18,7 +18,7 @@ export const Detail = () => {
     const [stock, setstock] = useState(0)
     const [detail, setdetail] = useState("")
     const [specs, setSpecs] = useState("")
-    const { id } = useContext(Context)
+    const { id, setIsCartOpen, fetchCart } = useContext(Context)
     const [idd, setidd] = useState("")
     const [rela, setrela] = useState([])
     const [pr] = useSearchParams()
@@ -80,6 +80,15 @@ export const Detail = () => {
         }
     }
     const goto = async () => {
+        if (!id) {
+            Swal.fire({
+                icon: "info",
+                title: "Sign In Required",
+                text: "Please sign in to add items to your cart."
+            });
+            navigate("/login");
+            return;
+        }
         if (Number(value) > stock) {
             Swal.fire("Stock unavailable", `Only ${stock} item${stock === 1 ? " is" : "s are"} available.`, "info")
             return
@@ -93,22 +102,15 @@ export const Detail = () => {
         if (result.ok) {
             const res = await result.json()
             if (res.statuscode === 2) {
-                Swal.fire({
-                    icon: "info",
-                    title: "🛒 Already in Cart",
-                    text: (res.message)
-                });
-
+                await fetchCart();
+                setIsCartOpen(true);
             }
             else if (res.statuscode === 1) {
-                navigate(`/cart?id=${id}`)
-                Swal.fire({
-                    icon: "success",
-                    text: "🛒 Added to Cart"
-                })
+                await fetchCart();
+                setIsCartOpen(true);
             }
             else {
-                alert("error")
+                Swal.fire("Error", res.message || "Could not add to cart", "error")
             }
         }
     }
@@ -192,6 +194,15 @@ export const Detail = () => {
         }
     }
     const cart = async (id, name, price, img, value = 1, prr) => {
+        if (!id) {
+            Swal.fire({
+                icon: "info",
+                title: "Sign In Required",
+                text: "Please sign in to add items to your cart."
+            });
+            navigate("/login");
+            return;
+        }
         const data = { id, name, price, img, value }
         const result = await fetch(`${API_BASE}/api/cartdata/${prr}`, {
             method: "post",
@@ -200,23 +211,12 @@ export const Detail = () => {
         })
         if (result.ok) {
             const res = await result.json()
-            if (res.statuscode === 2) {
-                Swal.fire({
-                    icon: "info",
-                    title: "🛒 Already in Cart",
-                    text: (res.message)
-                });
-
-            }
-            else if (res.statuscode === 1) {
-                navigate(`/cart?id=${id}`)
-                Swal.fire({
-                    icon: "success",
-                    text: "🛒 Added to Cart"
-                })
+            if (res.statuscode === 2 || res.statuscode === 1) {
+                await fetchCart();
+                setIsCartOpen(true);
             }
             else {
-                alert("Something error")
+                Swal.fire("Error", res.message || "Something went wrong", "error");
             }
         }
     }

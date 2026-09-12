@@ -29,7 +29,7 @@ export const Main = () => {
     const [mobile, setmobile] = useState([])
     const [led, setled] = useState([])
     const [airpod, setairpod] = useState([])
-    const { id, theme } = useContext(Context)
+    const { id, theme, setIsCartOpen, fetchCart } = useContext(Context)
     const [discount, setdiscount] = useState("")
     const [showTop, setShowTop] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -323,23 +323,12 @@ export const Main = () => {
         })
         if (result.ok) {
             const res = await result.json()
-            if (res.statuscode === 2) {
-                Swal.fire({
-                    icon: "info",
-                    title: "🛒 Already in Cart",
-                    text: (res.message)
-                });
-
-            }
-            else if (res.statuscode === 1) {
-                navigate(`/cart?id=${id}`)
-                Swal.fire({
-                    icon: "success",
-                    text: "🛒 Added to Cart"
-                })
+            if (res.statuscode === 2 || res.statuscode === 1) {
+                await fetchCart();
+                setIsCartOpen(true);
             }
             else {
-                alert("dfg")
+                Swal.fire("Error", res.message || "Could not add to cart", "error")
             }
         }
     }

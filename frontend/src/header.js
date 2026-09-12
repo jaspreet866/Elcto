@@ -6,39 +6,28 @@ import logo from "./images/WhatsApp Image 2026-02-12 at 11.08.16 AM.png"
 import { motion, AnimatePresence } from 'framer-motion'
 
 export const Header = () => {
-    const [flag, setflag] = useState(false);
-    const { id, setid, theme, toggleTheme } = useContext(Context)
-    const { setutype } = useContext(Context)
-     const[d,setd]=useState([])
+    const { id, theme, toggleTheme, cartCount, setIsCartOpen, logoutAuth } = useContext(Context)
+    const flag = Boolean(id || localStorage.getItem("data"));
+    const [d, setd] = useState([])
     const searchRef = useRef(null);
-    const [search,setsearch] = useState("")
+    const [search, setsearch] = useState("")
     const navigate = useNavigate()
-    useEffect(() => {
-        const token = localStorage.getItem("data")
-        if (token) {
-            setflag(true);
-        }
-        else {
-            setflag(false);
-        }
-    }, [id])
 
-     useEffect(()=>{
+    useEffect(() => {
         handleSearch();
-    },[search])
+    }, [search])
 
     const handleSearch = async () => {
         const result = await fetch(`https://elcto-1.onrender.com/api/getproduct`, {
             method: "get"
         })
         if (result.ok) {
-            const res= await result.json();
-            if(res.statuscode===1){
+            const res = await result.json();
+            if (res.statuscode === 1) {
                 setd(res.data);
-               
             }
         }
-         if(searchRef.current){
+        if (searchRef.current) {
             clearTimeout(searchRef.current);
         }
         searchRef.current = setTimeout(() => {
@@ -46,38 +35,37 @@ export const Header = () => {
         }, 5000);
     }
     const filteredProducts = [...d].filter((product) =>
-    product.ProductName.toLowerCase().includes(search.toLowerCase())
-  );
-
+        product.ProductName.toLowerCase().includes(search.toLowerCase())
+    );
 
     const logout = () => {
-        localStorage.removeItem("data");
-        setflag(false);
-        setid("");
-        Swal.fire("Logout Successfull", "", "success");
-       
+        if (logoutAuth) {
+            logoutAuth();
+        } else {
+            localStorage.removeItem("data");
+        }
+        Swal.fire("Logout Successful", "", "success");
+        navigate("/");
     }
 
-    const cart=()=>{
-        if(id){
-            navigate("/cart")
+    const cart = () => {
+        if (id) {
+            setIsCartOpen(true);
         }
-        else{
-            navigate("/login")
+        else {
+            navigate("/login");
         }
     }
-    const wish=()=>{
-        if(id){
+    const wish = () => {
+        if (id) {
             navigate("/wish")
         }
-        else{
+        else {
             navigate("/login")
         }
     }
     return (
         <>
-
-
             <nav className="navbar navbar-expand-lg sticky-glass-nav t py-2">
                 <div className="container">
                     <div className="d-flex align-items-center gap-3">
@@ -115,6 +103,11 @@ export const Header = () => {
                         </button>
                         <button className="btn header-mobile-action position-relative" onClick={cart} aria-label="Open cart">
                             <i className="bi bi-bag-fill"></i>
+                            {cartCount > 0 && (
+                                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary" style={{ fontSize: "0.6rem", padding: "0.25em 0.45em" }}>
+                                    {cartCount}
+                                </span>
+                            )}
                         </button>
                     </div>
 
@@ -267,6 +260,11 @@ export const Header = () => {
                             </button>
                             <button className="btn header-icon-btn position-relative" onClick={() => cart()} title="Cart" aria-label="Cart">
                                 <i className="bi bi-bag-fill fs-5"></i>
+                                {cartCount > 0 && (
+                                    <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary" style={{ fontSize: "0.65rem" }}>
+                                        {cartCount}
+                                    </span>
+                                )}
                             </button>
                             <button className="btn header-icon-btn position-relative" onClick={() => wish()} title="Wishlist" aria-label="Wishlist">
                                 <i className="bi bi-heart-fill fs-5 text-danger"></i>
@@ -430,8 +428,13 @@ export const Header = () => {
                         <i className="bi bi-heart-fill"></i><br></br>
                         <span className=''>Wishlist</span>
                     </div>
-                    <div className="btn text-white" onClick={() => { cart() }}>
-                        <i class="bi bi-cart-fill"></i><br></br>
+                    <div className="btn text-white position-relative" onClick={() => { cart() }}>
+                        <i className="bi bi-cart-fill"></i><br></br>
+                        {cartCount > 0 && (
+                            <span className="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-danger" style={{ fontSize: "0.55rem" }}>
+                                {cartCount}
+                            </span>
+                        )}
                         <span className=''>Cart</span>
                     </div>
                    {

@@ -8,7 +8,7 @@ export const Wish = () => {
 
 
     const [d, setd] = useState([])
-    const { id } = useContext(Context)
+    const { id, setIsCartOpen, fetchCart } = useContext(Context)
     const navigate = useNavigate()
    
 
@@ -41,8 +41,9 @@ export const Wish = () => {
         })
         if (result.ok) {
             const res = await result.json()
-            if (res.statuscode === 1) {
-                navigate(`/cart?id=${id}`)
+            if (res.statuscode === 1 || res.statuscode === 2) {
+                await fetchCart();
+                setIsCartOpen(true);
             }
         }
     }

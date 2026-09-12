@@ -1,12 +1,14 @@
-import { useState } from "react"
+import { useState, useContext } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { SEO } from "./SEO"
+import { Context } from "./usecontext"
 
 export const VendorLogin = () => {
     const [email, setemail] = useState("")
     const [pass, setpass] = useState("")
     const [loading, setLoading] = useState(false)
     const [message, setMessage] = useState("")
+    const { loginAuth } = useContext(Context)
     const navigate = useNavigate()
 
     const login = async (e) => {
@@ -19,7 +21,7 @@ export const VendorLogin = () => {
             })
             const res = result.ok ? await result.json() : null
             if (res?.statuscode === 1) {
-                localStorage.setItem("data", JSON.stringify(res.token))
+                loginAuth(res.token)
                 navigate("/")
             } else setMessage("Email or password isn’t correct. Please try again.")
         } catch { setMessage("We couldn’t sign you in right now. Please try again.") } finally { setLoading(false) }

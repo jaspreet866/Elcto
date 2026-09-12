@@ -12,7 +12,7 @@ export const Related = () => {
     const [pricesort, setpricesort] = useState("")
     const [brandSort, setbrandSort] = useState("")
     const [datta, setdatta] = useState([])
-    const { id } = useContext(Context)
+    const { id, setIsCartOpen, fetchCart } = useContext(Context)
     const [pr] = useSearchParams()
     const navigate = useNavigate()
     const prr = pr.get("id")
@@ -137,26 +137,14 @@ export const Related = () => {
         })
         if (result.ok) {
             const res = await result.json()
-            if (res.statuscode === 2) {
-                Swal.fire({
-                    icon: "info",
-                    title: "🛒 Already in Cart",
-                    text: (res.message)
-                });
-
-            }
-            else if (res.statuscode === 1) {
-                navigate(`/cart?id=${id}`)
-                Swal.fire({
-                    icon: "success",
-                    text: "🛒 Added to Cart"
-                })
+            if (res.statuscode === 2 || res.statuscode === 1) {
+                await fetchCart();
+                setIsCartOpen(true);
             }
             else {
-                alert("Something Error")
+                Swal.fire("Error", res.message || "Could not add to cart", "error")
             }
         }
-
     }
     const products = [...d]
         .filter((p) => {
