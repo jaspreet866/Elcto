@@ -4,6 +4,18 @@ dotenv.config();
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
+const rateLimit = require("express-rate-limit");
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 100,
+  message: {
+    success: false,
+    message: "Too many requests, please try again after 15 minutes.",
+  },
+});
+
+app.use(limiter);
 
 // Route imports
 const authRoutes = require('./routes/authRoutes');
