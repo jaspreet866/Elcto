@@ -29,7 +29,11 @@ function App() {
   const [theme, setTheme] = useState(getPreferredTheme);
 
   const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === "dark" ? "light" : "dark"));
+    setTheme((prevTheme) => {
+      const nextTheme = prevTheme === "dark" ? "light" : "dark";
+      localStorage.setItem("theme", nextTheme);
+      return nextTheme;
+    });
   };
 
   useEffect(() => {
@@ -41,6 +45,19 @@ function App() {
     const themeColor = document.querySelector('meta[name="theme-color"]');
     themeColor?.setAttribute("content", theme === "dark" ? "#090d16" : "#f8fafc");
   }, [theme]);
+
+  // Listen to OS-level theme changes if no manual preference is locked in session
+  useEffect(() => {
+    const mediaQuery = window.matchMedia?.("(prefers-color-scheme: dark)");
+    if (!mediaQuery) return;
+    const handleChange = (e) => {
+      if (!localStorage.getItem("theme")) {
+        setTheme(e.matches ? "dark" : "light");
+      }
+    };
+    mediaQuery.addEventListener?.("change", handleChange);
+    return () => mediaQuery.removeEventListener?.("change", handleChange);
+  }, []);
 
   const decodeToken = (stored) => {
     if (!stored) return null;
@@ -74,7 +91,7 @@ function App() {
       if (decode) {
         if (decode.usertype) setutype(decode.usertype);
         if (decode.id) setid(decode.id);
-        if (decode.mail) setmail(decode.mail);
+        if (decode.mail || decode.email) setmail(decode.mail || decode.email);
       }
     } catch (err) {
       console.warn("Login auth error:", err);
@@ -83,6 +100,7 @@ function App() {
 
   const logoutAuth = useCallback(() => {
     localStorage.removeItem("data");
+    localStorage.removeItem("user_details");
     setid("");
     setutype("");
     setmail("");
@@ -96,7 +114,7 @@ function App() {
       if (decode) {
         if (decode.usertype) setutype(decode.usertype);
         if (decode.id) setid(decode.id);
-        if (decode.mail) setmail(decode.mail);
+        if (decode.mail || decode.email) setmail(decode.mail || decode.email);
       }
     }
   }, []);

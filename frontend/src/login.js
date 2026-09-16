@@ -17,6 +17,9 @@ export const Login = () => {
         if (result) {
             const res = await result.json()
             if (res.statuscode === 1) {
+                if (res.data) {
+                    localStorage.setItem("user_details", JSON.stringify(res.data));
+                }
                 loginAuth(res.jwtoken)
                 Swal.fire({ icon: "success", title: "Login Successful" })
                 navigate(`/`)

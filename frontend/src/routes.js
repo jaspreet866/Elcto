@@ -21,6 +21,7 @@ import { VendorLogin } from "./vendorlog"
 import { ForgetPass } from "./forgotpassword"
 import { Verifyy } from "./verify"
 import { ResetPassword } from "./resetpassword"
+import { Profile } from "./Profile"
 
 export const Rout = () => {
 
@@ -41,6 +42,8 @@ export const Rout = () => {
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/dashboard" element={<Dashboard></Dashboard>} />
                 <Route path="/myorder" element={<Order></Order>} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/myprofile" element={<Profile />} />
                 <Route path="/about" element={<About></About>} />
                 <Route path="/contact" element={<Contact></Contact>} />
                 <Route path="/vendor" element={<Vendor></Vendor>}></Route>

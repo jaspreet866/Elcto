@@ -3,10 +3,11 @@ import { useContext } from "react";
 import { Context } from "./usecontext";
 import Swal from "sweetalert2"
 import logo from "./images/WhatsApp Image 2026-02-12 at 11.08.16 AM.png"
+import ThemeToggle from "./ThemeToggle"
 
 
 export const AdminHeader = () => {
-    const { id, theme, toggleTheme, logoutAuth } = useContext(Context)
+    const { id, logoutAuth } = useContext(Context)
     const flag = Boolean(id || localStorage.getItem("data"));
     const navigate = useNavigate()
 
@@ -78,33 +79,36 @@ export const AdminHeader = () => {
                                 <a className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Account
                                 </a>
-                                <ul className="dropdown-menu dropdown-menu-end shadow-sm text-center ">
-                                    <li>
-                                        {flag ? <>
-                                            <button onClick={logout} className="btn text-center justify-content-center">
-                                                Logout
-                                            </button></>
-                                            : <>
-                                                <Link className=" text-decoration-none text-black" to="/login">Log IN</Link><br></br>
-                                                <Link className="text-decoration-none text-black" to="/register">SignUp</Link>
-                                            </>}
-                                    </li>
+                                <ul className="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-2 text-start" style={{ minWidth: "180px" }}>
+                                    {flag ? (
+                                        <>
+                                            <li>
+                                                <Link className="dropdown-item rounded-3 py-2 fw-semibold" to="/profile">
+                                                    <i className="bi bi-person-circle me-2 text-primary"></i>My Profile
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link className="dropdown-item rounded-3 py-2 fw-semibold" to="/dashboard">
+                                                    <i className="bi bi-speedometer2 me-2 text-info"></i>Dashboard
+                                                </Link>
+                                            </li>
+                                            <li><hr className="dropdown-divider my-1" /></li>
+                                            <li>
+                                                <button onClick={logout} className="dropdown-item rounded-3 py-2 text-danger fw-semibold w-100 text-start border-0 bg-transparent">
+                                                    <i className="bi bi-box-arrow-right me-2"></i>Logout
+                                                </button>
+                                            </li>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <li><Link className="dropdown-item text-center rounded-3 mb-1" to="/login">Log In</Link></li>
+                                            <li><Link className="dropdown-item text-center rounded-3 fw-semibold text-primary" to="/register">Sign Up</Link></li>
+                                        </>
+                                    )}
                                 </ul>
                             </li>
                             <li className="nav-item d-flex align-items-center ms-lg-2">
-                                <button 
-                                    className="btn btn-theme-toggle header-icon-btn" 
-                                    onClick={toggleTheme} 
-                                    title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
-                                    aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-                                    aria-pressed={theme === "dark"}
-                                >
-                                    {theme === "dark" ? (
-                                        <i className="bi bi-sun-fill text-warning fs-5"></i>
-                                    ) : (
-                                        <i className="bi bi-moon-stars-fill text-primary fs-5"></i>
-                                    )}
-                                </button>
+                                <ThemeToggle />
                             </li>
                         </ul>
 

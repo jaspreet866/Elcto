@@ -3,10 +3,11 @@ import { useContext, useState, useEffect ,useRef} from "react"
 import Swal from "sweetalert2";
 import { Context } from "./usecontext";
 import logo from "./images/WhatsApp Image 2026-02-12 at 11.08.16 AM.png"
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
+import ThemeToggle from "./ThemeToggle"
 
 export const Header = () => {
-    const { id, theme, toggleTheme, cartCount, setIsCartOpen, logoutAuth } = useContext(Context)
+    const { id, cartCount, setIsCartOpen, logoutAuth } = useContext(Context)
     const flag = Boolean(id || localStorage.getItem("data"));
     const [d, setd] = useState([])
     const searchRef = useRef(null);
@@ -91,16 +92,8 @@ export const Header = () => {
                         </Link>
                     </div>
 
-                    <div className="header-mobile-actions d-lg-none">
-                        <button
-                            className="btn btn-theme-toggle header-mobile-action"
-                            onClick={toggleTheme}
-                            title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
-                            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-                            aria-pressed={theme === "dark"}
-                        >
-                            <i className={`bi ${theme === "dark" ? "bi-sun-fill text-warning" : "bi-moon-stars-fill text-primary"}`}></i>
-                        </button>
+                    <div className="header-mobile-actions d-lg-none d-flex align-items-center gap-2">
+                        <ThemeToggle className="header-mobile-action" />
                         <button className="btn header-mobile-action position-relative" onClick={cart} aria-label="Open cart">
                             <i className="bi bi-bag-fill"></i>
                             {cartCount > 0 && (
@@ -229,35 +222,43 @@ export const Header = () => {
                                 >
                                     Account
                                 </a>
-                                <ul className="dropdown-menu shadow-lg border-0 rounded-4 p-2">
-                                    <li className="dropdown-item">
-                                        {flag ? <>
-                                            <p onClick={logout} className="text-danger m-0 text-center fw-semibold style-pointer">
-                                                Logout
-                                            </p></>
-                                            : <>
-                                                <Link className="dropdown-item text-center rounded-3 mb-1" to="/login">Log In</Link>
-                                                <Link className="dropdown-item text-center rounded-3 fw-semibold text-primary" to="/register">Sign Up</Link>
-                                            </>}
-                                    </li>
+                                <ul className="dropdown-menu shadow-lg border-0 rounded-4 p-2" style={{ minWidth: "180px" }}>
+                                    {flag ? (
+                                        <>
+                                            <li>
+                                                <Link className="dropdown-item rounded-3 py-2 fw-semibold" to="/profile">
+                                                    <i className="bi bi-person-circle me-2 text-primary"></i>My Profile
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link className="dropdown-item rounded-3 py-2 fw-semibold" to="/myorder">
+                                                    <i className="bi bi-box-seam me-2 text-info"></i>My Orders
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link className="dropdown-item rounded-3 py-2 fw-semibold" to="/wish">
+                                                    <i className="bi bi-heart me-2 text-danger"></i>Wishlist
+                                                </Link>
+                                            </li>
+                                            <li><hr className="dropdown-divider my-1" /></li>
+                                            <li>
+                                                <button onClick={logout} className="dropdown-item rounded-3 py-2 text-danger fw-semibold w-100 text-start border-0 bg-transparent">
+                                                    <i className="bi bi-box-arrow-right me-2"></i>Sign Out
+                                                </button>
+                                            </li>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <li><Link className="dropdown-item text-center rounded-3 mb-1" to="/login">Log In</Link></li>
+                                            <li><Link className="dropdown-item text-center rounded-3 fw-semibold text-primary" to="/register">Sign Up</Link></li>
+                                        </>
+                                    )}
                                 </ul>
                             </li>
                         </ul>
 
                         <div className="ms-lg-4 d-flex align-items-center gap-2">
-                            <button 
-                                className="btn btn-theme-toggle header-icon-btn" 
-                                onClick={toggleTheme} 
-                                title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
-                                aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-                                aria-pressed={theme === "dark"}
-                            >
-                                {theme === "dark" ? (
-                                    <i className="bi bi-sun-fill text-warning fs-5"></i>
-                                ) : (
-                                    <i className="bi bi-moon-stars-fill text-primary fs-5"></i>
-                                )}
-                            </button>
+                            <ThemeToggle />
                             <button className="btn header-icon-btn position-relative" onClick={() => cart()} title="Cart" aria-label="Cart">
                                 <i className="bi bi-bag-fill fs-5"></i>
                                 {cartCount > 0 && (
@@ -287,19 +288,7 @@ export const Header = () => {
                 <div className="offcanvas-header border-bottom d-flex align-items-center justify-content-between">
                     <h5 className="offcanvas-title fw-bold m-0" id="mobileOffcanvasLabel">ElectoMart</h5>
                     <div className="d-flex align-items-center gap-2">
-                        <button 
-                            className="btn btn-theme-toggle header-icon-btn" 
-                            onClick={toggleTheme} 
-                            title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
-                            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-                            aria-pressed={theme === "dark"}
-                        >
-                            {theme === "dark" ? (
-                                <i className="bi bi-sun-fill text-warning fs-6"></i>
-                            ) : (
-                                <i className="bi bi-moon-stars-fill text-primary fs-6"></i>
-                            )}
-                        </button>
+                        <ThemeToggle />
                         <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                 </div>
@@ -384,8 +373,27 @@ export const Header = () => {
                             </a>
                             <div className="collapse text-start" id="accountCollapse">
                                 <div className="ps-4 py-2" data-bs-dismiss="offcanvas">
-                                    <Link to="/login" className="dropdown-item py-2">Login</Link>
-                                    <Link to="/register" className="dropdown-item py-2" >Sign Up</Link>
+                                    {flag ? (
+                                        <>
+                                            <Link to="/profile" className="dropdown-item py-2 fw-semibold text-primary">
+                                                <i className="bi bi-person-circle me-2"></i>My Profile
+                                            </Link>
+                                            <Link to="/myorder" className="dropdown-item py-2">
+                                                <i className="bi bi-box-seam me-2"></i>My Orders
+                                            </Link>
+                                            <Link to="/wish" className="dropdown-item py-2">
+                                                <i className="bi bi-heart me-2"></i>Wishlist
+                                            </Link>
+                                            <button onClick={logout} className="dropdown-item py-2 text-danger border-0 bg-transparent text-start w-100">
+                                                <i className="bi bi-box-arrow-right me-2"></i>Sign Out
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Link to="/login" className="dropdown-item py-2">Login</Link>
+                                            <Link to="/register" className="dropdown-item py-2">Sign Up</Link>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </li>
