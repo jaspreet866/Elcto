@@ -282,9 +282,9 @@ footer i:hover {
 }
 
 #goTopBtn {
-   position: fixed;
-  bottom: 20px;
-  right: 15px;
+  position: fixed;
+  bottom: 90px;
+  right: 26px;
   font-size: 40px;
   color: black;
   cursor: pointer;
@@ -372,9 +372,10 @@ footer i:hover {
   .navbar-logo {
     height: 36px;
   }
-  #goTopBtn{
-    bottom:80px;
-    font-size: 35px;
+  #goTopBtn {
+    bottom: 76px;
+    right: 16px;
+    font-size: 30px;
   }
 }
 
@@ -1697,11 +1698,10 @@ section h2.fw-bold,
 }
 
 #goTopBtn {
-  width: 58px;
-  height: 58px;
-  right: 22px;
-
-  bottom: 24px;
+  width: 54px;
+  height: 54px;
+  right: 26px;
+  bottom: 86px;
   display: grid;
   place-items: center;
   position: fixed;
@@ -2035,7 +2035,7 @@ footer .fa-brands:hover {
   }
 
   #goTopBtn {
-    bottom: 86px;
+    bottom: 76px;
     right: 16px;
     width: 46px;
     height: 46px;

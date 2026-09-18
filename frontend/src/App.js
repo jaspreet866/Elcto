@@ -8,6 +8,7 @@ import { AdminHeader } from './adminheader';
 import ScrollToTop from './scroll'; 
 import CustomCursor from './CustomCursor'; 
 import MiniCartDrawer from './MiniCartDrawer';
+import { Chatbot } from './Chatbot';
 import { API_BASE } from './apiConfig';
 import Swal from 'sweetalert2';
 
@@ -267,6 +268,7 @@ function App() {
         <CustomCursor />
         {utype === "admin" || utype === "Vendor" ? <AdminHeader /> : <Header />}
         <MiniCartDrawer />
+        <Chatbot />
         <ScrollToTop />
         <Rout />
         <Footer />

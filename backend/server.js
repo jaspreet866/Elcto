@@ -20,6 +20,7 @@ const wishlistRoutes = require('./routes/wishlistRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const vendorRoutes = require('./routes/vendorRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 
 const app = express();
 const limiter = rateLimit({
@@ -75,6 +76,7 @@ app.use('/api', wishlistRoutes);
 app.use('/api', orderRoutes);
 app.use('/api', contactRoutes);
 app.use('/api', vendorRoutes);
+app.use('/api', chatRoutes);
 
 // ─── GLOBAL ERROR HANDLER ────────────────────────────────────────────────────
 app.use((err, req, res, next) => {

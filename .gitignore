@@ -14,3 +14,8 @@ frontend/node_modules/.cache/
 .DS_Store
 *.log
 .env
+.env.*
+*.env
+**/.env
+backend/.env
+frontend/.env
