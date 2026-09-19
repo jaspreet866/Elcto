@@ -3,7 +3,7 @@
   "outputDirectory": "build",
   "rewrites": [
     {
-      "source": "/((?!static/|.*\\..*).*)",
+      "source": "/((?!static/|_vercel/|.*\\..*).*)",
       "destination": "/index.html"
     }
   ]
