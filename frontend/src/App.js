@@ -1,4 +1,6 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import './App.css';
 import { Footer } from './footer';
 import { Context } from './usecontext';
@@ -14,6 +16,7 @@ import Swal from 'sweetalert2';
 
 
 function App() {
+  const location = useLocation();
   const [id, setid] = useState("")
   const [utype, setutype] = useState("")
   const [mail, setmail] = useState("")
@@ -272,6 +275,7 @@ function App() {
         <ScrollToTop />
         <Rout />
         <Footer />
+        <SpeedInsights route={location.pathname} />
       </Context.Provider>
     </div>
   );
