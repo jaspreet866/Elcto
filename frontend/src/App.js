@@ -11,6 +11,7 @@ import MiniCartDrawer from './MiniCartDrawer';
 import { Chatbot } from './Chatbot';
 import { API_BASE } from './apiConfig';
 import Swal from 'sweetalert2';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 
 function App() {
@@ -272,10 +273,10 @@ function App() {
         <ScrollToTop />
         <Rout />
         <Footer />
+        <SpeedInsights />
       </Context.Provider>
     </div>
   );
 }
 
 export default App;
-
