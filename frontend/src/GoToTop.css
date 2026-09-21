@@ -1,0 +1,220 @@
+/* ==========================================================
+   GO TO TOP FLOATING BUTTON STYLES
+   Modern, sleek, glassmorphic design with circular progress ring
+   ========================================================== */
+
+.go-to-top-wrapper {
+  position: fixed;
+  bottom: 92px;
+  right: 24px;
+  z-index: 10030;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+/* Tooltip on the left */
+.go-to-top-tooltip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(15, 23, 42, 0.9);
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: inherit;
+  padding: 6px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.tooltip-progress {
+  color: #60a5fa;
+  font-weight: 700;
+  font-size: 0.72rem;
+  background: rgba(96, 165, 250, 0.15);
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+
+[data-theme="dark"] .go-to-top-tooltip {
+  background: rgba(30, 41, 59, 0.95);
+  color: #f1f5f9;
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Main Button */
+.go-to-top-btn {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  box-shadow: 0 8px 24px -4px rgba(15, 23, 42, 0.14),
+              0 2px 6px rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+
+.go-to-top-btn:hover {
+  transform: translateY(-4px) scale(1.05);
+  background: #ffffff;
+  box-shadow: 0 14px 30px -4px rgba(37, 99, 235, 0.3),
+              0 4px 10px rgba(0, 0, 0, 0.08);
+  border-color: rgba(37, 99, 235, 0.4);
+}
+
+.go-to-top-btn:active {
+  transform: translateY(-1px) scale(0.96);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
+}
+
+.go-to-top-btn:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 3px;
+}
+
+/* Dark Mode Button */
+[data-theme="dark"] .go-to-top-btn {
+  background: rgba(30, 41, 59, 0.9);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="dark"] .go-to-top-btn:hover {
+  background: rgba(30, 41, 59, 1);
+  border-color: rgba(96, 165, 250, 0.5);
+  box-shadow: 0 14px 32px rgba(59, 130, 246, 0.35);
+}
+
+/* SVG Progress Ring */
+.go-to-top-progress-ring {
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 50px;
+  height: 50px;
+  transform: rotate(-90deg); /* Start circular fill from top (12 o'clock) */
+  pointer-events: none;
+}
+
+.progress-ring-track {
+  stroke: rgba(203, 213, 225, 0.4);
+  transition: stroke 0.3s ease;
+}
+
+[data-theme="dark"] .progress-ring-track {
+  stroke: rgba(255, 255, 255, 0.1);
+}
+
+.progress-ring-indicator {
+  stroke: #2563eb;
+  transition: stroke-dashoffset 0.12s ease-out, stroke 0.3s ease;
+}
+
+.go-to-top-btn:hover .progress-ring-indicator {
+  stroke: #3b82f6;
+  filter: drop-shadow(0 0 4px rgba(59, 130, 246, 0.6));
+}
+
+[data-theme="dark"] .progress-ring-indicator {
+  stroke: #60a5fa;
+}
+
+/* Icon Container & Arrow */
+.go-to-top-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.go-to-top-arrow {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #1e293b;
+  line-height: 1;
+  transition: color 0.25s ease, transform 0.25s ease;
+  -webkit-text-stroke: 0.5px currentColor;
+}
+
+.go-to-top-btn:hover .go-to-top-arrow {
+  color: #2563eb;
+  animation: goToTopBounce 0.6s ease infinite alternate;
+}
+
+[data-theme="dark"] .go-to-top-arrow {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .go-to-top-btn:hover .go-to-top-arrow {
+  color: #60a5fa;
+}
+
+/* Micro-animation: subtle upward bounce on hover */
+@keyframes goToTopBounce {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-3px);
+  }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .go-to-top-wrapper {
+    bottom: 86px;
+    right: 18px;
+  }
+
+  .go-to-top-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .go-to-top-progress-ring {
+    width: 46px;
+    height: 46px;
+    top: -1px;
+    left: -1px;
+  }
+
+  .go-to-top-arrow {
+    font-size: 1.05rem;
+  }
+
+  /* On touch devices, hide hover tooltip to prevent persistent display */
+  .go-to-top-tooltip {
+    display: none;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .go-to-top-btn,
+  .go-to-top-btn:hover,
+  .go-to-top-arrow,
+  .go-to-top-btn:hover .go-to-top-arrow {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+  }
+}

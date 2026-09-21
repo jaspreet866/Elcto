@@ -31,7 +31,6 @@ export const Main = () => {
     const [airpod, setairpod] = useState([])
     const { id, theme, setIsCartOpen, fetchCart } = useContext(Context)
     const [discount, setdiscount] = useState("")
-    const [showTop, setShowTop] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalData, setModalData] = useState({ img: "", title: "", price: "", salePrice: "" });
 
@@ -44,7 +43,6 @@ export const Main = () => {
         });
         setIsModalOpen(true);
     };
-    const [scrollProgress, setScrollProgress] = useState(0);
     const [isMobile, setIsMobile] = useState(
         () => window.matchMedia?.("(max-width: 767px), (prefers-reduced-motion: reduce)")?.matches ?? false
     );
@@ -122,24 +120,6 @@ export const Main = () => {
         return () => clearTimeout(timer);
     }, [])
 
-    useEffect(() => {
-
-        const handleScroll = () => {
-            setShowTop(window.scrollY > window.innerHeight * 0.2);
-            const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
-            setScrollProgress(scrollableHeight > 0 ? (window.scrollY / scrollableHeight) * 100 : 0);
-        };
-
-        handleScroll();
-        window.addEventListener("scroll", handleScroll);
-        window.addEventListener("resize", handleScroll);
-
-        return () => {
-            window.removeEventListener("scroll", handleScroll);
-            window.removeEventListener("resize", handleScroll);
-        };
-
-    }, []);
 
 
 
@@ -332,12 +312,7 @@ export const Main = () => {
             }
         }
     }
-    const gotop = () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        })
-    }
+
     const calculateDiscount = (original, sale) => {
         return Math.round(((original - sale) / original) * 100);
     }
@@ -1346,19 +1321,6 @@ export const Main = () => {
                 </div>
             </section>
 
-            {showTop && (
-                <button
-                    id='goTopBtn'
-                    type="button"
-                    onClick={gotop}
-                    style={{ "--scroll-progress": `${Math.min(scrollProgress, 100) * 3.6}deg` }}
-                    aria-label="Go to top"
-                >
-                    <span className="go-top-icon" aria-hidden="true">
-                        <i className="bi bi-arrow-up"></i>
-                    </span>
-                </button>
-            )}
 
             <ImageModal 
                 isOpen={isModalOpen}

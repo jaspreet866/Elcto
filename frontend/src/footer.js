@@ -7,10 +7,33 @@ import logo from "./images/WhatsApp Image 2026-02-12 at 11.08.16 AM.png"
 import { motion } from 'framer-motion'
 
 export const Footer = () => {
+    const handleScrollTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    };
+
     return (
         <>
+            <div 
+                className="footer-back-to-top-bar"
+                onClick={handleScrollTop}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleScrollTop();
+                    }
+                }}
+                aria-label="Back to top of page"
+            >
+                <span>Back to top</span>
+                <i className="bi bi-chevron-up"></i>
+            </div>
             <motion.footer 
-                className="bg-light mt-5 pt-5"
+                className="bg-light pt-4"
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}

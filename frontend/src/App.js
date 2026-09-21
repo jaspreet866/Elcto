@@ -11,6 +11,7 @@ import ScrollToTop from './scroll';
 import CustomCursor from './CustomCursor'; 
 import MiniCartDrawer from './MiniCartDrawer';
 import { Chatbot } from './Chatbot';
+import { GoToTop } from './GoToTop';
 import { API_BASE } from './apiConfig';
 import Swal from 'sweetalert2';
 
@@ -272,6 +273,7 @@ function App() {
         {utype === "admin" || utype === "Vendor" ? <AdminHeader /> : <Header />}
         <MiniCartDrawer />
         <Chatbot />
+        <GoToTop />
         <ScrollToTop />
         <Rout />
         <Footer />
