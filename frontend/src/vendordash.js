@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react"
 import { Link } from "react-router-dom"
 import { Context } from "./usecontext"
 import { SEO } from "./SEO"
+import { API_BASE } from "./apiConfig"
 
 export const VendorDashboard = () => {
     const [d, setd] = useState([])
@@ -14,7 +15,7 @@ export const VendorDashboard = () => {
         if (!id) { setLoading(false); return }
         setLoading(true)
         try {
-            const result = await fetch(`https://elcto-1.onrender.com/api/vendorproduct/${id}`, { method: "get" })
+            const result = await fetch(`${API_BASE}/api/vendorproduct/${id}`, { method: "get" })
             if (result.ok) {
                 const res = await result.json()
                 if (res.statuscode === 1) setd(res.data)

@@ -21,7 +21,12 @@ const OrderSchema = new mongoose.Schema({
         Quantity: Number,
         Price: Number,
         Img: String
-    }]
-});
+    }],
+    OrderStatus: {
+        type: String,
+        default: 'Processing',
+        enum: ['Processing', 'Confirmed', 'Shipped', 'Out for Delivery', 'Delivered', 'Cancelled']
+    }
+}, { timestamps: true });
 
 module.exports = mongoose.model('Checkout', OrderSchema);

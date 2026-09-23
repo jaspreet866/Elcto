@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { useSearchParams } from "react-router-dom"
 import { SEO } from "./SEO"
+import { API_BASE } from "./apiConfig"
 
 export const Brand = () => {
 
@@ -15,20 +16,23 @@ export const Brand = () => {
   }, [])
 
   const show = async () => {
-    const result = await fetch(`https://elcto-1.onrender.com/api/brand/${prr}`, {
-      method: "get"
-    })
-    if (result.ok) {
-      const res = await result.json()
-      if (res.statuscode === 1) {
-        setd(res.data)
-        setidd(res.data[0]?.Category)
+    try {
+      const result = await fetch(`${API_BASE}/api/brand/${prr}`, {
+        method: "get"
+      })
+      if (result.ok) {
+        const res = await result.json()
+        if (res.statuscode === 1 && Array.isArray(res.data)) {
+          setd(res.data)
+          setidd(res.data[0]?.Category)
+        } else {
+          setd([])
+        }
       }
-      else {
-        alert("no")
-      }
+    } catch (err) {
+      console.error("Failed to fetch brand products:", err)
+      setd([])
     }
-
   }
 
 

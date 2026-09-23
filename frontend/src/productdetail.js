@@ -75,7 +75,7 @@ export const Detail = () => {
                 setidd(id)
             }
             else {
-                alert("not")
+                console.error("Product not found")
             }
         }
     }
@@ -94,103 +94,116 @@ export const Detail = () => {
             return
         }
         const data = { value, img, name, price, id, prr }
-        const result = await fetch(`${API_BASE}/api/cartdata/${prr}`, {
-            method: "post",
-            body: JSON.stringify(data),
-            headers: { "Content-type": "application/json;charset=UTF-8" }
-        })
-        if (result.ok) {
-            const res = await result.json()
-            if (res.statuscode === 2) {
-                await fetchCart();
-                setIsCartOpen(true);
+        try {
+            const result = await fetch(`${API_BASE}/api/cartdata/${prr}`, {
+                method: "post",
+                body: JSON.stringify(data),
+                headers: { "Content-type": "application/json;charset=UTF-8" }
+            })
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 2 || res.statuscode === 1) {
+                    await fetchCart();
+                    setIsCartOpen(true);
+                }
+                else {
+                    Swal.fire("Error", res.message || "Could not add to cart", "error")
+                }
             }
-            else if (res.statuscode === 1) {
-                await fetchCart();
-                setIsCartOpen(true);
-            }
-            else {
-                Swal.fire("Error", res.message || "Could not add to cart", "error")
-            }
+        } catch (err) {
+            console.error("Cart add error:", err);
+            Swal.fire("Error", "Could not connect to server", "error");
         }
     }
 
     const show2 = async () => {
-        const result = await fetch(`${API_BASE}/api/relatedtwo/${catidd}`, {
-            method: "get"
-        })
-        if (result.ok) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setrela(res.data)
+        try {
+            const result = await fetch(`${API_BASE}/api/relatedtwo/${catidd}`, {
+                method: "get"
+            })
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1 && Array.isArray(res.data)) {
+                    setrela(res.data)
+                } else {
+                    setrela([])
+                }
             }
-        }
-        else {
-            alert("not any")
+        } catch (err) {
+            console.error("Related products error:", err);
+            setrela([])
         }
     }
 
     const wish = async () => {
         const data = { img, name, price, id, }
-        const result = await fetch(`${API_BASE}/api/wishpost/${prr}`, {
-            method: "post",
-            body: JSON.stringify(data),
-            headers: { "Content-type": "application/json;charset=UTF-8" }
-        })
-        if (result) {
-            const res = await result.json();
+        try {
+            const result = await fetch(`${API_BASE}/api/wishpost/${prr}`, {
+                method: "post",
+                body: JSON.stringify(data),
+                headers: { "Content-type": "application/json;charset=UTF-8" }
+            })
+            if (result) {
+                const res = await result.json();
 
-            if (res.statuscode === 2) {
-                Swal.fire({
-                    icon: "info",
-                    title: "❤️ Already in Wishlist",
-                    text: (res.message)
-                })
+                if (res.statuscode === 2) {
+                    Swal.fire({
+                        icon: "info",
+                        title: "❤️ Already in Wishlist",
+                        text: (res.message)
+                    })
+                }
+
+                else if (res.statuscode === 1) {
+                    navigate(`/wish?id=${id}`);
+                    Swal.fire({
+                        icon: "success",
+                        title: "❤️ Added in Wishlist",
+                    })
+                }
+
+                else {
+                    Swal.fire("Notice", res.message || "Something went wrong", "info");
+                }
             }
-
-            else if (res.statuscode === 1) {
-                navigate(`/wish?id=${id}`);
-                Swal.fire({
-                    icon: "success",
-                    title: "❤️ Added in Wishlist",
-                })
-            }
-
-            else {
-                alert("Something went wrong");
-            }
-
-
+        } catch (err) {
+            console.error("Wishlist error:", err);
+            Swal.fire("Error", "Could not connect to server", "error");
         }
     }
     const wish2 = async (id, name, price, img, prr) => {
         const data = { id, name, price, img }
-        const result = await fetch(`${API_BASE}/api/wishpost/${prr}`, {
-            method: "post",
-            body: JSON.stringify(data),
-            headers: { "Content-type": "application/json;charset=UTF-8" }
-        })
-        if (result.ok) {
-            const res = await result.json();
+        try {
+            const result = await fetch(`${API_BASE}/api/wishpost/${prr}`, {
+                method: "post",
+                body: JSON.stringify(data),
+                headers: { "Content-type": "application/json;charset=UTF-8" }
+            })
+            if (result.ok) {
+                const res = await result.json();
 
-            if (res.statuscode === 2) {
-                Swal.fire({
-                    icon: "info",
-                    title: "❤️ Already in Wishlist",
-                    text: (res.message)
-                })
-            }
+                if (res.statuscode === 2) {
+                    Swal.fire({
+                        icon: "info",
+                        title: "❤️ Already in Wishlist",
+                        text: (res.message)
+                    })
+                }
 
-            else if (res.statuscode === 1) {
-                navigate(`/wish?id=${id}`);
-                Swal.fire({
-                    icon: "success",
-                    title: "❤️ Added in Wishlist",
-                })
+                else if (res.statuscode === 1) {
+                    navigate(`/wish?id=${id}`);
+                    Swal.fire({
+                        icon: "success",
+                        title: "❤️ Added in Wishlist",
+                    })
+                }
+                else {
+                    Swal.fire("Notice", res.message || "Something went wrong", "info");
+                }
             }
-            else {
-                alert("Something went wrong");
-            }
+        } catch (err) {
+            console.error("Wishlist error:", err);
+            Swal.fire("Error", "Could not connect to server", "error");
         }
     }
     const cart = async (id, name, price, img, value = 1, prr) => {
@@ -204,20 +217,25 @@ export const Detail = () => {
             return;
         }
         const data = { id, name, price, img, value }
-        const result = await fetch(`${API_BASE}/api/cartdata/${prr}`, {
-            method: "post",
-            body: JSON.stringify(data),
-            headers: { "Content-type": "application/json;charset=UTF-8" }
-        })
-        if (result.ok) {
-            const res = await result.json()
-            if (res.statuscode === 2 || res.statuscode === 1) {
-                await fetchCart();
-                setIsCartOpen(true);
+        try {
+            const result = await fetch(`${API_BASE}/api/cartdata/${prr}`, {
+                method: "post",
+                body: JSON.stringify(data),
+                headers: { "Content-type": "application/json;charset=UTF-8" }
+            })
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 2 || res.statuscode === 1) {
+                    await fetchCart();
+                    setIsCartOpen(true);
+                }
+                else {
+                    Swal.fire("Error", res.message || "Something went wrong", "error");
+                }
             }
-            else {
-                Swal.fire("Error", res.message || "Something went wrong", "error");
-            }
+        } catch (err) {
+            console.error("Cart error:", err);
+            Swal.fire("Error", "Could not connect to server", "error");
         }
     }
     const handleRating = (rate) => {
@@ -227,41 +245,51 @@ export const Detail = () => {
     const send = async (e) => {
         e.preventDefault()
         const data = { username, mail, prr, rating, msg }
-        const result = await fetch("https://elcto-1.onrender.com/api/reviews", {
-            method: "post",
-            body: JSON.stringify(data),
-            headers: { "Content-type": "application/json;charset=UTF-8" }
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                Swal.fire({
-                    icon: "success",
-                    title: "Review Submitted",
-                })
-                setusername("")
-                setmail("")
-                setmsg("")
-                setrating(0)
-                showreview()
+        try {
+            const result = await fetch(`${API_BASE}/api/reviews`, {
+                method: "post",
+                body: JSON.stringify(data),
+                headers: { "Content-type": "application/json;charset=UTF-8" }
+            })
+            if (result) {
+                const res = await result.json()
+                if (res.statuscode === 1) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Review Submitted",
+                    })
+                    setusername("")
+                    setmail("")
+                    setmsg("")
+                    setrating(0)
+                    showreview()
+                }
+                else {
+                    Swal.fire("Error", res.message || "Failed to submit review", "error")
+                }
             }
-            else {
-                alert("not")
-            }
+        } catch (err) {
+            console.error("Review submit error:", err);
+            Swal.fire("Error", "Could not connect to server", "error");
         }
     }
     const showreview = async () => {
-        const result = await fetch(`https://elcto-1.onrender.com/api/getreview/${prr}`, {
-            method: "get"
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setreview(res.data)
+        try {
+            const result = await fetch(`${API_BASE}/api/getreview/${prr}`, {
+                method: "get"
+            })
+            if (result) {
+                const res = await result.json()
+                if (res.statuscode === 1 && Array.isArray(res.data)) {
+                    setreview(res.data)
+                }
+                else {
+                    setreview([])
+                }
             }
-            else {
-                alert("fgh")
-            }
+        } catch (err) {
+            console.error("Fetch reviews error:", err);
+            setreview([])
         }
     }
 

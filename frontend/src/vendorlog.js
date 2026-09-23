@@ -2,6 +2,7 @@ import { useState, useContext } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { SEO } from "./SEO"
 import { Context } from "./usecontext"
+import { API_BASE } from "./apiConfig"
 
 export const VendorLogin = () => {
     const [email, setemail] = useState("")
@@ -16,7 +17,7 @@ export const VendorLogin = () => {
         setLoading(true)
         setMessage("")
         try {
-            const result = await fetch("https://elcto-1.onrender.com/api/vlog", {
+            const result = await fetch(`${API_BASE}/api/vlog`, {
                 method: "post", body: JSON.stringify({ email, pass }), headers: { "Content-type": "application/json;charset=UTF-8" }
             })
             const res = result.ok ? await result.json() : null

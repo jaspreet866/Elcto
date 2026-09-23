@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react"
 import { Context } from "./usecontext"
 import { useNavigate } from "react-router-dom"
+import Swal from "sweetalert2"
 import { SEO } from "./SEO"
-
-
+import { API_BASE } from "./apiConfig"
 
 export const Category = () => {
   const [name, setname] = useState("")
@@ -11,8 +11,8 @@ export const Category = () => {
   const [brandname, setbrandname] = useState("")
   const [brandimg, setbrandimg] = useState("")
   const [category, setcategory] = useState('')
-  const{utype}=useContext(Context)
-  const navigate=useNavigate()
+  const { utype } = useContext(Context)
+  const navigate = useNavigate()
   const [d, setd] = useState([])
 
   useEffect(() => {
@@ -21,58 +21,74 @@ export const Category = () => {
 
   const add = async (e) => {
     e.preventDefault()
-    const formdata = new FormData()
-    formdata.append("name", name)
-    formdata.append("pic", img)
-    const result = await fetch(`https://elcto-1.onrender.com/api/category`, {
-      method: "post",
-      body: formdata
-    })
-    if (result.ok) {
-      const res = await result.json()
-      if (res.statuscode === 1) {
-        alert("added")
-        show()
+    try {
+      const formdata = new FormData()
+      formdata.append("name", name)
+      formdata.append("pic", img)
+      const result = await fetch(`${API_BASE}/api/category`, {
+        method: "post",
+        body: formdata
+      })
+      if (result.ok) {
+        const res = await result.json()
+        if (res.statuscode === 1) {
+          Swal.fire("Success", "Category added successfully", "success")
+          setname("")
+          setimg("")
+          show()
+        } else {
+          Swal.fire("Error", res.message || "Failed to add category", "error")
+        }
       }
-      else {
-        alert("not")
-      }
+    } catch (err) {
+      console.error("Failed to add category:", err)
+      Swal.fire("Error", "Server error adding category", "error")
     }
-
   }
+
   const add2 = async (e) => {
     e.preventDefault()
-    const formdata2 = new FormData()
-    formdata2.append("brandname", brandname)
-    formdata2.append("pic", brandimg)
-    formdata2.append("category", category)
-    const result = await fetch(`https://elcto-1.onrender.com/api/brand`, {
-      method: "post",
-      body: formdata2,
-    })
-    if (result.ok) {
-      const res = await result.json()
-      if (res.statuscode === 1) {
-        alert("added")
+    try {
+      const formdata2 = new FormData()
+      formdata2.append("brandname", brandname)
+      formdata2.append("pic", brandimg)
+      formdata2.append("category", category)
+      const result = await fetch(`${API_BASE}/api/brand`, {
+        method: "post",
+        body: formdata2,
+      })
+      if (result.ok) {
+        const res = await result.json()
+        if (res.statuscode === 1) {
+          Swal.fire("Success", "Brand added successfully", "success")
+          setbrandname("")
+          setbrandimg("")
+        } else {
+          Swal.fire("Error", res.message || "Failed to add brand", "error")
+        }
       }
-      else {
-        alert("onot")
-      }
+    } catch (err) {
+      console.error("Failed to add brand:", err)
+      Swal.fire("Error", "Server error adding brand", "error")
     }
   }
+
   const show = async () => {
-    const result = await fetch(`https://elcto-1.onrender.com/api/getcategory`, {
-      method: "get"
-    })
-    if (result.ok) {
-      const res = await result.json()
-      if (res.statuscode === 1) {
-      
-        setd(res.data)
+    try {
+      const result = await fetch(`${API_BASE}/api/getcategory`, {
+        method: "get"
+      })
+      if (result.ok) {
+        const res = await result.json()
+        if (res.statuscode === 1 && Array.isArray(res.data)) {
+          setd(res.data)
+        } else {
+          setd([])
+        }
       }
-      else {
-        alert("rr")
-      }
+    } catch (err) {
+      console.error("Failed to fetch categories:", err)
+      setd([])
     }
   }
 

@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { SEO } from "./SEO"
+import { API_BASE } from "./apiConfig"
 
 export const Vendor = () => {
     const [name, setname] = useState("")
@@ -20,7 +21,7 @@ export const Vendor = () => {
         setMessage("")
         const data = { name, uname, email, phn, pass, bank, city, state }
         try {
-            const result = await fetch("https://elcto-1.onrender.com/api/vendorregister", {
+            const result = await fetch(`${API_BASE}/api/vendorregister`, {
                 method: "post",
                 body: JSON.stringify(data),
                 headers: { "Content-type": "application/json;charset=UTF-8" }

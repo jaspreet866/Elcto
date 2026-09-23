@@ -19,7 +19,7 @@ const checkout = async (req, res) => {
             const updatedProduct = await Product.findOneAndUpdate(
                 { _id: cartItem.ProductId, Stock: { $gte: quantity } },
                 { $inc: { Stock: -quantity } },
-                { new: true }
+                { returnDocument: 'after' }
             );
 
             if (!updatedProduct) {
@@ -53,7 +53,8 @@ const checkout = async (req, res) => {
             Payment: req.body.payment,
             Total: total,
             Order: orderItems,
-            OrderNo: req.body.orderno
+            OrderNo: req.body.orderno,
+            OrderStatus: req.body.status || 'Processing'
         }).save();
 
         await Cart.deleteMany({ User: req.body.id });
@@ -100,4 +101,28 @@ const getMonthlySales = async (req, res) => {
     res.send({ statuscode: 1, labels: Object.keys(monthly), values: Object.values(monthly) });
 };
 
-module.exports = { checkout, getAllOrders, getMyOrders, getMonthlySales };
+// PUT /api/order/status/:id
+const updateOrderStatus = async (req, res) => {
+    try {
+        const { status } = req.body;
+        const validStatuses = ['Processing', 'Confirmed', 'Shipped', 'Out for Delivery', 'Delivered', 'Cancelled'];
+        if (!validStatuses.includes(status)) {
+            return res.status(400).send({ statuscode: 0, message: 'Invalid order status' });
+        }
+        const updated = await Order.findByIdAndUpdate(
+            req.params.id,
+            { OrderStatus: status },
+            { returnDocument: 'after' }
+        );
+        if (!updated) {
+            return res.status(404).send({ statuscode: 0, message: 'Order not found' });
+        }
+        res.send({ statuscode: 1, message: 'Order status updated', data: updated });
+    } catch (err) {
+        console.error('Error updating order status:', err);
+        res.status(500).send({ statuscode: 0, message: 'Failed to update order status' });
+    }
+};
+
+module.exports = { checkout, getAllOrders, getMyOrders, getMonthlySales, updateOrderStatus };
+

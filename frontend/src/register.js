@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import Swal from "sweetalert2"
 import { SEO } from "./SEO"
+import { API_BASE } from "./apiConfig"
 
 export const Register = () => {
     const [fname, setfname] = useState("")
@@ -14,15 +15,26 @@ export const Register = () => {
 
     const register = async (e) => {
         e.preventDefault()
-        const result = await fetch("https://elcto-1.onrender.com/api/register", { method: "post", body: JSON.stringify({ fname, lname, email, pass }), headers: { "Content-type": "application/json;charset=UTF-8" } })
-        if (result.ok) {
-            const res = await result.json()
-            if (res.statuscode === 2) Swal.fire({ icon: "info", title: "Registration", text: res.message })
-            else if (res.statuscode === 1) {
-                Swal.fire({ icon: "success", title: "Registration", text: "Registered Successfully , ElectoMart Welcomes You" })
-                setemail(""); setfname(""); setlname(""); setpass(""); navigate("/login")
+        try {
+            const result = await fetch(`${API_BASE}/api/register`, {
+                method: "post",
+                body: JSON.stringify({ fname, lname, email, pass }),
+                headers: { "Content-type": "application/json;charset=UTF-8" }
+            })
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 2) Swal.fire({ icon: "info", title: "Registration", text: res.message })
+                else if (res.statuscode === 1) {
+                    Swal.fire({ icon: "success", title: "Registration", text: "Registered Successfully, ElectoMart Welcomes You" })
+                    setemail(""); setfname(""); setlname(""); setpass(""); navigate("/login")
+                }
+                if (res.statuscode === 3) setmsg(res.message)
+            } else {
+                Swal.fire({ icon: "error", title: "Registration Failed", text: "Unable to register right now." })
             }
-            if (res.statuscode === 3) setmsg(res.message)
+        } catch (err) {
+            console.error("Register request failed:", err)
+            Swal.fire({ icon: "error", title: "Connection Error", text: "Unable to connect to server. Please try again." })
         }
     }
 

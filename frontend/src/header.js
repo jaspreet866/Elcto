@@ -5,6 +5,7 @@ import { Context } from "./usecontext";
 import logo from "./images/WhatsApp Image 2026-02-12 at 11.08.16 AM.png"
 import { motion } from 'framer-motion'
 import ThemeToggle from "./ThemeToggle"
+import { API_BASE } from "./apiConfig"
 
 export const Header = () => {
     const { id, cartCount, setIsCartOpen, logoutAuth } = useContext(Context)
@@ -19,14 +20,18 @@ export const Header = () => {
     }, [search])
 
     const handleSearch = async () => {
-        const result = await fetch(`https://elcto-1.onrender.com/api/getproduct`, {
-            method: "get"
-        })
-        if (result.ok) {
-            const res = await result.json();
-            if (res.statuscode === 1) {
-                setd(res.data);
+        try {
+            const result = await fetch(`${API_BASE}/api/getproduct`, {
+                method: "get"
+            })
+            if (result.ok) {
+                const res = await result.json();
+                if (res.statuscode === 1 && Array.isArray(res.data)) {
+                    setd(res.data);
+                }
             }
+        } catch (err) {
+            console.error("Failed to fetch products for header search:", err);
         }
         if (searchRef.current) {
             clearTimeout(searchRef.current);

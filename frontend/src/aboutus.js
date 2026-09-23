@@ -10,6 +10,7 @@ import AOS from "aos"
 import "aos/dist/aos.css"
 import CountUp from "react-countup"
 import { SEO } from "./SEO"
+import { API_BASE } from "./apiConfig"
 
 export const About = () => {
 
@@ -51,13 +52,15 @@ export const About = () => {
     }, [])
 
     const show = async () => {
-        const result = await fetch("https://elcto-1.onrender.com/api/showbrand")
-
-        if (result.ok) {
-            const res = await result.json()
-            if (res.statuscode === 1) setd(res.data)
+        try {
+            const result = await fetch(`${API_BASE}/api/showbrand`)
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1) setd(res.data)
+            }
+        } catch (err) {
+            console.error("Failed to fetch brands in about:", err)
         }
-
         setLoading(false)
     }
 

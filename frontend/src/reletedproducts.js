@@ -6,6 +6,7 @@ import Splide from '@splidejs/splide'
 import '@splidejs/splide/css'
 import { ImageModal } from "./ImageModal"
 import { SEO } from "./SEO"
+import { API_BASE } from "./apiConfig"
 
 export const Related = () => {
     const [d, setd] = useState([])
@@ -64,86 +65,103 @@ export const Related = () => {
     }, [datta]);
 
     const show = async (id) => {
-        const result = await fetch(`https://elcto-1.onrender.com/api/related/${id}`, {
-            method: "get"
-        })
-        if (result.ok) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setd(res.data)
-
+        try {
+            const result = await fetch(`${API_BASE}/api/related/${id}`, {
+                method: "get"
+            })
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1 && Array.isArray(res.data)) {
+                    setd(res.data)
+                } else {
+                    setd([])
+                }
             }
-            else {
-                alert("error")
-            }
+        } catch (err) {
+            console.error("Failed to fetch related products:", err)
+            setd([])
         }
     }
 
     const show2 = async () => {
-        const result = await fetch(`https://elcto-1.onrender.com/api/getbrand/${prr}`, {
-            method: "get"
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setdatta(res.data)
+        try {
+            const result = await fetch(`${API_BASE}/api/getbrand/${prr}`, {
+                method: "get"
+            })
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1 && Array.isArray(res.data)) {
+                    setdatta(res.data)
+                } else {
+                    setdatta([])
+                }
             }
-            else {
-                alert("not")
-            }
+        } catch (err) {
+            console.error("Failed to fetch brands:", err)
+            setdatta([])
         }
     }
 
     const wish = async (id, name, price, img, prr) => {
         if (!prr || !id) return;
         const data = { id, name, price, img }
-        const result = await fetch(`https://elcto-1.onrender.com/api/wishpost/${prr}`, {
-            method: "post",
-            body: JSON.stringify(data),
-            headers: { "Content-type": "application/json;charset=UTF-8" }
-        })
-        if (result.ok) {
-            const res = await result.json();
+        try {
+            const result = await fetch(`${API_BASE}/api/wishpost/${prr}`, {
+                method: "post",
+                body: JSON.stringify(data),
+                headers: { "Content-type": "application/json;charset=UTF-8" }
+            })
+            if (result.ok) {
+                const res = await result.json();
 
-            if (res.statuscode === 2) {
-                Swal.fire({
-                    icon: "info",
-                    title: "❤️ Already in Wishlist",
-                    text: (res.message)
-                })
+                if (res.statuscode === 2) {
+                    Swal.fire({
+                        icon: "info",
+                        title: "❤️ Already in Wishlist",
+                        text: (res.message)
+                    })
+                }
+
+                else if (res.statuscode === 1) {
+                    navigate(`/wish?id=${id}`);
+                    Swal.fire({
+                        icon: "success",
+                        title: "❤️ Added in Wishlist",
+                    })
+                }
+
+                else {
+                    Swal.fire("Error", res.message || "Failed to update wishlist", "error");
+                }
+
             }
-
-            else if (res.statuscode === 1) {
-                navigate(`/wish?id=${id}`);
-                Swal.fire({
-                    icon: "success",
-                    title: "❤️ Added in Wishlist",
-                })
-            }
-
-            else {
-                alert("Something went wrong");
-            }
-
+        } catch (err) {
+            console.error("Failed to post wish:", err);
+            Swal.fire("Error", "Could not connect to server", "error");
         }
     }
     const cart = async (id, name, price, img, value = 1, prr) => {
         if (!prr || !id) return;
         const data = { id, name, price, img, value }
-        const result = await fetch(`https://elcto-1.onrender.com/api/cartdata/${prr}`, {
-            method: "post",
-            body: JSON.stringify(data),
-            headers: { "Content-type": "application/json;charset=UTF-8" }
-        })
-        if (result.ok) {
-            const res = await result.json()
-            if (res.statuscode === 2 || res.statuscode === 1) {
-                await fetchCart();
-                setIsCartOpen(true);
+        try {
+            const result = await fetch(`${API_BASE}/api/cartdata/${prr}`, {
+                method: "post",
+                body: JSON.stringify(data),
+                headers: { "Content-type": "application/json;charset=UTF-8" }
+            })
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 2 || res.statuscode === 1) {
+                    await fetchCart();
+                    setIsCartOpen(true);
+                }
+                else {
+                    Swal.fire("Error", res.message || "Could not add to cart", "error")
+                }
             }
-            else {
-                Swal.fire("Error", res.message || "Could not add to cart", "error")
-            }
+        } catch (err) {
+            console.error("Failed to add to cart:", err);
+            Swal.fire("Error", "Could not connect to server", "error");
         }
     }
     const products = [...d]

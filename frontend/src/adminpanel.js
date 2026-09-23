@@ -16,6 +16,7 @@ import { Context } from "./usecontext";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { SEO } from "./SEO";
+import { API_BASE } from "./apiConfig";
 
 ChartJs.register(
     CategoryScale,
@@ -57,6 +58,7 @@ export const Dashboard = () => {
     const [selectedRole, setSelectedRole] = useState({});
     const [selectedStatus, setSelectedStatus] = useState({});
     const [selectedVendorStatus, setSelectedVendorStatus] = useState({});
+    const [selectedOrderStatus, setSelectedOrderStatus] = useState({});
 
     // Search and Filter States
     const [orderSearch, setOrderSearch] = useState("");
@@ -91,7 +93,7 @@ export const Dashboard = () => {
 
     const loadMonthlySales = async () => {
         try {
-            const res = await fetch("https://elcto-1.onrender.com/api/sales/monthly");
+            const res = await fetch(`${API_BASE}/api/sales/monthly`);
             const data = await res.json();
             if (data && data.labels) {
                 setMonthlyData({
@@ -115,7 +117,7 @@ export const Dashboard = () => {
 
     const loadUsers = async () => {
         try {
-            const res = await fetch("https://elcto-1.onrender.com/api/users");
+            const res = await fetch(`${API_BASE}/api/users`);
             const result = await res.json();
             if (result.statuscode === 1) {
                 setUsersList(result.data);
@@ -130,7 +132,7 @@ export const Dashboard = () => {
 
     const loadCategories = async () => {
         try {
-            const res = await fetch("https://elcto-1.onrender.com/api/getcategory");
+            const res = await fetch(`${API_BASE}/api/getcategory`);
             const result = await res.json();
             if (result.statuscode === 1) {
                 setCategoryCount(result.data.length);
@@ -142,7 +144,7 @@ export const Dashboard = () => {
 
     const loadProducts = async () => {
         try {
-            const res = await fetch("https://elcto-1.onrender.com/api/getproduct");
+            const res = await fetch(`${API_BASE}/api/getproduct`);
             const result = await res.json();
             if (result.statuscode === 1) {
                 setProductCount(result.data.length);
@@ -154,7 +156,7 @@ export const Dashboard = () => {
 
     const loadBrands = async () => {
         try {
-            const res = await fetch("https://elcto-1.onrender.com/api/showbrand");
+            const res = await fetch(`${API_BASE}/api/showbrand`);
             const result = await res.json();
             if (result.statuscode === 1) {
                 setBrandCount(result.data.length);
@@ -166,7 +168,7 @@ export const Dashboard = () => {
 
     const loadOrders = async () => {
         try {
-            const res = await fetch("https://elcto-1.onrender.com/api/orderdata");
+            const res = await fetch(`${API_BASE}/api/orderdata`);
             const result = await res.json();
             if (result.statuscode === 1) {
                 setOrdersList(result.data);
@@ -182,7 +184,7 @@ export const Dashboard = () => {
 
     const loadVendors = async () => {
         try {
-            const res = await fetch("https://elcto-1.onrender.com/api/vendordata");
+            const res = await fetch(`${API_BASE}/api/vendordata`);
             const result = await res.json();
             if (result.statuscode === 1) {
                 setVendorsList(result.data);
@@ -213,7 +215,7 @@ export const Dashboard = () => {
 
         if (confirm.isConfirmed) {
             try {
-                const res = await fetch(`https://elcto-1.onrender.com/api/makeadmin/${userId}`, {
+                const res = await fetch(`${API_BASE}/api/makeadmin/${userId}`, {
                     method: "put",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ ad: role })
@@ -248,7 +250,7 @@ export const Dashboard = () => {
 
         if (confirm.isConfirmed) {
             try {
-                const res = await fetch(`https://elcto-1.onrender.com/api/changestatus/${userId}`, {
+                const res = await fetch(`${API_BASE}/api/changestatus/${userId}`, {
                     method: "put",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ status: status })
@@ -283,7 +285,7 @@ export const Dashboard = () => {
 
         if (confirm.isConfirmed) {
             try {
-                const res = await fetch(`https://elcto-1.onrender.com/api/approval/${vendorId}`, {
+                const res = await fetch(`${API_BASE}/api/approval/${vendorId}`, {
                     method: "put",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ status: status })
@@ -297,6 +299,42 @@ export const Dashboard = () => {
                 }
             } catch (err) {
                 Swal.fire("Error", "Server error updating vendor", "error");
+            }
+        }
+    };
+
+    const changeOrderStatus = async (orderId) => {
+        const status = selectedOrderStatus[orderId];
+        if (!status) {
+            Swal.fire("Select Status", "Please choose an order status first", "info");
+            return;
+        }
+
+        const confirm = await Swal.fire({
+            title: "Update Order Status?",
+            text: `Set order status to "${status}"?`,
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: "Yes, Update"
+        });
+
+        if (confirm.isConfirmed) {
+            try {
+                const res = await fetch(`${API_BASE}/api/order/status/${orderId}`, {
+                    method: "put",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ status })
+                });
+                const data = await res.json();
+                if (data.statuscode === 1) {
+                    Swal.fire("Updated!", "Order status updated successfully!", "success");
+                    loadOrders();
+                } else {
+                    Swal.fire("Error", data.message || "Could not update order status", "error");
+                }
+            } catch (err) {
+                console.error("Order status update failed:", err);
+                Swal.fire("Error", "Server error updating order status", "error");
             }
         }
     };
@@ -583,17 +621,55 @@ export const Dashboard = () => {
                                                             data-bs-toggle="collapse"
                                                             data-bs-target={`#order${ord._id}`}
                                                         >
-                                                            <div className="w-100 d-flex justify-content-between pe-3 align-items-center">
+                                                            <div className="w-100 d-flex flex-wrap justify-content-between pe-3 align-items-center gap-2">
                                                                 <span><i className="bi bi-receipt me-2 text-primary"></i><strong>Order #{ord.OrderNo || ord._id.slice(-6)}</strong></span>
                                                                 <span>Customer: {ord.FirstName} {ord.LastName}</span>
-                                                                <span className="badge bg-secondary rounded-pill">{ord.Payment}</span>
+                                                                <div className="d-flex align-items-center gap-2">
+                                                                    <span className={`badge rounded-pill ${
+                                                                        ord.OrderStatus === 'Delivered' ? 'bg-success' :
+                                                                        ord.OrderStatus === 'Cancelled' ? 'bg-danger' :
+                                                                        ord.OrderStatus === 'Shipped' || ord.OrderStatus === 'Out for Delivery' ? 'bg-info text-dark' :
+                                                                        'bg-warning text-dark'
+                                                                    }`}>
+                                                                        {ord.OrderStatus || 'Processing'}
+                                                                    </span>
+                                                                    <span className="badge bg-secondary rounded-pill">{ord.Payment}</span>
+                                                                </div>
                                                             </div>
                                                         </button>
                                                     </h2>
                                                     <div id={`order${ord._id}`} className="accordion-collapse collapse" data-bs-parent="#ordersAccordion">
                                                         <div className="accordion-body">
-                                                            <p><strong>Customer Name:</strong> {ord.FirstName} {ord.LastName}</p>
-                                                            <p><strong>Payment Method:</strong> {ord.Payment}</p>
+                                                            <div className="row g-2 mb-3">
+                                                                <div className="col-12 col-md-6">
+                                                                    <p className="mb-1"><strong>Customer Name:</strong> {ord.FirstName} {ord.LastName}</p>
+                                                                    <p className="mb-1"><strong>Email / Phone:</strong> {ord.Email || 'N/A'} / {ord.Phone || 'N/A'}</p>
+                                                                    <p className="mb-1"><strong>Address:</strong> {ord.Address}, {ord.City}, {ord.State} {ord.PostalCode}</p>
+                                                                </div>
+                                                                <div className="col-12 col-md-6 bg-light p-3 rounded">
+                                                                    <label className="form-label fw-bold small text-muted">Update Fulfillment Status</label>
+                                                                    <div className="d-flex gap-2">
+                                                                        <select
+                                                                            className="form-select form-select-sm"
+                                                                            defaultValue={ord.OrderStatus || "Processing"}
+                                                                            onChange={(e) => setSelectedOrderStatus({ ...selectedOrderStatus, [ord._id]: e.target.value })}
+                                                                        >
+                                                                            <option value="Processing">Processing</option>
+                                                                            <option value="Confirmed">Confirmed</option>
+                                                                            <option value="Shipped">Shipped</option>
+                                                                            <option value="Out for Delivery">Out for Delivery</option>
+                                                                            <option value="Delivered">Delivered</option>
+                                                                            <option value="Cancelled">Cancelled</option>
+                                                                        </select>
+                                                                        <button
+                                                                            className="btn btn-primary btn-sm px-3"
+                                                                            onClick={() => changeOrderStatus(ord._id)}
+                                                                        >
+                                                                            Update
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                             <hr />
                                                             <h6>Order Items:</h6>
                                                             {ord.Order && ord.Order.map((item, idx) => (

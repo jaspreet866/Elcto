@@ -2,6 +2,7 @@ import { useState } from "react";
 import img1 from "./images/img_01.jpg";
 import img2 from "./images/contact.jpg";
 import { SEO } from "./SEO";
+import { API_BASE } from "./apiConfig";
 
 const initialForm = { name: "", mail: "", phn: "", type: "", msg: "", saveInfo: false };
 
@@ -21,7 +22,7 @@ export const Contact = () => {
     setMessage("");
 
     try {
-      const result = await fetch("https://elcto-1.onrender.com/api/response", {
+      const result = await fetch(`${API_BASE}/api/response`, {
         method: "POST",
         body: JSON.stringify({ name: form.name, mail: form.mail, phn: form.phn, type: form.type, msg: form.msg }),
         headers: { "Content-Type": "application/json;charset=UTF-8" },

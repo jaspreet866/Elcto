@@ -3,6 +3,7 @@ import { Context } from "./usecontext";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { SEO } from "./SEO";
+import { API_BASE } from "./apiConfig";
 
 export const Admin = () => {
     // Context & Routing
@@ -34,7 +35,7 @@ export const Admin = () => {
     const loadUsers = async () => {
         setLoading(true);
         try {
-            const res = await fetch("https://elcto-1.onrender.com/api/users");
+            const res = await fetch(`${API_BASE}/api/users`);
             const result = await res.json();
             if (result.statuscode === 1) {
                 setUsersList(result.data);
@@ -64,7 +65,7 @@ export const Admin = () => {
 
         if (confirm.isConfirmed) {
             try {
-                const res = await fetch(`https://elcto-1.onrender.com/api/makeadmin/${userId}`, {
+                const res = await fetch(`${API_BASE}/api/makeadmin/${userId}`, {
                     method: "put",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ ad: role })
@@ -100,7 +101,7 @@ export const Admin = () => {
 
         if (confirm.isConfirmed) {
             try {
-                const res = await fetch(`https://elcto-1.onrender.com/api/changestatus/${userId}`, {
+                const res = await fetch(`${API_BASE}/api/changestatus/${userId}`, {
                     method: "put",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ status: status })

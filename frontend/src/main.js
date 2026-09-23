@@ -17,6 +17,7 @@ import EchoText from './EchoText'
 import { ImageModal } from './ImageModal'
 import { Preloader } from './Preloader'
 import { SEO } from './SEO'
+import { API_BASE } from './apiConfig'
 
 export const Main = () => {
     const [pageLoading, setPageLoading] = useState(true)
@@ -127,118 +128,144 @@ export const Main = () => {
 
    const show = async () => {
     try {
-        const result = await fetch("https://elcto-1.onrender.com/api/getcategory");
-
+        const result = await fetch(`${API_BASE}/api/getcategory`);
         const res = await result.json();
 
-        if (res.statuscode === 1) {
+        if (res.statuscode === 1 && Array.isArray(res.data)) {
             setd(res.data);
             setidd(res.data[0]?.Category);
         } else {
-            alert("Error from API");
+            setd([]);
         }
     } catch (err) {
-        console.error("Fetch error:", err);
+        console.error("Fetch categories error:", err);
+        setd([]);
     }
 };
     const show2 = async () => {
-        const result = await fetch("https://elcto-1.onrender.com/api/saleproduct", {
-            method: "get"
-        })
-        if (result.ok) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-
-                setspro(res.data)
+        try {
+            const result = await fetch(`${API_BASE}/api/saleproduct`, {
+                method: "get"
+            })
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1 && Array.isArray(res.data)) {
+                    setspro(res.data)
+                } else {
+                    setspro([])
+                }
             }
-            else {
-                alert("bbfb")
-            }
+        } catch (err) {
+            console.error("Fetch sale products error:", err);
+            setspro([]);
         }
     }
     const show3 = async () => {
-        const result = await fetch("https://elcto-1.onrender.com/api/latestproduct", {
-            method: "get"
-        })
-        if (result.ok) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setlpro(res.data)
+        try {
+            const result = await fetch(`${API_BASE}/api/latestproduct`, {
+                method: "get"
+            })
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1 && Array.isArray(res.data)) {
+                    setlpro(res.data)
+                } else {
+                    setlpro([])
+                }
             }
-            else {
-                alert("bbfb")
-            }
+        } catch (err) {
+            console.error("Fetch latest products error:", err);
+            setlpro([]);
         }
     }
     const show4 = async () => {
-        const result = await fetch(" https://elcto-1.onrender.com/api/showbrand", {
-            method: "get"
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setbr(res.data)
+        try {
+            const result = await fetch(`${API_BASE}/api/showbrand`, {
+                method: "get"
+            })
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1 && Array.isArray(res.data)) {
+                    setbr(res.data)
+                } else {
+                    setbr([])
+                }
             }
-            else {
-                alert("rere")
-            }
+        } catch (err) {
+            console.error("Fetch brands error:", err);
+            setbr([]);
         }
     }
     const show5 = async () => {
-        const result = await fetch(`https://elcto-1.onrender.com/api/laptop`, {
-            method: "get"
-        })
-        if (result.ok) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setlaptop(res.data)
-
+        try {
+            const result = await fetch(`${API_BASE}/api/laptop`, {
+                method: "get"
+            })
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1 && Array.isArray(res.data)) {
+                    setlaptop(res.data)
+                } else {
+                    setlaptop([])
+                }
             }
-            else {
-                alert("not found")
-            }
+        } catch (err) {
+            console.error("Fetch laptops error:", err);
+            setlaptop([]);
         }
     }
     const show6 = async () => {
-        const result = await fetch("https://elcto-1.onrender.com/api/mobiles", {
-            method: "get"
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setmobile(res.data)
+        try {
+            const result = await fetch(`${API_BASE}/api/mobiles`, {
+                method: "get"
+            })
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1 && Array.isArray(res.data)) {
+                    setmobile(res.data)
+                } else {
+                    setmobile([])
+                }
             }
-            else {
-                alert("sdfg")
-            }
+        } catch (err) {
+            console.error("Fetch mobiles error:", err);
+            setmobile([]);
         }
     }
     const show7 = async () => {
-        const result = await fetch("https://elcto-1.onrender.com/api/leds", {
-            method: "get"
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setled(res.data)
+        try {
+            const result = await fetch(`${API_BASE}/api/leds`, {
+                method: "get"
+            })
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1 && Array.isArray(res.data)) {
+                    setled(res.data)
+                } else {
+                    setled([])
+                }
             }
-            else {
-                alert("dfg")
-            }
+        } catch (err) {
+            console.error("Fetch LEDs error:", err);
+            setled([]);
         }
     }
     const show8 = async () => {
-        const result = await fetch("https://elcto-1.onrender.com/api/airpods", {
-            method: "get"
-        })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setairpod(res.data)
+        try {
+            const result = await fetch(`${API_BASE}/api/airpods`, {
+                method: "get"
+            })
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1 && Array.isArray(res.data)) {
+                    setairpod(res.data)
+                } else {
+                    setairpod([])
+                }
             }
-            else {
-                alert("d")
-            }
+        } catch (err) {
+            console.error("Fetch airpods error:", err);
+            setairpod([]);
         }
     }
 
@@ -247,41 +274,46 @@ export const Main = () => {
         Swal.fire({
             icon: "warning",
             title: "Please Login First",
-            text: "Login to add items to cart"
+            text: "Login to add items to wishlist"
         })
         navigate("/login")
         return
     }
 
         const data = { id, name, price, img, prr, saleprice }
-        const result = await fetch(`https://elcto-1.onrender.com/api/wishpost/${prr}`, {
-            method: "post",
-            body: JSON.stringify(data),
-            headers: { "Content-type": "application/json;charset=UTF-8" }
-        })
-        if (result.ok) {
-            const res = await result.json();
+        try {
+            const result = await fetch(`${API_BASE}/api/wishpost/${prr}`, {
+                method: "post",
+                body: JSON.stringify(data),
+                headers: { "Content-type": "application/json;charset=UTF-8" }
+            })
+            if (result.ok) {
+                const res = await result.json();
 
-            if (res.statuscode === 2) {
-                Swal.fire({
-                    icon: "info",
-                    title: "❤️ Already in Wishlist",
-                    text: (res.message)
-                })
+                if (res.statuscode === 2) {
+                    Swal.fire({
+                        icon: "info",
+                        title: "❤️ Already in Wishlist",
+                        text: (res.message)
+                    })
+                }
+
+                else if (res.statuscode === 1) {
+                    navigate(`/wish?id=${id}`);
+                    Swal.fire({
+                        icon: "success",
+                        title: "❤️ Added in Wishlist",
+                    })
+                }
+
+                else {
+                    Swal.fire("Notice", res.message || "Could not update wishlist", "info");
+                }
+
             }
-
-            else if (res.statuscode === 1) {
-                navigate(`/wish?id=${id}`);
-                Swal.fire({
-                    icon: "success",
-                    title: "❤️ Added in Wishlist",
-                })
-            }
-
-            else {
-                alert("Something went wrong");
-            }
-
+        } catch (err) {
+            console.error("Wishlist error:", err);
+            Swal.fire("Error", "Could not connect to server", "error");
         }
     }
     const cart = async (id, name, price, img, value = 1, prr) => {
@@ -296,20 +328,25 @@ export const Main = () => {
     }
 
         const data = { id, name, price, img, value }
-        const result = await fetch(`https://elcto-1.onrender.com/api/cartdata/${prr}`, {
-            method: "post",
-            body: JSON.stringify(data),
-            headers: { "Content-type": "application/json;charset=UTF-8" }
-        })
-        if (result.ok) {
-            const res = await result.json()
-            if (res.statuscode === 2 || res.statuscode === 1) {
-                await fetchCart();
-                setIsCartOpen(true);
+        try {
+            const result = await fetch(`${API_BASE}/api/cartdata/${prr}`, {
+                method: "post",
+                body: JSON.stringify(data),
+                headers: { "Content-type": "application/json;charset=UTF-8" }
+            })
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 2 || res.statuscode === 1) {
+                    await fetchCart();
+                    setIsCartOpen(true);
+                }
+                else {
+                    Swal.fire("Error", res.message || "Could not add to cart", "error")
+                }
             }
-            else {
-                Swal.fire("Error", res.message || "Could not add to cart", "error")
-            }
+        } catch (err) {
+            console.error("Add to cart error:", err);
+            Swal.fire("Error", "Could not connect to server", "error");
         }
     }
 

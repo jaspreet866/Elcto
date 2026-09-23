@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom"
 import Swal from "sweetalert2"
 import { Context } from "./usecontext"
 import { SEO } from "./SEO"
+import { API_BASE } from "./apiConfig"
 
 export const Login = () => {
     const [email, setemail] = useState("")
@@ -13,19 +14,30 @@ export const Login = () => {
 
     const login = async (e) => {
         e.preventDefault()
-        const result = await fetch("https://elcto-1.onrender.com/api/login", { method: "post", body: JSON.stringify({ email, pass }), headers: { "Content-type": "application/json;charset=UTF-8" } })
-        if (result) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                if (res.data) {
-                    localStorage.setItem("user_details", JSON.stringify(res.data));
+        try {
+            const result = await fetch(`${API_BASE}/api/login`, {
+                method: "post",
+                body: JSON.stringify({ email, pass }),
+                headers: { "Content-type": "application/json;charset=UTF-8" }
+            })
+            if (result) {
+                const res = await result.json()
+                if (res.statuscode === 1) {
+                    if (res.data) {
+                        localStorage.setItem("user_details", JSON.stringify(res.data));
+                    }
+                    loginAuth(res.jwtoken)
+                    Swal.fire({ icon: "success", title: "Login Successful" })
+                    navigate(`/`)
+                    setemail("")
+                    setpass("")
+                } else {
+                    Swal.fire({ icon: "error", title: "Login Error", text: res.message || "Check Password and Mail is Correct" })
                 }
-                loginAuth(res.jwtoken)
-                Swal.fire({ icon: "success", title: "Login Successful" })
-                navigate(`/`)
-                setemail("")
-                setpass("")
-            } else Swal.fire({ icon: "error", title: "Login Error", text: "Check Password and Mail is Correct" })
+            }
+        } catch (err) {
+            console.error("Login request failed:", err)
+            Swal.fire({ icon: "error", title: "Connection Error", text: "Unable to connect to server. Please try again." })
         }
     }
 

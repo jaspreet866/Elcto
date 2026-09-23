@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import Swal from "sweetalert2"
 import { Context } from "./usecontext"
 import { SEO } from "./SEO"
+import { API_BASE } from "./apiConfig"
 
 export const Wish = () => {
 
@@ -16,35 +17,44 @@ export const Wish = () => {
         show()
     }, [id])
 
-    const show = async (e) => {
-
-        const result = await fetch(`https://elcto-1.onrender.com/api/getwish/${id}`, {
-            method: "get"
-        })
-        if (result.ok) {
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setd(res.data)
+    const show = async () => {
+        if (!id) return;
+        try {
+            const result = await fetch(`${API_BASE}/api/getwish/${id}`, {
+                method: "get"
+            })
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1 && Array.isArray(res.data)) {
+                    setd(res.data)
+                }
+                else {
+                    setd([])
+                }
             }
-            else {
-                alert("ojoj")
-            }
+        } catch (err) {
+            console.error("Failed to fetch wishlist:", err);
+            setd([]);
         }
     }
 
     const cart = async (id, name, price, img, value = 1, prr) => {
         const data = { id, name, price, img, value, prr }
-        const result = await fetch(`https://elcto-1.onrender.com/api/cartdata/${prr}`, {
-            method: "post",
-            body: JSON.stringify(data),
-            headers: { "Content-type": "application/json;charset=UTF-8" }
-        })
-        if (result.ok) {
-            const res = await result.json()
-            if (res.statuscode === 1 || res.statuscode === 2) {
-                await fetchCart();
-                setIsCartOpen(true);
+        try {
+            const result = await fetch(`${API_BASE}/api/cartdata/${prr}`, {
+                method: "post",
+                body: JSON.stringify(data),
+                headers: { "Content-type": "application/json;charset=UTF-8" }
+            })
+            if (result.ok) {
+                const res = await result.json()
+                if (res.statuscode === 1 || res.statuscode === 2) {
+                    await fetchCart();
+                    setIsCartOpen(true);
+                }
             }
+        } catch (err) {
+            console.error("Failed to add from wishlist to cart:", err);
         }
     }
     const remove = async (id) => {
@@ -59,10 +69,10 @@ export const Wish = () => {
         });
 
         if (confirm.isConfirmed) {
-
-            const result = await fetch(`https://elcto-1.onrender.com/api/deletewish/${id}`, {
-                method: "DELETE"
-            });
+            try {
+                const result = await fetch(`${API_BASE}/api/deletewish/${id}`, {
+                    method: "DELETE"
+                });
 
             const res = await result.json();
 
@@ -78,6 +88,10 @@ export const Wish = () => {
             } else {
                 Swal.fire("Error", "Something went wrong", "error");
             }
+        } catch (err) {
+            console.error("Failed to delete wishlist item:", err);
+            Swal.fire("Error", "Server error deleting item", "error");
+        }
         }
         else {
             Swal.fire({

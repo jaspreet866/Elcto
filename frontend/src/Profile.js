@@ -160,8 +160,7 @@ export const Profile = () => {
       // Tier 2: Fallback to /api/users to find user document
       if (!foundUser) {
         const userEndpoints = [
-          `${API_BASE}/api/users`,
-          'https://elcto-1.onrender.com/api/users'
+          `${API_BASE}/api/users`
         ];
 
         for (const url of userEndpoints) {
@@ -232,7 +231,7 @@ export const Profile = () => {
 
     try {
       setLoadingOrders(true);
-      const res = await fetch(`https://elcto-1.onrender.com/api/myorder/${currentId}`);
+      const res = await fetch(`${API_BASE}/api/myorder/${currentId}`);
       if (res.ok) {
         const data = await res.json();
         if (data.statuscode === 1 && Array.isArray(data.data)) {
@@ -286,7 +285,7 @@ export const Profile = () => {
 
     try {
       setLoadingWishlist(true);
-      const res = await fetch(`https://elcto-1.onrender.com/api/getwish/${currentId}`);
+      const res = await fetch(`${API_BASE}/api/getwish/${currentId}`);
       if (res.ok) {
         const data = await res.json();
         if (data.statuscode === 1 && Array.isArray(data.data)) {
@@ -434,7 +433,7 @@ export const Profile = () => {
 
     if (confirm.isConfirmed) {
       try {
-        const res = await fetch(`https://elcto-1.onrender.com/api/deletewish/${wishId}`, { method: 'DELETE' });
+        const res = await fetch(`${API_BASE}/api/deletewish/${wishId}`, { method: 'DELETE' });
         const data = await res.json();
         if (data.statuscode === 1) {
           setWishlist((prev) => prev.filter((item) => item._id !== wishId));
