@@ -107,20 +107,35 @@ const updateOrderStatus = async (req, res) => {
         const { status } = req.body;
         const validStatuses = ['Processing', 'Confirmed', 'Shipped', 'Out for Delivery', 'Delivered', 'Cancelled'];
         if (!validStatuses.includes(status)) {
-            return res.status(400).send({ statuscode: 0, message: 'Invalid order status' });
+            return res.status(400).send({ statuscode: 0, message: 'Invalid order status. Allowed: ' + validStatuses.join(', ') });
         }
-        const updated = await Order.findByIdAndUpdate(
-            req.params.id,
+
+        const id = req.params.id;
+        if (!id) {
+            return res.status(400).send({ statuscode: 0, message: 'Order ID is required' });
+        }
+
+        const mongoose = require('mongoose');
+        let query;
+        if (mongoose.Types.ObjectId.isValid(id)) {
+            query = { _id: id };
+        } else {
+            query = { OrderNo: id };
+        }
+
+        const updated = await Order.findOneAndUpdate(
+            query,
             { OrderStatus: status },
             { returnDocument: 'after' }
         );
+
         if (!updated) {
             return res.status(404).send({ statuscode: 0, message: 'Order not found' });
         }
-        res.send({ statuscode: 1, message: 'Order status updated', data: updated });
+        res.send({ statuscode: 1, message: 'Order status updated successfully', data: updated });
     } catch (err) {
         console.error('Error updating order status:', err);
-        res.status(500).send({ statuscode: 0, message: 'Failed to update order status' });
+        res.status(500).send({ statuscode: 0, message: err.message || 'Failed to update order status' });
     }
 };
 

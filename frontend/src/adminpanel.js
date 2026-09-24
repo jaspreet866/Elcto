@@ -304,11 +304,8 @@ export const Dashboard = () => {
     };
 
     const changeOrderStatus = async (orderId) => {
-        const status = selectedOrderStatus[orderId];
-        if (!status) {
-            Swal.fire("Select Status", "Please choose an order status first", "info");
-            return;
-        }
+        const currentOrder = ordersList.find(o => o._id === orderId || o.OrderNo === orderId);
+        const status = selectedOrderStatus[orderId] || currentOrder?.OrderStatus || "Processing";
 
         const confirm = await Swal.fire({
             title: "Update Order Status?",
@@ -321,20 +318,20 @@ export const Dashboard = () => {
         if (confirm.isConfirmed) {
             try {
                 const res = await fetch(`${API_BASE}/api/order/status/${orderId}`, {
-                    method: "put",
+                    method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ status })
                 });
-                const data = await res.json();
-                if (data.statuscode === 1) {
+                const data = await res.json().catch(() => null);
+                if (data && data.statuscode === 1) {
                     Swal.fire("Updated!", "Order status updated successfully!", "success");
                     loadOrders();
                 } else {
-                    Swal.fire("Error", data.message || "Could not update order status", "error");
+                    Swal.fire("Error", (data && data.message) || "Could not update order status", "error");
                 }
             } catch (err) {
                 console.error("Order status update failed:", err);
-                Swal.fire("Error", "Server error updating order status", "error");
+                Swal.fire("Error", "Server error updating order status: " + (err.message || "Network issue"), "error");
             }
         }
     };
@@ -651,8 +648,8 @@ export const Dashboard = () => {
                                                                     <div className="d-flex gap-2">
                                                                         <select
                                                                             className="form-select form-select-sm"
-                                                                            defaultValue={ord.OrderStatus || "Processing"}
-                                                                            onChange={(e) => setSelectedOrderStatus({ ...selectedOrderStatus, [ord._id]: e.target.value })}
+                                                                            value={selectedOrderStatus[ord._id] || ord.OrderStatus || "Processing"}
+                                                                            onChange={(e) => setSelectedOrderStatus(prev => ({ ...prev, [ord._id]: e.target.value }))}
                                                                         >
                                                                             <option value="Processing">Processing</option>
                                                                             <option value="Confirmed">Confirmed</option>

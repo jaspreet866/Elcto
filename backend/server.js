@@ -25,7 +25,7 @@ const chatRoutes = require('./routes/chatRoutes');
 const app = express();
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  limit: 100,
+  limit: 1000,
   message: {
     success: false,
     message: "Too many requests, please try again after 15 minutes.",
@@ -40,7 +40,10 @@ const CORS_ORIGINS = [
     'https://elcto-self.vercel.app',
     'http://localhost:3000',
     'http://localhost:3001',
-    'http://localhost:5173'
+    'http://localhost:5173',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:3001',
+    'http://127.0.0.1:5173'
 ];
 
 const allowedOriginPatterns = [
