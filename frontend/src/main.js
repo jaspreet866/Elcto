@@ -11,6 +11,7 @@ import "aos/dist/aos.css"
 import Splide from '@splidejs/splide'
 import '@splidejs/splide/css'
 import { motion } from 'framer-motion'
+import CursorGrid from './CursorGrid'
 import Lightfall from './Lightfall'
 import EchoText from './EchoText'
 import { ImageModal } from './ImageModal'
@@ -732,10 +733,11 @@ export const Main = () => {
                   <i className="bi bi-lightning-charge-fill"></i> Flagship Store 2026
               </div>
               <div className="my-3 hero-title-animated">
-                <h1 className="hero-main-heading m-0 p-0" style={{ fontSize: 'inherit', fontWeight: 'inherit', lineHeight: 'inherit' }}>
-                  {isMobile ? (
-                    <span className="hero-mobile-title">ElectoMart — Your Tech Partner</span>
-                  ) : (
+                {isMobile ? (
+                  <h1 className="hero-mobile-title">ElectoMart — Your Tech Partner</h1>
+                ) : (
+                  <>
+                    <h1 className="visually-hidden">ElectoMart — Your Tech Partner</h1>
                     <EchoText
                       text="ElectoMart - Your Tech Partner"
                       echoes={10}
@@ -753,8 +755,8 @@ export const Main = () => {
                       fontWeight={800}
                       color="#ffffff"
                     />
-                  )}
-                </h1>
+                  </>
+                )}
               </div>
               <p className="hero-desc hero-desc-animated d-none d-sm-block">Upgrade your digital lifestyle with high-speed smartphones, flagship workstations, and studio audio devices.</p>
               <div className="d-flex gap-3 flex-wrap hero-actions-animated">
@@ -804,7 +806,22 @@ export const Main = () => {
             ))}
         </div> */}
     </div>      
-            <div className="container mt-5 position-relative py-4 rounded-4" style={{ background: "radial-gradient(circle at 50% 20%, rgba(37, 99, 235, 0.04) 0%, transparent 70%)" }}>
+            <div className="container mt-5 position-relative py-3 rounded-4" style={{ overflow: 'hidden' }}>
+                <CursorGrid
+                    cellSize={50}
+                    color={theme === "dark" ? "#818cf8" : "#0d6efd"}
+                    radius={130}
+                    falloff="smooth"
+                    holdTime={400}
+                    fadeDuration={700}
+                    lineWidth={1}
+                    maxOpacity={0.7}
+                    fillOpacity={0.04}
+                    gridOpacity={0.08}
+                    cellRadius={2}
+                    clickPulse={true}
+                    pulseSpeed={500}
+                />
                 <motion.h2 
                     className="fw-bold text-center mb-4 section-title-modern position-relative"
                     style={{ zIndex: 2 }}
@@ -907,7 +924,7 @@ export const Main = () => {
                                 </div>
 
                                 <div className="card-body p-0">
-                                    <h3 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title" title={p.ProductName}>{p.ProductName}</h3>
+                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title" title={p.ProductName}>{p.ProductName}</h6>
                                     <div className="mb-2 text-warning">
     <i className="bi bi-star-fill"></i>
     <i className="bi bi-star-fill"></i>
@@ -929,11 +946,11 @@ export const Main = () => {
 
                                     </p>
 
-                                    <div className='d-flex flex-column flex-md-row gap-2 mt-2'>
-                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-outline-primary btn-sm w-100">
-                                            View Details
+                                    <div className='d-flex flex-column flex-md-row gap-2 mt-auto pt-2'>
+                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
+                                            View Product
                                         </Link>
-                                        <button className='btn btn-primary btn-sm w-100 fw-semibold' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
+                                        <button className='btn btn-danger btn-sm w-100' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
                                     </div>
                                 </div>
 
@@ -976,7 +993,7 @@ export const Main = () => {
                                 </div>
 
                                 <div className="card-body p-0">
-                                    <h3 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title" title={p.ProductName}>{p.ProductName}</h3>
+                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title" title={p.ProductName}>{p.ProductName}</h6>
                                     <div className="mb-2 text-warning">
     <i className="bi bi-star-fill"></i>
     <i className="bi bi-star-fill"></i>
@@ -996,11 +1013,11 @@ export const Main = () => {
                                         
 
                                     </p>
-                                    <div className='d-flex flex-column flex-md-row gap-2 mt-2'>
-                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-outline-primary btn-sm w-100">
-                                            View Details
+                                    <div className='d-flex flex-column flex-md-row gap-2 mt-auto pt-2'>
+                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
+                                            View Product
                                         </Link>
-                                        <button className='btn btn-primary btn-sm w-100 fw-semibold' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
+                                        <button className='btn btn-danger btn-sm w-100' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
                                     </div>
                                 </div>
                             </div>
@@ -1037,7 +1054,7 @@ export const Main = () => {
                                 </div>
 
                                 <div className="card-body p-0">
-                                    <h3 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title" title={p.ProductName}>{p.ProductName}</h3>
+                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title" title={p.ProductName}>{p.ProductName}</h6>
                                     <div className="mb-2 text-warning">
     <i className="bi bi-star-fill"></i>
     <i className="bi bi-star-fill"></i>
@@ -1057,11 +1074,11 @@ export const Main = () => {
                                         
 
                                     </p>
-                                    <div className='d-flex flex-column flex-md-row gap-2 mt-2'>
-                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-outline-primary btn-sm w-100">
-                                            View Details
+                                    <div className='d-flex flex-column flex-md-row gap-2 mt-auto pt-2'>
+                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
+                                            View Product
                                         </Link>
-                                        <button className='btn btn-primary btn-sm w-100 fw-semibold' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
+                                        <button className='btn btn-danger btn-sm w-100' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
                                     </div>
                                 </div>
                             </div>
@@ -1098,7 +1115,7 @@ export const Main = () => {
                                 </div>
 
                                 <div className="card-body p-0">
-                                    <h3 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title" title={p.ProductName}>{p.ProductName}</h3>
+                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title" title={p.ProductName}>{p.ProductName}</h6>
                                     <div className="mb-2 text-warning">
     <i className="bi bi-star-fill"></i>
     <i className="bi bi-star-fill"></i>
@@ -1117,11 +1134,11 @@ export const Main = () => {
                                         
 
                                     </p>
-                                    <div className='d-flex flex-column flex-md-row gap-2 mt-2'>
-                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-outline-primary btn-sm w-100">
-                                            View Details
+                                    <div className='d-flex flex-column flex-md-row gap-1'>
+                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
+                                            View Product
                                         </Link>
-                                        <button className='btn btn-primary btn-sm w-100 fw-semibold' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
+                                        <button className='btn btn-danger btn-sm w-100 ' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
                                     </div>
                                 </div>
                             </div>
@@ -1158,7 +1175,7 @@ export const Main = () => {
                                 </div>
 
                                 <div className="card-body p-0">
-                                    <h3 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title" title={p.ProductName}>{p.ProductName}</h3>
+                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title">{p.ProductName}</h6>
                                     <div className="mb-2 text-warning">
     <i className="bi bi-star-fill"></i>
     <i className="bi bi-star-fill"></i>
@@ -1178,11 +1195,11 @@ export const Main = () => {
                                         
 
                                     </p>
-                                    <div className='d-flex flex-column flex-md-row gap-2 mt-2'>
-                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-outline-primary btn-sm w-100">
-                                            View Details
+                                    <div className='d-flex flex-column flex-md-row gap-1'>
+                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
+                                            View Product
                                         </Link>
-                                        <button className='btn btn-primary btn-sm w-100 fw-semibold' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
+                                        <button className='btn btn-danger btn-sm w-100 ' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
                                     </div>
                                 </div>
                             </div>
@@ -1219,7 +1236,7 @@ export const Main = () => {
                                 </div>
 
                                 <div className="card-body p-0">
-                                    <h3 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title" title={p.ProductName}>{p.ProductName}</h3>
+                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title">{p.ProductName}</h6>
                                     <div className="mb-2 text-warning">
     <i className="bi bi-star-fill"></i>
     <i className="bi bi-star-fill"></i>
@@ -1238,13 +1255,12 @@ export const Main = () => {
                                         </span>
                                         
 
-
                                     </p>
-                                    <div className='d-flex flex-column flex-md-row gap-2 mt-2'>
-                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-outline-primary btn-sm w-100">
-                                            View Details
+                                    <div className='d-flex flex-column flex-md-row gap-1'>
+                                        <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
+                                            View Product
                                         </Link>
-                                        <button className='btn btn-primary btn-sm w-100 fw-semibold' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
+                                        <button className='btn btn-danger btn-sm w-100 ' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
                                     </div>
                                 </div>
                             </div>
@@ -1283,7 +1299,7 @@ export const Main = () => {
                                 whileHover={{ rotate: [0, -12, 12, -6, 0], scale: 1.25 }}
                                 transition={{ type: "spring", stiffness: 300 }}
                             ></motion.i>
-                            <h3 className="mt-2 fw-bold fs-6">{item.title}</h3>
+                            <h6 className="mt-2 fw-bold">{item.title}</h6>
                             <small className="text-muted">{item.desc}</small>
                         </motion.div>
                     ))}
@@ -1322,7 +1338,7 @@ export const Main = () => {
                                             ))}
                                         </div>
                                         <p className="mt-3 text-muted fst-italic">"{review.quote}"</p>
-                                        <p className="fw-bold text-dark mb-0 fs-6">{review.author}</p>
+                                        <h6 className="fw-bold text-dark">{review.author}</h6>
                                     </div>
                                 </div>
                             </motion.div>
@@ -1332,14 +1348,9 @@ export const Main = () => {
             </section>
             <section>
                 <div className="container mt-3" >
-                    <div className="d-flex justify-content-between align-items-center mb-2">
-                        <h2 className="mb-0">Trusted By</h2>
-                        <span className="badge rounded-pill text-bg-light border text-muted px-3 py-1 small">
-                            <i className="bi bi-pause-circle me-1" aria-hidden="true"></i> Continuous · Hover to pause
-                        </span>
-                    </div>
+                    <h2>Trusted By</h2>
 
-                    <div className="marquee py-5" title="Brands we trust (scrolls continuously, hover to pause)">
+                    <div className="marquee py-5">
                         <div className="marquee-content gap-5">
                             {br.concat(br).map((a, index) => (
                                 <img key={index} className='rounded-4 object-fit-cover' src={`/uploads/${a.Img}`} height="100px" alt="brand" />
