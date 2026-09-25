@@ -58,7 +58,7 @@ export const Footer = () => {
 
                         {/* PRODUCTS */}
                         <div className="col-lg-3 col-6 col-md-6">
-                            <h5 className="fw-semibold mb-3">Products</h5>
+                            <h3 className="fs-5 fw-semibold mb-3">Products</h3>
                             <ul className="list-unstyled text-muted">
                                 {["MOBILES", "LEDs", "LAPTOPS", "CAMERAS"].map((item, i) => (
                                     <motion.li key={i} whileHover={{ x: 6, color: "#0d6efd" }} transition={{ duration: 0.2 }}>
@@ -70,7 +70,7 @@ export const Footer = () => {
 
                         {/* FEATURES */}
                         <div className="col-lg-3 col-6 col-md-6">
-                            <h5 className="fw-semibold mb-3">Features</h5>
+                            <h3 className="fs-5 fw-semibold mb-3">Features</h3>
                             <ul className="list-unstyled text-muted">
                                 {["About Us", "Contact Us", "Order", "Terms & Conditions"].map((item, i) => (
                                     <motion.li key={i} whileHover={{ x: 6, color: "#0d6efd" }} transition={{ duration: 0.2 }}>
@@ -82,9 +82,9 @@ export const Footer = () => {
 
                         {/* HELP */}
                         <div className="col-lg-3 col-6 col-md-6">
-                            <h5 className="fw-semibold mb-2">
+                            <h3 className="fs-5 fw-semibold mb-2">
                                 We are here to help you
-                            </h5>
+                            </h3>
                             <p className="text-muted">
                                 If any problem, email us
                             </p>
