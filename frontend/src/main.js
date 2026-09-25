@@ -1134,11 +1134,11 @@ export const Main = () => {
                                         
 
                                     </p>
-                                    <div className='d-flex flex-column flex-md-row gap-1'>
+                                    <div className='d-flex flex-column flex-md-row gap-2 mt-auto pt-2'>
                                         <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
                                             View Product
                                         </Link>
-                                        <button className='btn btn-danger btn-sm w-100 ' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
+                                        <button className='btn btn-danger btn-sm w-100' onClick={() => { cart(id, p.ProductName, p.ProductPrice, p.Img, p.Quantity, p._id) }}>Add to Cart</button>
                                     </div>
                                 </div>
                             </div>
@@ -1175,7 +1175,7 @@ export const Main = () => {
                                 </div>
 
                                 <div className="card-body p-0">
-                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title">{p.ProductName}</h6>
+                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title" title={p.ProductName}>{p.ProductName}</h6>
                                     <div className="mb-2 text-warning">
     <i className="bi bi-star-fill"></i>
     <i className="bi bi-star-fill"></i>
@@ -1195,7 +1195,7 @@ export const Main = () => {
                                         
 
                                     </p>
-                                    <div className='d-flex flex-column flex-md-row gap-1'>
+                                    <div className='d-flex flex-column flex-md-row gap-2 mt-auto pt-2'>
                                         <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
                                             View Product
                                         </Link>
@@ -1236,7 +1236,7 @@ export const Main = () => {
                                 </div>
 
                                 <div className="card-body p-0">
-                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title">{p.ProductName}</h6>
+                                    <h6 className="fs-6 fs-md-5 fs-lg-5 fw-semibold product-title" title={p.ProductName}>{p.ProductName}</h6>
                                     <div className="mb-2 text-warning">
     <i className="bi bi-star-fill"></i>
     <i className="bi bi-star-fill"></i>
@@ -1256,7 +1256,7 @@ export const Main = () => {
                                         
 
                                     </p>
-                                    <div className='d-flex flex-column flex-md-row gap-1'>
+                                    <div className='d-flex flex-column flex-md-row gap-2 mt-auto pt-2'>
                                         <Link to={`/detail?id=${p._id}&cid=${p.Category} `} className="btn btn-primary btn-sm w-100">
                                             View Product
                                         </Link>
