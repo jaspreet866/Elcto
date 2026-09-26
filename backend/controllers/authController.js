@@ -64,12 +64,17 @@ const forgotPassword = async (req, res) => {
 
         const otp = createOtp();
         saveOtpForEmail(email, otp);
-        const emailDelivered = await sendOtpEmail(email, otp);
-        console.log(`[Forgot Password] OTP generated for ${email}: ${otp}`);
+        const emailResult = await sendOtpEmail(email, otp);
+        const isDelivered = typeof emailResult === 'object' ? Boolean(emailResult?.success) : Boolean(emailResult);
+        const deliveryError = typeof emailResult === 'object' ? emailResult?.error : null;
+        console.log(`[Forgot Password] OTP generated for ${email}: ${otp}, delivered: ${isDelivered}`);
 
         return res.send({
             statuscode: 1,
-            message: emailDelivered ? 'OTP sent to your email' : 'OTP generated successfully! Check your email',
+            emailSent: isDelivered,
+            message: isDelivered 
+                ? 'OTP sent to your email' 
+                : (deliveryError ? `OTP generated, but email delivery failed (${deliveryError})` : 'OTP generated successfully! Check your email'),
             demoOtp: otp
         });
     } catch (err) {

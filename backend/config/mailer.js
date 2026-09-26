@@ -41,41 +41,83 @@ const createOtpEmail = (email, otp) => {
 };
 
 const sendOtpEmail = async (email, otp) => {
-    let emailDelivered = false;
-
-    // Send via Brevo REST API (https://api.brevo.com/v3/smtp/email)
     const apiKey = process.env.BREVO_API_KEY;
-    if (apiKey) {
-        try {
-            const emailMessage = createOtpEmail(email, otp);
-            const response = await fetch('https://api.brevo.com/v3/smtp/email', {
-                method: 'POST',
-                headers: {
-                    'accept': 'application/json',
-                    'content-type': 'application/json',
-                    'api-key': apiKey
-                },
-                body: JSON.stringify(emailMessage)
-            });
-
-            if (response.ok || response.status === 201) {
-                emailDelivered = true;
-                console.log(`[OTP] Email sent via Brevo API to ${email}`);
-                return true;
-            } else {
-                const text = await response.text();
-                console.warn(`[OTP] Brevo API returned ${response.status}: ${text}`);
-            }
-        } catch (apiErr) {
-            console.warn(`[OTP] Brevo API failed for ${email}:`, apiErr.message);
-        }
-    } else {
-        console.warn('[OTP] BREVO_API_KEY is not set in backend/.env. Falling back to console log.');
+    if (!apiKey) {
+        const msg = 'BREVO_API_KEY is not configured in environment variables';
+        console.warn(`[OTP] ${msg}`);
+        console.log(`\n===============================================\n🔑 [OTP CODE for ${email}]: ${otp}\n===============================================\n`);
+        return { success: false, error: msg };
     }
 
-    // Fallback: Always log OTP to server console so testing/auth flow is never blocked
-    console.log(`\n===============================================\n🔑 [OTP CODE for ${email}]: ${otp}\n===============================================\n`);
-    return emailDelivered;
+    try {
+        const emailMessage = createOtpEmail(email, otp);
+        const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+            method: 'POST',
+            headers: {
+                'accept': 'application/json',
+                'content-type': 'application/json',
+                'api-key': apiKey
+            },
+            body: JSON.stringify(emailMessage)
+        });
+
+        if (response.ok || response.status === 201) {
+            console.log(`[OTP] Email sent via Brevo API to ${email}`);
+            return { success: true };
+        } else {
+            const errData = await response.json().catch(() => null);
+            const errText = errData?.message || `HTTP ${response.status}`;
+            console.warn(`[OTP] Brevo API error (${response.status}):`, errText);
+            console.log(`\n===============================================\n🔑 [OTP CODE for ${email}]: ${otp}\n===============================================\n`);
+            return { success: false, error: `Brevo (${response.status}): ${errText}` };
+        }
+    } catch (apiErr) {
+        console.warn(`[OTP] Brevo API failed for ${email}:`, apiErr.message);
+        console.log(`\n===============================================\n🔑 [OTP CODE for ${email}]: ${otp}\n===============================================\n`);
+        return { success: false, error: `Network error: ${apiErr.message}` };
+    }
 };
 
-module.exports = { createOtp, saveOtpForEmail, getOtpForEmail, deleteOtpForEmail, sendOtpEmail };
+const checkEmailHealth = async (req, res) => {
+    const apiKey = process.env.BREVO_API_KEY;
+    const sender = process.env.BREVO_SENDER_EMAIL;
+
+    if (!apiKey) {
+        return res.status(500).json({
+            ok: false,
+            error: 'BREVO_API_KEY is missing from environment variables on this server'
+        });
+    }
+
+    try {
+        const response = await fetch('https://api.brevo.com/v3/account', {
+            headers: {
+                'accept': 'application/json',
+                'api-key': apiKey
+            }
+        });
+        const data = await response.json().catch(() => ({}));
+        if (response.ok) {
+            return res.json({
+                ok: true,
+                message: 'Brevo API is connected and verified!',
+                senderConfigured: sender || 'not set (using default)',
+                accountEmail: data.email,
+                creditsRemaining: data.plan?.[0]?.credits
+            });
+        } else {
+            return res.status(response.status).json({
+                ok: false,
+                status: response.status,
+                brevoMessage: data.message || data
+            });
+        }
+    } catch (err) {
+        return res.status(500).json({
+            ok: false,
+            error: err.message
+        });
+    }
+};
+
+module.exports = { createOtp, saveOtpForEmail, getOtpForEmail, deleteOtpForEmail, sendOtpEmail, checkEmailHealth };
