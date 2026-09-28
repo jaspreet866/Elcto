@@ -4,6 +4,11 @@ import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import banner2 from './images/banner2.png'
 import banner1 from './images/banner1.png'
 import banner3 from './images/banner3.png'
+import bentoLaptop from './images/bento-laptop.jpg'
+import bentoPhone from './images/bento-phone.jpg'
+import bentoAudio from './images/bento-audio.jpg'
+import bentoTv from './images/bento-tv.jpg'
+import './MainModern.css'
 import { Context } from './usecontext'
 import Swal from 'sweetalert2'
 import AOS from "aos"
@@ -30,6 +35,11 @@ export const Main = () => {
     const [mobile, setmobile] = useState([])
     const [led, setled] = useState([])
     const [airpod, setairpod] = useState([])
+
+    const laptopCat = useMemo(() => d.find(c => c.Name?.toLowerCase().includes('laptop'))?._id || '6970dd60300a757a6dcdb92e', [d]);
+    const mobileCat = useMemo(() => d.find(c => c.Name?.toLowerCase().includes('mobile') || c.Name?.toLowerCase().includes('phone'))?._id || '6970dd2d300a757a6dcdb92a', [d]);
+    const airpodCat = useMemo(() => d.find(c => c.Name?.toLowerCase().includes('airpod') || c.Name?.toLowerCase().includes('audio') || c.Name?.toLowerCase().includes('headphone'))?._id || '69849f299a77c6ecd3c2839b', [d]);
+    const ledCat = useMemo(() => d.find(c => c.Name?.toLowerCase().includes('led') || c.Name?.toLowerCase().includes('tv'))?._id || '6970dd16300a757a6dcdb928', [d]);
     const { id, theme, setIsCartOpen, fetchCart } = useContext(Context)
     const [discount, setdiscount] = useState("")
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -806,6 +816,93 @@ export const Main = () => {
             ))}
         </div> */}
     </div>      
+
+            {/* Flagship Bento Grid Showcase */}
+            <section className="container mt-5 pt-2" data-aos="fade-up">
+                <div className="d-flex justify-content-between align-items-end mb-3">
+                    <div>
+                        <span className="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill fw-bold text-uppercase mb-2">
+                            Featured Spotlight
+                        </span>
+                        <h2 className="fw-bold fs-2 mb-1">Flagship Tech Innovations</h2>
+                        <p className="text-muted small mb-0">Handpicked gear engineered for speed, power, and precision</p>
+                    </div>
+                    <Link to={`/related?id=${d[0]?._id || laptopCat}`} className="btn btn-outline-secondary btn-sm rounded-pill d-none d-md-inline-flex align-items-center gap-1">
+                        Browse All <i className="bi bi-arrow-right"></i>
+                    </Link>
+                </div>
+
+                <div className="bento-grid-wrapper">
+                    {/* Bento 1: Flagship Laptops */}
+                    <Link to={`/related?id=${laptopCat}`} className="bento-card bento-card-7 bento-laptop">
+                        <div className="bento-content">
+                            <div className="bento-badge">
+                                <i className="bi bi-cpu-fill text-warning"></i> Flagship Power
+                            </div>
+                            <h3 className="bento-title">Pro Laptops & Workstations</h3>
+                            <p className="bento-subtitle">M3 Max & Intel Core Ultra. Next-level speed for developers and creators. Save up to ₹20,000.</p>
+                            <span className="bento-cta-btn">
+                                Shop Laptops <i className="bi bi-arrow-right"></i>
+                            </span>
+                        </div>
+                        <div className="bento-img-container">
+                            <img src={bentoLaptop} alt="Flagship Laptop" className="bento-img" />
+                        </div>
+                    </Link>
+
+                    {/* Bento 2: 5G Smartphones */}
+                    <Link to={`/related?id=${mobileCat}`} className="bento-card bento-card-5 bento-phone">
+                        <div className="bento-content">
+                            <div className="bento-badge">
+                                <i className="bi bi-phone-fill text-info"></i> 5G Pro
+                            </div>
+                            <h3 className="bento-title">Next-Gen Flagships</h3>
+                            <p className="bento-subtitle">Titanium finish, 120Hz OLED & cinematic camera systems.</p>
+                            <span className="bento-cta-btn">
+                                Explore Phones <i className="bi bi-arrow-right"></i>
+                            </span>
+                        </div>
+                        <div className="bento-img-container">
+                            <img src={bentoPhone} alt="Next-Gen Phone" className="bento-img" />
+                        </div>
+                    </Link>
+
+                    {/* Bento 3: Studio Audio */}
+                    <Link to={`/related?id=${airpodCat}`} className="bento-card bento-card-5 bento-audio">
+                        <div className="bento-content">
+                            <div className="bento-badge">
+                                <i className="bi bi-soundwave text-success"></i> Lossless Audio
+                            </div>
+                            <h3 className="bento-title">Spatial Audio & ANC</h3>
+                            <p className="bento-subtitle">Active Noise Cancellation & 40hr playtime for immersive sound.</p>
+                            <span className="bento-cta-btn">
+                                Shop Audio <i className="bi bi-arrow-right"></i>
+                            </span>
+                        </div>
+                        <div className="bento-img-container">
+                            <img src={bentoAudio} alt="Studio Audio" className="bento-img" />
+                        </div>
+                    </Link>
+
+                    {/* Bento 4: Smart Entertainment Displays */}
+                    <Link to={`/related?id=${ledCat}`} className="bento-card bento-card-7 bento-tv">
+                        <div className="bento-content">
+                            <div className="bento-badge">
+                                <i className="bi bi-tv-fill text-danger"></i> 4K Cinema
+                            </div>
+                            <h3 className="bento-title">OLED & Smart 4K Screens</h3>
+                            <p className="bento-subtitle">Dolby Vision, 144Hz Gaming Mode & AI Upscaling right in your living room.</p>
+                            <span className="bento-cta-btn">
+                                Explore Displays <i className="bi bi-arrow-right"></i>
+                            </span>
+                        </div>
+                        <div className="bento-img-container">
+                            <img src={bentoTv} alt="Smart OLED TV" className="bento-img" />
+                        </div>
+                    </Link>
+                </div>
+            </section>
+
             <div className="container mt-5 position-relative py-3 rounded-4" style={{ overflow: 'hidden' }}>
                 <CursorGrid
                     cellSize={50}
