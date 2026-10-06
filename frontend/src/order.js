@@ -3,6 +3,8 @@ import { Link } from "react-router-dom"
 import { Context } from "./usecontext"
 import { SEO } from "./SEO"
 import { API_BASE } from "./apiConfig"
+import { inr } from "./format"
+import "./Shop.css"
 
 export const Order = () => {
     const [d, setd] = useState([])
@@ -45,16 +47,16 @@ export const Order = () => {
         const s = status || "Processing"
         switch (s) {
             case "Delivered":
-                return <span className="badge bg-success px-3 py-2 rounded-pill"><i className="bi bi-check-circle-fill me-1"></i> Delivered</span>
+                return <div className="order-status order-status--delivered"><i className="bi bi-check-circle-fill"></i> Delivered</div>
             case "Shipped":
             case "Out for Delivery":
-                return <span className="badge bg-info text-dark px-3 py-2 rounded-pill"><i className="bi bi-truck me-1"></i> {s}</span>
+                return <div className="order-status order-status--shipped"><i className="bi bi-truck"></i> {s}</div>
             case "Cancelled":
-                return <span className="badge bg-danger px-3 py-2 rounded-pill"><i className="bi bi-x-circle-fill me-1"></i> Cancelled</span>
+                return <div className="order-status order-status--cancelled"><i className="bi bi-x-circle-fill"></i> Cancelled</div>
             case "Confirmed":
-                return <span className="badge bg-primary px-3 py-2 rounded-pill"><i className="bi bi-patch-check-fill me-1"></i> Confirmed</span>
+                return <div className="order-status order-status--confirmed"><i className="bi bi-patch-check-fill"></i> Confirmed</div>
             default:
-                return <span className="badge bg-warning text-dark px-3 py-2 rounded-pill"><i className="bi bi-clock-history me-1"></i> Processing</span>
+                return <div className="order-status order-status--processing"><i className="bi bi-clock-history"></i> Processing</div>
         }
     }
 
@@ -105,123 +107,115 @@ export const Order = () => {
                 </div>
             </section>
 
-            <div className="container my-5">
-                {loading ? (
-                    <div className="text-center py-5">
-                        <div className="spinner-border text-primary" role="status" style={{ width: "3rem", height: "3rem" }}>
-                            <span className="visually-hidden">Loading orders...</span>
+            <section className="shop-page">
+                <div className="container">
+                    {loading ? (
+                        <div className="order-grid" aria-busy="true">
+                            <div className="shop-panel">
+                                <div className="shop-skeleton shop-skeleton-block"></div>
+                            </div>
+                            <div className="shop-panel">
+                                <div className="shop-skeleton shop-skeleton-block"></div>
+                            </div>
+                            <div className="visually-hidden" role="status">Loading orders...</div>
                         </div>
-                        <p className="mt-3 text-muted">Retrieving your order history...</p>
-                    </div>
-                ) : !id ? (
-                    <div className="text-center py-5">
-                        <i className="bi bi-person-lock fs-1 text-muted"></i>
-                        <h4 className="mt-3">Please Log In</h4>
-                        <p className="text-muted">You need to be logged in to view your orders.</p>
-                        <Link to="/login" className="btn btn-primary px-4 py-2 mt-2">Log In</Link>
-                    </div>
-                ) : d.length === 0 ? (
-                    <div className="text-center py-5 card border-0 shadow-sm p-5 rounded-4">
-                        <div className="mb-3">
-                            <i className="bi bi-bag-x text-muted" style={{ fontSize: "3.5rem" }}></i>
+                    ) : !id ? (
+                        <div className="shop-panel shop-empty">
+                            <div className="shop-empty-icon">
+                                <i className="bi bi-person-lock"></i>
+                            </div>
+                            <h2 className="shop-empty-title">Please Log In</h2>
+                            <div className="shop-empty-text">You need to be logged in to view your orders.</div>
+                            <Link to="/login" className="btn btn-primary shop-btn">Log In</Link>
                         </div>
-                        <h4>No Orders Yet</h4>
-                        <p className="text-muted">You haven't placed any orders with us yet. Discover the latest electronics now!</p>
-                        <div>
-                            <Link to="/product" className="btn btn-primary px-4 py-2 rounded-pill">
-                                <i className="bi bi-cart me-2"></i> Explore Products
+                    ) : d.length === 0 ? (
+                        <div className="shop-panel shop-empty">
+                            <div className="shop-empty-icon">
+                                <i className="bi bi-bag-x"></i>
+                            </div>
+                            <h2 className="shop-empty-title">No Orders Yet</h2>
+                            <div className="shop-empty-text">You haven't placed any orders with us yet. Discover the latest electronics now!</div>
+                            <Link to="/product" className="btn btn-primary shop-btn">
+                                <i className="bi bi-cart"></i> Explore Products
                             </Link>
                         </div>
-                    </div>
-                ) : (
-                    <div className="row g-4">
-                        {d.map((a, index) => {
-                            const currentStatus = a.OrderStatus || "Processing"
-                            const steps = ["Processing", "Confirmed", "Shipped", "Delivered"]
-                            const currentStepIdx = currentStatus === "Cancelled" ? -1 : steps.indexOf(currentStatus)
+                    ) : (
+                        <div className="order-grid">
+                            {d.map((a, index) => {
+                                const currentStatus = a.OrderStatus || "Processing"
+                                const steps = ["Processing", "Confirmed", "Shipped", "Delivered"]
+                                const currentStepIdx = currentStatus === "Cancelled" ? -1 : steps.indexOf(currentStatus)
+                                const activeStepIdx = currentStepIdx === -1 ? 0 : currentStepIdx
 
-                            return (
-                                <div className="col-lg-6 col-12" key={a._id || index}>
-                                    <div className="card rounded-4 shadow-sm border-0 overflow-hidden mb-3">
-                                        <div className="card-header bg-white border-bottom p-3 d-flex flex-wrap align-items-center justify-content-between gap-2">
+                                return (
+                                    <article className="shop-panel order-card" key={a._id || index}>
+                                        <div className="order-card-head">
                                             <div>
-                                                <span className="fw-bold text-dark me-2">Order #{a.OrderNo || a._id?.slice(-6)}</span>
-                                                <small className="text-muted d-block">{formatDate(a.Date || a.createdAt)}</small>
+                                                <div className="order-number">Order #{a.OrderNo || a._id?.slice(-6)}</div>
+                                                <small className="order-date">{formatDate(a.Date || a.createdAt)}</small>
                                             </div>
-                                            <div className="d-flex align-items-center gap-2">
+                                            <div className="order-tags">
                                                 {getStatusBadge(a.OrderStatus)}
-                                                <span className="badge bg-light text-dark border px-2 py-1">
+                                                <div className="order-pay">
                                                     {a.Payment || "COD"}
-                                                </span>
+                                                </div>
                                             </div>
                                         </div>
 
                                         {/* Status progress bar */}
                                         {currentStatus !== "Cancelled" && (
-                                            <div className="px-4 pt-3 pb-1 bg-light">
-                                                <div className="d-flex justify-content-between text-center position-relative mb-2">
-                                                    {steps.map((st, sIdx) => {
-                                                        const isDone = sIdx <= (currentStepIdx === -1 ? 0 : currentStepIdx)
-                                                        return (
-                                                            <div key={st} className="flex-fill position-relative">
-                                                                <div 
-                                                                    className={`rounded-circle mx-auto d-flex align-items-center justify-content-center ${isDone ? 'bg-primary text-white' : 'bg-white border text-muted'}`}
-                                                                    style={{ width: "24px", height: "24px", fontSize: "11px", fontWeight: "bold" }}
-                                                                >
-                                                                    {isDone ? "✓" : sIdx + 1}
-                                                                </div>
-                                                                <small style={{ fontSize: "11px" }} className={`d-block mt-1 ${isDone ? 'fw-bold text-primary' : 'text-muted'}`}>
-                                                                    {st}
-                                                                </small>
+                                            <ol className="order-track">
+                                                {steps.map((st, sIdx) => {
+                                                    const isDone = sIdx <= activeStepIdx
+                                                    return (
+                                                        <li
+                                                            key={st}
+                                                            className={`${isDone ? "is-done" : ""} ${sIdx === activeStepIdx ? "is-current" : ""}`}
+                                                            aria-current={sIdx === activeStepIdx ? "step" : undefined}
+                                                        >
+                                                            <div className="order-track-dot">
+                                                                {isDone ? <i className="bi bi-check-lg"></i> : sIdx + 1}
                                                             </div>
-                                                        )
-                                                    })}
-                                                </div>
-                                            </div>
+                                                            {st}
+                                                        </li>
+                                                    )
+                                                })}
+                                            </ol>
                                         )}
 
-                                        <div className="card-body p-3">
+                                        <ul className="shop-lines">
                                             {Array.isArray(a.Order) && a.Order.map((b, i) => (
-                                                <div key={i} className="d-flex align-items-center justify-content-between py-2 border-bottom">
-                                                    <div className="d-flex align-items-center gap-3">
-                                                        <img
-                                                            src={b.Img || "/placeholder.png"}
-                                                            alt={b.ProductName}
-                                                            style={{
-                                                                height: "60px",
-                                                                width: "60px",
-                                                                objectFit: "cover",
-                                                                borderRadius: "8px"
-                                                            }}
-                                                            onError={(e) => { e.target.style.display = 'none' }}
-                                                        />
-                                                        <div>
-                                                            <div className="fw-semibold product-title" style={{ fontSize: "0.95rem" }}>
-                                                                {b.ProductName}
-                                                            </div>
-                                                            <small className="text-muted">
-                                                                Qty: {b.Quantity || 1} × ₹{b.Price}
-                                                            </small>
-                                                        </div>
+                                                <li key={i} className="shop-line">
+                                                    <img
+                                                        src={b.Img || "/placeholder.png"}
+                                                        alt={b.ProductName}
+                                                        className="shop-thumb"
+                                                        onError={(e) => { e.target.style.visibility = 'hidden' }}
+                                                    />
+                                                    <div>
+                                                        <div className="shop-line-name">{b.ProductName}</div>
+                                                        <small className="shop-line-meta">
+                                                            Qty: {b.Quantity || 1} × {inr(b.Price)}
+                                                        </small>
                                                     </div>
-                                                    <div className="fw-bold text-dark">
-                                                        ₹{(Number(b.Price) || 0) * (Number(b.Quantity) || 1)}
+                                                    <div className="shop-line-price">
+                                                        {inr((Number(b.Price) || 0) * (Number(b.Quantity) || 1))}
                                                     </div>
-                                                </div>
+                                                </li>
                                             ))}
+                                        </ul>
 
-                                            <div className="d-flex justify-content-between align-items-center pt-3">
-                                                <span className="text-muted">Total Paid</span>
-                                                <span className="fs-5 fw-bold text-primary">₹{a.Total}</span>
-                                            </div>
+                                        <div className="order-card-foot">
+                                            <div>Total Paid</div>
+                                            <strong>{inr(a.Total)}</strong>
                                         </div>
-                                    </div>
-                                </div>
-                            )
-                        })}
-                    </div>
-                )}
-            </div>
+                                    </article>
+                                )
+                            })}
+                        </div>
+                    )}
+                </div>
+            </section>
         </>
     )
 }

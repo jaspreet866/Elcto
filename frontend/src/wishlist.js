@@ -4,11 +4,15 @@ import Swal from "sweetalert2"
 import { Context } from "./usecontext"
 import { SEO } from "./SEO"
 import { API_BASE } from "./apiConfig"
+import { inr } from "./format"
+import "./Related.css"
+import "./Shop.css"
 
 export const Wish = () => {
 
 
     const [d, setd] = useState([])
+    const [loading, setloading] = useState(true)
     const { id, setIsCartOpen, fetchCart } = useContext(Context)
     const navigate = useNavigate()
    
@@ -35,6 +39,8 @@ export const Wish = () => {
         } catch (err) {
             console.error("Failed to fetch wishlist:", err);
             setd([]);
+        } finally {
+            setloading(false)
         }
     }
 
@@ -117,9 +123,9 @@ export const Wish = () => {
 
                         <ul className="breadcrumbs-page list-unstyled d-flex justify-content-center align-items-center gap-2 py-3">
                             <li>
-                                <a href="/" className="h6 link text-decoration-none">
+                                <Link to="/" className="h6 link text-decoration-none">
                                     Home
-                                </a>
+                                </Link>
                             </li>
 
                             <li>
@@ -136,55 +142,75 @@ export const Wish = () => {
                 </div>
             </section>
 
-            <div className="container mt-5">
-                <div className="row g-4">
-                    {d.map((a) => (
-                        <div className="col-lg-3 col-md-4 col-sm-6 col-6" key={a._id}>
-                            <div className="card  w-100 shadow-sm wishlist-card">
-
-
-                                <div className="position-relative">
-                                    <img
-                                        src={`${a.Img}`}
-                                        className="card-img-top p-3"
-                                        alt="product"
-                                        style={{ height: "200px", objectFit: "contain" }}
-                                    />
-                                </div>
-
-
-                                <div className="card-body d-flex flex-column">
-                                    <h6 className="card-title text-truncate product-title">
-                                        {a.Name}
-                                    </h6>
-
-                                <p className="d-flex justify-content-center align-self-center text-center">
-                                        <span className=" ">
-                                            ₹{a.Price}
-                                        </span>
-                                        <span className=" text-success fw-bold ms-1 ">
-                                            ₹{a.SalePrice}
-                                        </span>
-                                        
-
-                                    </p>
-
-                                    <div className="d-flex flex-column flex-md-row gap-1">
-
-                                        <button onClick={() => { cart(id, a.Name, a.Price, a.Img, a.Quantity, a._id) }} className="btn btn-sm btn-primary mt-auto w-100">Add to Cart </button>
-
-                                        <button className="btn btn-sm btn-danger mt-auto w-100" onClick={() => remove(a._id)}>
-                                            Remove
-                                        </button>
-                                    </div>
-
-                                </div>
-
+            <section className="shop-page">
+                <div className="container">
+                    {!id ? (
+                        <div className="shop-panel shop-empty">
+                            <div className="shop-empty-icon">
+                                <i className="bi bi-person-lock"></i>
                             </div>
+                            <h2 className="shop-empty-title">Please Log In</h2>
+                            <div className="shop-empty-text">You need to be logged in to view your wishlist.</div>
+                            <Link to="/login" className="btn btn-primary shop-btn">Log In</Link>
                         </div>
-                    ))}
+                    ) : loading ? (
+                        <div className="row g-3 g-md-4" aria-busy="true">
+                            {[0, 1, 2, 3].map((n) => (
+                                <div className="col-lg-3 col-md-4 col-6" key={n}>
+                                    <div className="shop-skeleton shop-skeleton-card"></div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : d.length === 0 ? (
+                        <div className="shop-panel shop-empty">
+                            <div className="shop-empty-icon">
+                                <i className="bi bi-heart"></i>
+                            </div>
+                            <h2 className="shop-empty-title">Your wishlist is empty</h2>
+                            <div className="shop-empty-text">Tap the heart on any product to save it here for later.</div>
+                            <Link to="/product" className="btn btn-primary shop-btn">
+                                <i className="bi bi-grid"></i> Browse products
+                            </Link>
+                        </div>
+                    ) : (
+                        <div className="row g-3 g-md-4">
+                            {d.map((a) => {
+                                const hasDiscount = Number(a.SalePrice) > 0 && Number(a.SalePrice) < Number(a.Price)
+
+                                return (
+                                    <div className="col-lg-3 col-md-4 col-6" key={a._id}>
+                                        <div className="related-product-card">
+                                            <div className="related-img-wrap shop-static-img">
+                                                <img src={`${a.Img}`} alt={a.Name} loading="lazy" />
+                                            </div>
+
+                                            <div className="related-card-content">
+                                                <h6 className="related-card-title" title={a.Name}>
+                                                    {a.Name}
+                                                </h6>
+
+                                                <div className="related-price-row">
+                                                    <strong className="related-current-price">{inr(a.SalePrice || a.Price)}</strong>
+                                                    {hasDiscount && <del className="related-original-price">{inr(a.Price)}</del>}
+                                                </div>
+
+                                                <div className="related-card-actions">
+                                                    <button type="button" className="btn-card-detail" onClick={() => remove(a._id)}>
+                                                        <i className="bi bi-trash3"></i> Remove
+                                                    </button>
+                                                    <button type="button" className="btn-card-buy" onClick={() => { cart(id, a.Name, a.Price, a.Img, a.Quantity, a._id) }}>
+                                                        <i className="bi bi-cart-plus-fill"></i> Add to Cart
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    )}
                 </div>
-            </div>
+            </section>
 
         </>
     )

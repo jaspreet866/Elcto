@@ -1,13 +1,17 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { Context } from "./usecontext"
 import Swal from "sweetalert2"
-import { useNavigate, useSearchParams } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { API_BASE } from "./apiConfig"
 import { SEO } from "./SEO"
+import { inr } from "./format"
+import "./Shop.css"
 
 export const Cart = () => {
     const [d, setd] = useState([])
     const [price, setprice] = useState(0)
+    const [loading, setloading] = useState(true)
+    const latestLoad = useRef(0)
     const { id, fetchCart } = useContext(Context)
     const navigate = useNavigate()
     useEffect(() => {
@@ -23,15 +27,21 @@ export const Cart = () => {
     })
 
     const show = async () => {
-        const result = await fetch(`${API_BASE}/api/getcartdata/${id}`, {
-            method: "get"
-        })
-        if (result.ok) {
-            console.log(result)
-            const res = await result.json()
-            if (res.statuscode === 1) {
-                setd(res.data)
+        const load = ++latestLoad.current
+        try {
+            const result = await fetch(`${API_BASE}/api/getcartdata/${id}`, {
+                method: "get"
+            })
+            if (result.ok) {
+                console.log(result)
+                const res = await result.json()
+                if (res.statuscode === 1) {
+                    setd(res.data)
+                }
             }
+        } finally {
+            // The user id arrives just after mount; only the newest request ends the loading state.
+            if (load === latestLoad.current) setloading(false)
         }
     }
     const qty = async (index, change) => {
@@ -102,6 +112,8 @@ export const Cart = () => {
 
 
 
+    const itemCount = d.reduce((acc, item) => acc + (Number(item.Quantity) || 0), 0)
+
     return (
         <>
             <SEO
@@ -115,9 +127,9 @@ export const Cart = () => {
 
                         <ul className="breadcrumbs-page list-unstyled d-flex justify-content-center align-items-center gap-2 py-3">
                             <li>
-                                <a href="/" className="h6 link text-decoration-none">
+                                <Link to="/" className="h6 link text-decoration-none">
                                     Home
-                                </a>
+                                </Link>
                             </li>
 
                             <li>
@@ -133,83 +145,102 @@ export const Cart = () => {
                     </div>
                 </div>
             </section>
-            <section>
-
-                <div className="container mt-5">
-                    <div className="row">
-                        <div className="col-lg-9 cart-phn table-responsive">
-                            <table className="table align-middle table-outlined">
-                                <thead className="table-dark">
-                                    <tr>
-                                        <th></th>
-                                        <th></th>
-                                        <th>PRODUCT</th>
-                                        <th>PRICE</th>
-                                        <th>QUANTITY</th>
-                                        <th>TOTAL</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+            <section className="shop-page">
+                <div className="container">
+                    {loading ? (
+                        <div className="shop-layout" aria-busy="true">
+                            <div className="shop-panel">
+                                <div className="shop-skeleton shop-skeleton-row"></div>
+                                <div className="shop-skeleton shop-skeleton-row"></div>
+                                <div className="shop-skeleton shop-skeleton-row"></div>
+                            </div>
+                            <div className="shop-panel">
+                                <div className="shop-skeleton shop-skeleton-block"></div>
+                            </div>
+                        </div>
+                    ) : d.length === 0 ? (
+                        <div className="shop-panel shop-empty">
+                            <div className="shop-empty-icon">
+                                <i className="bi bi-bag"></i>
+                            </div>
+                            <h2 className="shop-empty-title">Your cart is empty</h2>
+                            <div className="shop-empty-text">Browse the store and add the products you like. They will show up here.</div>
+                            <Link to="/product" className="btn btn-primary shop-btn">
+                                <i className="bi bi-grid"></i> Browse products
+                            </Link>
+                        </div>
+                    ) : (
+                        <div className="shop-layout">
+                            <div className="shop-panel">
+                                <div className="shop-panel-head">
+                                    <h2 className="shop-panel-title">Items in your cart</h2>
+                                    <small className="shop-panel-meta">{itemCount} {itemCount === 1 ? "item" : "items"}</small>
+                                </div>
+                                <ul className="cart-items">
                                     {
                                         d.map((a, index) =>
-                                            <tr key={index}>
-                                                <td><button className="btn" onClick={() => remove(a._id)}><i class="bi bi-trash3-fill"></i></button></td>
-                                                <td><img style={{ height: "60px" }} src={`${a.Img}`}></img></td>
-                                                <td className="product-title">{a.Name}</td>
-                                                <td>{a.Price}</td>
-                                                <td><div className="d-flex justify-content-center align-items-center gap-2">
-                                                    <button className="btn btn-sm " onClick={() => qty(index, -1)}> − </button>
-                                                    <span className="fw-semibold">{a.Quantity}</span>
-                                                    <button className="btn btn-sm " onClick={() => qty(index, 1)} > +</button>
-                                                </div></td>
-                                                <td>{a.Price * a.Quantity}</td>
-                                            </tr>
+                                            <li className="cart-item" key={index}>
+                                                <img className="shop-thumb" src={`${a.Img}`} alt={a.Name} />
+                                                <div className="cart-item-info">
+                                                    <div className="cart-item-name">{a.Name}</div>
+                                                    <small className="cart-item-unit">{inr(a.Price)} each</small>
+                                                </div>
+                                                <div className="qty-stepper" role="group" aria-label={`Quantity of ${a.Name}`}>
+                                                    <button type="button" aria-label="Decrease quantity" disabled={a.Quantity <= 1} onClick={() => qty(index, -1)}>
+                                                        <i className="bi bi-dash"></i>
+                                                    </button>
+                                                    <output>{a.Quantity}</output>
+                                                    <button type="button" aria-label="Increase quantity" onClick={() => qty(index, 1)}>
+                                                        <i className="bi bi-plus"></i>
+                                                    </button>
+                                                </div>
+                                                <strong className="cart-item-total">{inr(a.Price * a.Quantity)}</strong>
+                                                <button type="button" className="cart-item-remove" aria-label={`Remove ${a.Name}`} onClick={() => remove(a._id)}>
+                                                    <i className="bi bi-trash3"></i>
+                                                </button>
+                                            </li>
                                         )
                                     }
-                                </tbody>
-                            </table>
-                        </div>
-                        <div className="col">
-                            <div className="card shadow-sm w-100 sticky-top">
-                                <div className="card-body">
-                                    <h5 className="card-title mb-3">Order Summary</h5>
-
-                                    <div className="d-flex justify-content-between mb-2">
-                                        <span>Subtotal</span>
-                                        <strong>{price}</strong>
-                                    </div>
-
-                                    <div className="d-flex justify-content-between mb-2">
-                                        <span>Discount</span>
-                                        <strong>0</strong>
-                                    </div>
-
-                                    <hr />
-
-                                    <div className="d-flex justify-content-between fs-5 mb-3">
-                                        <strong>Total</strong>
-                                        <strong>{price}</strong>
-                                    </div>
-                                    <div className="d-flex gap-3">
+                                </ul>
+                            </div>
+                            <aside className="shop-panel shop-summary">
+                                <div className="shop-panel-head">
+                                    <h2 className="shop-panel-title">Order Summary</h2>
+                                </div>
+                                <div className="shop-panel-body">
+                                    <dl className="shop-summary-rows">
+                                        <div className="shop-summary-row">
+                                            <dt>Subtotal</dt>
+                                            <dd>{inr(price)}</dd>
+                                        </div>
+                                        <div className="shop-summary-row">
+                                            <dt>Discount</dt>
+                                            <dd>{inr(0)}</dd>
+                                        </div>
+                                        <div className="shop-summary-row shop-summary-total">
+                                            <dt>Total</dt>
+                                            <dd>{inr(price)}</dd>
+                                        </div>
+                                    </dl>
+                                    <div className="shop-summary-actions">
                                         <button
-                                            className="btn btn-sm btn-primary w-50"
+                                            className="btn btn-primary shop-btn shop-btn-block"
                                             onClick={async () => {
                                                 navigate(`/checkout?id=${id}`, { state: { totalprice: price } });
 
                                             }}
                                         >
-                                            Checkout
+                                            Checkout <i className="bi bi-arrow-right"></i>
                                         </button>
 
-                                        <button className="btn btn-sm btn-primary  w-50" onClick={() => navigate("/")}>Shopoing</button>
+                                        <button className="btn shop-btn shop-btn-ghost shop-btn-block" onClick={() => navigate("/")}>Continue shopping</button>
                                     </div>
                                 </div>
-                            </div>
-
+                            </aside>
                         </div>
-                    </div>
+                    )}
                 </div>
-            </section >
+            </section>
         </>
     )
 }
