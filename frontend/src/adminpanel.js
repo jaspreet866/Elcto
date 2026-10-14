@@ -268,8 +268,9 @@ export const Dashboard = () => {
         }
     };
 
-    const changeVendorStatus = async (vendorId) => {
-        const status = selectedVendorStatus[vendorId];
+    const changeVendorStatus = async (vendorId, customStatus = null) => {
+        const currentVendor = vendorsList.find(v => v._id === vendorId);
+        const status = customStatus || selectedVendorStatus[vendorId] || (currentVendor?.Status === "Pending" ? "Accept" : currentVendor?.Status);
         if (!status) {
             Swal.fire("Select Status", "Please select vendor approval status first", "info");
             return;
@@ -295,7 +296,7 @@ export const Dashboard = () => {
                     Swal.fire("Success", "Vendor status updated!", "success");
                     loadVendors();
                 } else {
-                    Swal.fire("Error", "Could not update vendor status", "error");
+                    Swal.fire("Error", data.message || "Could not update vendor status", "error");
                 }
             } catch (err) {
                 Swal.fire("Error", "Server error updating vendor", "error");
@@ -955,28 +956,40 @@ export const Dashboard = () => {
                                                             <td>{v.Email}</td>
                                                             <td>{v.Phone || "N/A"}</td>
                                                             <td>
-                                                                <span className={`badge rounded-pill px-2 ${v.Status === 'Accept' ? 'bg-success' : v.Status === 'Pending' ? 'bg-warning text-dark' : 'bg-secondary'}`}>
+                                                                <span className={`badge rounded-pill px-2 ${v.Status === 'Accept' ? 'bg-success' : v.Status === 'Pending' ? 'bg-warning text-dark' : 'bg-danger'}`}>
                                                                     {v.Status || 'Pending'}
                                                                 </span>
                                                             </td>
                                                             <td>
-                                                                <div className="d-flex gap-2">
+                                                                <div className="d-flex align-items-center gap-2">
                                                                     <select
                                                                         className="form-select form-select-sm"
+                                                                        style={{ width: "auto" }}
+                                                                        value={selectedVendorStatus[v._id] || v.Status || "Pending"}
                                                                         onChange={(e) => setSelectedVendorStatus({ ...selectedVendorStatus, [v._id]: e.target.value })}
                                                                     >
-                                                                        <option value="">Select</option>
                                                                         <option value="Accept">Accept</option>
                                                                         <option value="Pending">Pending</option>
                                                                         <option value="Reject">Reject</option>
                                                                     </select>
                                                                     <button
                                                                         className="btn btn-sm btn-primary d-flex align-items-center gap-1"
+                                                                        title="Update Status"
                                                                         onClick={() => changeVendorStatus(v._id)}
                                                                     >
-                                                                        <i className="bi bi-check2-circle"></i>
-                                                                        Approve
+                                                                        <i className="bi bi-arrow-repeat"></i>
+                                                                        Update
                                                                     </button>
+                                                                    {v.Status !== "Accept" && (
+                                                                        <button
+                                                                            className="btn btn-sm btn-success d-flex align-items-center gap-1"
+                                                                            title="Quick Approve"
+                                                                            onClick={() => changeVendorStatus(v._id, "Accept")}
+                                                                        >
+                                                                            <i className="bi bi-check2-circle"></i>
+                                                                            Approve
+                                                                        </button>
+                                                                    )}
                                                                 </div>
                                                             </td>
                                                         </tr>

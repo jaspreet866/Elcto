@@ -115,14 +115,30 @@ const updateUserPassword = async (req, res) => {
 
 // PUT /api/makeadmin/:id
 const makeAdmin = async (req, res) => {
-    const result = await User.updateOne({ _id: req.params.id }, { $set: { UserType: req.body.ad } });
-    res.send({ statuscode: result.modifiedCount === 1 ? 1 : 0 });
+    try {
+        const result = await User.findByIdAndUpdate(
+            req.params.id,
+            { $set: { UserType: req.body.ad } },
+            { new: true }
+        );
+        res.send({ statuscode: result ? 1 : 0 });
+    } catch (err) {
+        res.status(500).send({ statuscode: 0, message: err.message });
+    }
 };
 
 // PUT /api/changestatus/:id
 const changeStatus = async (req, res) => {
-    const result = await User.updateOne({ _id: req.params.id }, { $set: { Status: req.body.status } });
-    res.send({ statuscode: result.modifiedCount === 1 ? 1 : 0 });
+    try {
+        const result = await User.findByIdAndUpdate(
+            req.params.id,
+            { $set: { Status: req.body.status } },
+            { new: true }
+        );
+        res.send({ statuscode: result ? 1 : 0 });
+    } catch (err) {
+        res.status(500).send({ statuscode: 0, message: err.message });
+    }
 };
 
 module.exports = {
