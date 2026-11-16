@@ -64,7 +64,16 @@ function App() {
     return () => mediaQuery.removeEventListener?.("change", handleChange);
   }, []);
 
-  const decodeToken = (stored) => {
+  const logoutAuth = useCallback(() => {
+    localStorage.removeItem("data");
+    localStorage.removeItem("user_details");
+    setid("");
+    setutype("");
+    setmail("");
+    setCartItems([]);
+  }, []);
+
+  const decodeToken = useCallback((stored) => {
     if (!stored) return null;
     let info = stored;
     try {
@@ -79,14 +88,23 @@ function App() {
           const payload = parts[1];
           const enc = payload.replace(/-/g, '+').replace(/_/g, '/');
           const str = atob(enc);
-          return JSON.parse(str);
+          const decoded = JSON.parse(str);
+
+          // Check if token has expired (exp is in seconds, Date.now() is in milliseconds)
+          if (decoded && decoded.exp && decoded.exp * 1000 <= Date.now()) {
+            console.warn("JWT token has expired (1 hour limit reached). Logging out.");
+            logoutAuth();
+            return null;
+          }
+
+          return decoded;
         } catch (e) {
           console.warn("Auth token decode error:", e);
         }
       }
     }
     return null;
-  };
+  }, [logoutAuth]);
 
   const loginAuth = useCallback((token) => {
     if (!token) return;
@@ -101,16 +119,7 @@ function App() {
     } catch (err) {
       console.warn("Login auth error:", err);
     }
-  }, []);
-
-  const logoutAuth = useCallback(() => {
-    localStorage.removeItem("data");
-    localStorage.removeItem("user_details");
-    setid("");
-    setutype("");
-    setmail("");
-    setCartItems([]);
-  }, []);
+  }, [decodeToken]);
 
   useEffect(() => {
     const stored = localStorage.getItem("data");
@@ -122,7 +131,29 @@ function App() {
         if (decode.mail || decode.email) setmail(decode.mail || decode.email);
       }
     }
-  }, []);
+  }, [decodeToken]);
+
+  // Real-time automatic logout timer when token reaches its 1-hour expiration
+  useEffect(() => {
+    const stored = localStorage.getItem("data");
+    if (!stored || !id) return;
+
+    const decode = decodeToken(stored);
+    if (!decode || !decode.exp) return;
+
+    const remainingTime = decode.exp * 1000 - Date.now();
+    if (remainingTime <= 0) {
+      logoutAuth();
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      console.warn("Session expired after 1 hour. Logging out.");
+      logoutAuth();
+    }, remainingTime);
+
+    return () => clearTimeout(timer);
+  }, [id, decodeToken, logoutAuth]);
 
   // Fetch cart data
   const fetchCart = useCallback(async () => {
