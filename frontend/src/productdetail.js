@@ -510,82 +510,141 @@ export const Detail = () => {
                 </div>
             )}
             {activeTab === "reviews" && (
-                <div className="row g-5">
-                    <div className="col-lg-6 justify-content-center align-content-center col-12">
-                        {review.length > 0 ? (
-                            review.map((a, index) => (
-                                <div key={index} className="card w-100 shadow-sm border-0 mb-3">
-                                    <div className="card-body">
-
-                                        <div className="d-flex align-items-center mb-2">
-                                            <div
-                                                className="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3"
-                                                style={{ width: "45px", height: "45px" }}
-                                            >
-                                                <span className="fw-bold text-primary">
-                                                    {a.Name.charAt(0)}
-                                                </span>
-                                            </div>
-
-                                            <div>
-                                                <h6 className="mb-0 fw-bold">{a.Name}</h6>
-                                                <small className="text-muted">
-                                                    {a.Date.split("T")[0]}
-                                                </small>
-                                            </div>
-                                        </div>
-
-                                      <div className="text-start ms-4 ">
-                                          <Rating 
-                                            initialValue={parseFloat(a.Rating)}
-                                            allowFraction
-                                            size={18}
-                                            readonly
-                                        />
-                                      </div>
-
-                                        <p className="text-muted mt-2 mb-0">
-                                            {a.Msg}
-                                        </p>
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <div className="text-center py-5 bg-light rounded">
-                                <h5>No Reviews Yet</h5>
-                                <p className="text-muted">
-                                    Be the first to review this product!
-                                </p>
-                            </div>
-                        )}
-                    </div>
+                <div className="row g-4 g-lg-5 align-items-start mt-1">
+                    {/* LEFT COLUMN: REVIEWS LIST */}
                     <div className="col-lg-6 col-12">
-                        <div className="card w-100 border-0 bg-light p-4">
-                            <h5 className="mb-3">Add Your Review</h5>
+                        {/* Summary Header */}
+                        <div className="review-summary-bar">
+                            <div className="d-flex align-items-center gap-2">
+                                <span className="fw-bold fs-5 text-dark">
+                                    {review.length > 0
+                                        ? (review.reduce((acc, r) => acc + (parseFloat(r.Rating) || 0), 0) / review.length).toFixed(1)
+                                        : "0.0"}
+                                </span>
+                                <Rating
+                                    initialValue={
+                                        review.length > 0
+                                            ? review.reduce((acc, r) => acc + (parseFloat(r.Rating) || 0), 0) / review.length
+                                            : 0
+                                    }
+                                    allowFraction
+                                    size={18}
+                                    readonly
+                                />
+                            </div>
+                            <span className="text-muted small fw-semibold">
+                                {review.length} {review.length === 1 ? "Customer Review" : "Customer Reviews"}
+                            </span>
+                        </div>
+
+                        {/* Reviews Scrollable Container (fits 2-3 reviews comfortably at once) */}
+                        <div className="review-list-container">
+                            {review.length > 0 ? (
+                                review.map((a, index) => {
+                                    const initial = (a.Name && a.Name.trim() ? a.Name.trim().charAt(0) : "U").toUpperCase();
+                                    const dateStr = a.Date ? (a.Date.includes("T") ? a.Date.split("T")[0] : a.Date) : "";
+
+                                    return (
+                                        <div key={index} className="review-item-card">
+                                            <div className="review-item-header">
+                                                <div className="review-user-info">
+                                                    <div className="review-user-avatar">
+                                                        {initial}
+                                                    </div>
+                                                    <div>
+                                                        <h6 className="review-user-name">{a.Name || "Anonymous Customer"}</h6>
+                                                        {dateStr && (
+                                                            <span className="review-date-badge">
+                                                                <i className="bi bi-calendar3 me-1"></i>{dateStr}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+
+                                                <div className="review-stars-wrap">
+                                                    <Rating
+                                                        initialValue={parseFloat(a.Rating) || 0}
+                                                        allowFraction
+                                                        size={16}
+                                                        readonly
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <p className="review-msg-text">
+                                                {a.Msg}
+                                            </p>
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <div className="text-center py-5 review-item-card d-flex flex-column align-items-center justify-content-center">
+                                    <div
+                                        className="rounded-circle bg-light d-flex align-items-center justify-content-center mb-3"
+                                        style={{ width: "55px", height: "55px" }}
+                                    >
+                                        <i className="bi bi-chat-square-quote text-danger fs-3"></i>
+                                    </div>
+                                    <h6 className="fw-bold mb-1">No Reviews Yet</h6>
+                                    <p className="text-muted small mb-0">
+                                        Be the first to review this product!
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* RIGHT COLUMN: ADD REVIEW FORM */}
+                    <div className="col-lg-6 col-12">
+                        <div className="review-form-card">
+                            <div className="d-flex align-items-center gap-2 mb-3">
+                                <i className="bi bi-pencil-square text-danger fs-5"></i>
+                                <h5 className="mb-0 fw-bold">Add Your Review</h5>
+                            </div>
 
                             <form onSubmit={send}>
-                                <div className="mb-3">
+                                <div className="mb-3 text-start">
+                                    <label className="form-label small fw-semibold">Your Name</label>
                                     <input
                                         className="form-control"
-                                        placeholder="Enter Name"
+                                        placeholder="Enter your name"
                                         value={username}
                                         onChange={(e) => setusername(e.target.value)}
                                         required
                                     />
                                 </div>
 
-                                <div className="mb-3">
+                                <div className="mb-3 text-start">
+                                    <label className="form-label small fw-semibold">Your Email</label>
                                     <input
                                         type="email"
                                         className="form-control"
-                                        placeholder="Enter Email"
+                                        placeholder="Enter your email"
                                         value={mail}
                                         onChange={(e) => setmail(e.target.value)}
                                         required
                                     />
                                 </div>
 
-                                <div className="mb-3">
+                                <div className="mb-3 text-start">
+                                    <label className="form-label small fw-semibold d-block">Your Rating</label>
+                                    <div className="d-flex align-items-center gap-2">
+                                        <Rating
+                                            onClick={handleRating}
+                                            initialValue={rating}
+                                            allowFraction
+                                            size={24}
+                                        />
+                                        {rating > 0 && (
+                                            <span className="badge bg-danger bg-opacity-10 text-danger ms-2">
+                                                {rating} / 5
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="mb-3 text-start">
+                                    <label className="form-label small fw-semibold">Your Review</label>
                                     <textarea
                                         className="form-control"
                                         rows="4"
@@ -596,15 +655,7 @@ export const Detail = () => {
                                     />
                                 </div>
 
-                                <div className="mb-3">
-                                    <label className="fw-semibold">Your Rating:</label>
-                                    <Rating
-                                        onClick={handleRating}
-                                        allowFraction
-                                    />
-                                </div>
-
-                                <button type="submit" className="btn btn-danger w-100">
+                                <button type="submit" className="btn btn-danger w-100 py-2 fw-semibold shadow-sm">
                                     Send Review
                                 </button>
                             </form>
