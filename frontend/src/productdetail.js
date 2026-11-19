@@ -30,6 +30,8 @@ export const Detail = () => {
     const [msg, setmsg] = useState("")
     const [rating, setrating] = useState(0)
     const [review, setreview] = useState([])
+    const [reviewPage, setReviewPage] = useState(1)
+    const reviewsPerPage = 3
     const navigate = useNavigate()
     const [activeTab, setActiveTab] = useState("specifications");
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -262,6 +264,7 @@ export const Detail = () => {
                     setmail("")
                     setmsg("")
                     setrating(0)
+                    setReviewPage(1)
                     showreview()
                 }
                 else {
@@ -273,6 +276,46 @@ export const Detail = () => {
             Swal.fire("Error", "Could not connect to server", "error");
         }
     }
+
+    const deleteReviewHandler = async (reviewId) => {
+        const confirm = await Swal.fire({
+            title: "Remove Review?",
+            text: "Are you sure you want to remove this review?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#dc3545",
+            cancelButtonColor: "#6c757d",
+            confirmButtonText: "Yes, delete it"
+        });
+
+        if (confirm.isConfirmed) {
+            try {
+                const result = await fetch(`${API_BASE}/api/deletereview/${reviewId}`, {
+                    method: "delete"
+                });
+                if (result.ok) {
+                    const res = await result.json();
+                    if (res.statuscode === 1) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Review Removed",
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                        showreview();
+                    } else {
+                        Swal.fire("Error", res.message || "Failed to remove review", "error");
+                    }
+                } else {
+                    Swal.fire("Error", "Server error while removing review", "error");
+                }
+            } catch (err) {
+                console.error("Delete review error:", err);
+                Swal.fire("Error", "Could not connect to server", "error");
+            }
+        }
+    };
+
     const showreview = async () => {
         try {
             const result = await fetch(`${API_BASE}/api/getreview/${prr}`, {
@@ -509,161 +552,214 @@ export const Detail = () => {
                     )}
                 </div>
             )}
-            {activeTab === "reviews" && (
-                <div className="row g-4 g-lg-5 align-items-start mt-1">
-                    {/* LEFT COLUMN: REVIEWS LIST */}
-                    <div className="col-lg-6 col-12">
-                        {/* Summary Header */}
-                        <div className="review-summary-bar">
-                            <div className="d-flex align-items-center gap-2">
-                                <span className="fw-bold fs-5 text-dark">
-                                    {review.length > 0
-                                        ? (review.reduce((acc, r) => acc + (parseFloat(r.Rating) || 0), 0) / review.length).toFixed(1)
-                                        : "0.0"}
+            {activeTab === "reviews" && (() => {
+                const totalReviewPages = Math.ceil(review.length / reviewsPerPage) || 1;
+                const currentReviewPage = Math.min(reviewPage, totalReviewPages);
+                const displayedReviews = review.slice((currentReviewPage - 1) * reviewsPerPage, currentReviewPage * reviewsPerPage);
+
+                return (
+                    <div className="row g-4 g-lg-5 align-items-start mt-1">
+                        {/* LEFT COLUMN: REVIEWS LIST (SHOWS 3 AT ONCE) */}
+                        <div className="col-lg-6 col-12">
+                            {/* Summary Header */}
+                            <div className="review-summary-bar">
+                                <div className="d-flex align-items-center gap-2">
+                                    <span className="fw-bold fs-5 text-dark">
+                                        {review.length > 0
+                                            ? (review.reduce((acc, r) => acc + (parseFloat(r.Rating) || 0), 0) / review.length).toFixed(1)
+                                            : "0.0"}
+                                    </span>
+                                    <Rating
+                                        initialValue={
+                                            review.length > 0
+                                                ? review.reduce((acc, r) => acc + (parseFloat(r.Rating) || 0), 0) / review.length
+                                                : 0
+                                        }
+                                        allowFraction
+                                        size={18}
+                                        readonly
+                                    />
+                                </div>
+                                <span className="text-muted small fw-semibold">
+                                    {review.length} {review.length === 1 ? "Customer Review" : "Customer Reviews"}
                                 </span>
-                                <Rating
-                                    initialValue={
-                                        review.length > 0
-                                            ? review.reduce((acc, r) => acc + (parseFloat(r.Rating) || 0), 0) / review.length
-                                            : 0
-                                    }
-                                    allowFraction
-                                    size={18}
-                                    readonly
-                                />
                             </div>
-                            <span className="text-muted small fw-semibold">
-                                {review.length} {review.length === 1 ? "Customer Review" : "Customer Reviews"}
-                            </span>
-                        </div>
 
-                        {/* Reviews Scrollable Container (fits 2-3 reviews comfortably at once) */}
-                        <div className="review-list-container">
-                            {review.length > 0 ? (
-                                review.map((a, index) => {
-                                    const initial = (a.Name && a.Name.trim() ? a.Name.trim().charAt(0) : "U").toUpperCase();
-                                    const dateStr = a.Date ? (a.Date.includes("T") ? a.Date.split("T")[0] : a.Date) : "";
+                            {/* Reviews Container - exactly 3 reviews at once */}
+                            <div className="review-list-container">
+                                {displayedReviews.length > 0 ? (
+                                    displayedReviews.map((a, index) => {
+                                        const initial = (a.Name && a.Name.trim() ? a.Name.trim().charAt(0) : "U").toUpperCase();
+                                        const dateStr = a.Date ? (a.Date.includes("T") ? a.Date.split("T")[0] : a.Date) : "";
 
-                                    return (
-                                        <div key={index} className="review-item-card">
-                                            <div className="review-item-header">
-                                                <div className="review-user-info">
-                                                    <div className="review-user-avatar">
-                                                        {initial}
+                                        return (
+                                            <div key={a._id || index} className="review-item-card">
+                                                <div className="review-item-header">
+                                                    <div className="review-user-info">
+                                                        <div className="review-user-avatar">
+                                                            {initial}
+                                                        </div>
+                                                        <div>
+                                                            <h6 className="review-user-name">{a.Name || "Anonymous Customer"}</h6>
+                                                            {dateStr && (
+                                                                <span className="review-date-badge">
+                                                                    <i className="bi bi-calendar3 me-1"></i>{dateStr}
+                                                                </span>
+                                                            )}
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <h6 className="review-user-name">{a.Name || "Anonymous Customer"}</h6>
-                                                        {dateStr && (
-                                                            <span className="review-date-badge">
-                                                                <i className="bi bi-calendar3 me-1"></i>{dateStr}
-                                                            </span>
-                                                        )}
+
+                                                    <div className="d-flex align-items-center gap-2">
+                                                        <div className="review-stars-wrap">
+                                                            <Rating
+                                                                initialValue={parseFloat(a.Rating) || 0}
+                                                                allowFraction
+                                                                size={16}
+                                                                readonly
+                                                            />
+                                                        </div>
+                                                        <button
+                                                            type="button"
+                                                            className="review-delete-btn"
+                                                            title="Remove Review"
+                                                            onClick={() => deleteReviewHandler(a._id)}
+                                                        >
+                                                            <i className="bi bi-trash3"></i>
+                                                        </button>
                                                     </div>
                                                 </div>
 
-                                                <div className="review-stars-wrap">
-                                                    <Rating
-                                                        initialValue={parseFloat(a.Rating) || 0}
-                                                        allowFraction
-                                                        size={16}
-                                                        readonly
-                                                    />
-                                                </div>
+                                                <p className="review-msg-text">
+                                                    {a.Msg}
+                                                </p>
                                             </div>
-
-                                            <p className="review-msg-text">
-                                                {a.Msg}
-                                            </p>
+                                        );
+                                    })
+                                ) : (
+                                    <div className="text-center py-5 review-item-card d-flex flex-column align-items-center justify-content-center">
+                                        <div
+                                            className="rounded-circle bg-light d-flex align-items-center justify-content-center mb-3"
+                                            style={{ width: "55px", height: "55px" }}
+                                        >
+                                            <i className="bi bi-chat-square-quote text-danger fs-3"></i>
                                         </div>
-                                    );
-                                })
-                            ) : (
-                                <div className="text-center py-5 review-item-card d-flex flex-column align-items-center justify-content-center">
-                                    <div
-                                        className="rounded-circle bg-light d-flex align-items-center justify-content-center mb-3"
-                                        style={{ width: "55px", height: "55px" }}
-                                    >
-                                        <i className="bi bi-chat-square-quote text-danger fs-3"></i>
+                                        <h6 className="fw-bold mb-1">No Reviews Yet</h6>
+                                        <p className="text-muted small mb-0">
+                                            Be the first to review this product!
+                                        </p>
                                     </div>
-                                    <h6 className="fw-bold mb-1">No Reviews Yet</h6>
-                                    <p className="text-muted small mb-0">
-                                        Be the first to review this product!
-                                    </p>
+                                )}
+                            </div>
+
+                            {/* Pagination: Navigate 3 reviews at a time */}
+                            {totalReviewPages > 1 && (
+                                <div className="review-pagination">
+                                    <small className="text-muted fw-semibold">
+                                        Showing {(currentReviewPage - 1) * reviewsPerPage + 1}–{Math.min(currentReviewPage * reviewsPerPage, review.length)} of {review.length} reviews
+                                    </small>
+                                    <div className="d-flex align-items-center gap-1">
+                                        <button
+                                            type="button"
+                                            className="review-page-btn"
+                                            onClick={() => setReviewPage(prev => Math.max(prev - 1, 1))}
+                                            disabled={currentReviewPage === 1}
+                                        >
+                                            <i className="bi bi-chevron-left me-1"></i>Prev
+                                        </button>
+                                        {Array.from({ length: totalReviewPages }, (_, i) => i + 1).map(page => (
+                                            <button
+                                                key={page}
+                                                type="button"
+                                                className={`review-page-btn ${currentReviewPage === page ? "active" : ""}`}
+                                                onClick={() => setReviewPage(page)}
+                                            >
+                                                {page}
+                                            </button>
+                                        ))}
+                                        <button
+                                            type="button"
+                                            className="review-page-btn"
+                                            onClick={() => setReviewPage(prev => Math.min(prev + 1, totalReviewPages))}
+                                            disabled={currentReviewPage === totalReviewPages}
+                                        >
+                                            Next<i className="bi bi-chevron-right ms-1"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             )}
                         </div>
-                    </div>
 
-                    {/* RIGHT COLUMN: ADD REVIEW FORM */}
-                    <div className="col-lg-6 col-12">
-                        <div className="review-form-card">
-                            <div className="d-flex align-items-center gap-2 mb-3">
-                                <i className="bi bi-pencil-square text-danger fs-5"></i>
-                                <h5 className="mb-0 fw-bold">Add Your Review</h5>
-                            </div>
-
-                            <form onSubmit={send}>
-                                <div className="mb-3 text-start">
-                                    <label className="form-label small fw-semibold">Your Name</label>
-                                    <input
-                                        className="form-control"
-                                        placeholder="Enter your name"
-                                        value={username}
-                                        onChange={(e) => setusername(e.target.value)}
-                                        required
-                                    />
+                        {/* RIGHT COLUMN: ADD REVIEW FORM */}
+                        <div className="col-lg-6 col-12">
+                            <div className="review-form-card">
+                                <div className="d-flex align-items-center gap-2 mb-3">
+                                    <i className="bi bi-pencil-square text-danger fs-5"></i>
+                                    <h5 className="mb-0 fw-bold">Add Your Review</h5>
                                 </div>
 
-                                <div className="mb-3 text-start">
-                                    <label className="form-label small fw-semibold">Your Email</label>
-                                    <input
-                                        type="email"
-                                        className="form-control"
-                                        placeholder="Enter your email"
-                                        value={mail}
-                                        onChange={(e) => setmail(e.target.value)}
-                                        required
-                                    />
-                                </div>
-
-                                <div className="mb-3 text-start">
-                                    <label className="form-label small fw-semibold d-block">Your Rating</label>
-                                    <div className="d-flex align-items-center gap-2">
-                                        <Rating
-                                            onClick={handleRating}
-                                            initialValue={rating}
-                                            allowFraction
-                                            size={24}
+                                <form onSubmit={send}>
+                                    <div className="mb-3 text-start">
+                                        <label className="form-label small fw-semibold">Your Name</label>
+                                        <input
+                                            className="form-control"
+                                            placeholder="Enter your name"
+                                            value={username}
+                                            onChange={(e) => setusername(e.target.value)}
+                                            required
                                         />
-                                        {rating > 0 && (
-                                            <span className="badge bg-danger bg-opacity-10 text-danger ms-2">
-                                                {rating} / 5
-                                            </span>
-                                        )}
                                     </div>
-                                </div>
 
-                                <div className="mb-3 text-start">
-                                    <label className="form-label small fw-semibold">Your Review</label>
-                                    <textarea
-                                        className="form-control"
-                                        rows="4"
-                                        placeholder="Write your review..."
-                                        value={msg}
-                                        onChange={(e) => setmsg(e.target.value)}
-                                        required
-                                    />
-                                </div>
+                                    <div className="mb-3 text-start">
+                                        <label className="form-label small fw-semibold">Your Email</label>
+                                        <input
+                                            type="email"
+                                            className="form-control"
+                                            placeholder="Enter your email"
+                                            value={mail}
+                                            onChange={(e) => setmail(e.target.value)}
+                                            required
+                                        />
+                                    </div>
 
-                                <button type="submit" className="btn btn-danger w-100 py-2 fw-semibold shadow-sm">
-                                    Send Review
-                                </button>
-                            </form>
+                                    <div className="mb-3 text-start">
+                                        <label className="form-label small fw-semibold d-block">Your Rating</label>
+                                        <div className="d-flex align-items-center gap-2">
+                                            <Rating
+                                                onClick={handleRating}
+                                                initialValue={rating}
+                                                allowFraction
+                                                size={24}
+                                            />
+                                            {rating > 0 && (
+                                                <span className="badge bg-danger bg-opacity-10 text-danger ms-2">
+                                                    {rating} / 5
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <div className="mb-3 text-start">
+                                        <label className="form-label small fw-semibold">Your Review</label>
+                                        <textarea
+                                            className="form-control"
+                                            rows="4"
+                                            placeholder="Write your review..."
+                                            value={msg}
+                                            onChange={(e) => setmsg(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+
+                                    <button type="submit" className="btn btn-danger w-100 py-2 fw-semibold shadow-sm">
+                                        Send Review
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                    </div>
 
-                </div>
-            )}
+                    </div>
+                );
+            })()}
 
         </div>
     </div>
